@@ -1,8 +1,11 @@
-import { useMemo, useState } from 'react';
-import MasterySpreadViews from './masterySpread';
-import { IndividualPerformanceViews } from './individualPerformance';
-import { ExamItemsSampleAnalysisViews } from './examItemSampleAnalysis';
+import { lazy, Suspense, useMemo, useState } from 'react';
 import { loadWorkspace, saveWorkspace } from './shared/workspaceAutosave';
+
+const MasterySpreadViews = lazy(() => import('./masterySpread'));
+const IndividualPerformanceViews = lazy(() =>
+  import('./individualPerformance').then(({ IndividualPerformanceViews }) => ({ default: IndividualPerformanceViews })),
+);
+const ExamItemsSampleAnalysisViews = lazy(() => import('./examItemSampleAnalysis'));
 
 type ActivePath = 'home' | 'masterySpread' | 'individualPerformance' | 'examItemSampleAnalysis';
 
@@ -180,9 +183,11 @@ function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath:
           <button type="button" onClick={onBackHome} className="mw-back-home-button">الرجوع إلى الصفحة الرئيسية</button>
         </div>
       </header>
-      {activePath === 'masterySpread' && <MasterySpreadViews />}
-      {activePath === 'individualPerformance' && <IndividualPerformanceViews />}
-      {activePath === 'examItemSampleAnalysis' && <ExamItemsSampleAnalysisViews />}
+      <Suspense fallback={<div className="rounded-2xl border border-white/70 bg-white/80 p-6 text-center font-bold text-slate-600">جارٍ تحميل المسار…</div>}>
+        {activePath === 'masterySpread' && <MasterySpreadViews />}
+        {activePath === 'individualPerformance' && <IndividualPerformanceViews />}
+        {activePath === 'examItemSampleAnalysis' && <ExamItemsSampleAnalysisViews />}
+      </Suspense>
     </div>
   );
 }
