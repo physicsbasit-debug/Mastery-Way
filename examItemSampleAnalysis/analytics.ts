@@ -251,6 +251,15 @@ export function validateAnalysisReadiness(
         });
         return;
       }
+      if (Math.abs(score * 2 - Math.round(score * 2)) > 1e-9) {
+        invalidCells += 1;
+        cellIssues.push({
+          ...baseIssue,
+          type: 'invalid_increment',
+          message: `${rowLabel}، ${item.label}: الدرجة يجب أن تتدرج بمقدار 0.5، مثل 0، 0.5، 1، 1.5.`,
+        });
+        return;
+      }
 
       completedCells += 1;
     });
@@ -265,7 +274,7 @@ export function validateAnalysisReadiness(
   if (invalidCells > 0) {
     issues.push({
       scope: 'scores',
-      message: `توجد ${invalidCells} خلية درجة غير صالحة. راجع القيم السالبة أو غير الرقمية أو الأعلى من الدرجة الكلية.`,
+      message: `توجد ${invalidCells} خلية درجة غير صالحة. راجع القيم السالبة أو غير الرقمية أو الأعلى من الدرجة الكلية، وتأكد من استخدام درجات بتدرج 0.5.`,
     });
   }
 

@@ -42,6 +42,7 @@ import { ParetoChart } from '../shared/ParetoChart';
 import { MobileNumberInput } from '../shared/MobileNumberInput';
 import { toLatinDigits } from '../shared/numberFormat';
 import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } from '../shared/DashboardElements';
+import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 
  type TabKey = 'input' | 'overview' | 'charts' | 'gap' | 'decision' | 'plan' | 'report';
 const WORKSPACE_KEY = 'bosla.workspace.masterySpread.v2';
@@ -181,12 +182,15 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
   return (
     <main dir="rtl" className={`mw-track mw-track-mastery space-y-5 text-right ${className}`}>
       {activeTab === 'input' ? <Hero result={result} /> : <TabHeader tab={TABS.find((tab) => tab.key === activeTab) ?? TABS[0]} result={result} />}
-      <nav className="mastery-spread-no-print mw-analysis-steps grid grid-cols-2 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-sm md:grid-cols-4 xl:grid-cols-7">
-        {TABS.map((tab) => {
-          const disabled = tab.key !== 'input' && !result;
-          return <button type="button" key={tab.key} disabled={disabled} onClick={() => setActiveTab(tab.key)} className={`rounded-2xl px-3 py-3 text-right transition ${activeTab === tab.key ? 'bg-slate-900 text-white' : disabled ? 'cursor-not-allowed bg-slate-50 text-slate-300' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}`}><div className="text-sm font-black">{tab.label}</div><div className={`mt-1 text-xs ${activeTab === tab.key ? 'text-slate-200' : 'text-slate-400'}`}>{tab.description}</div></button>;
-        })}
-      </nav>
+      <div className="mastery-spread-no-print">
+        <AnalysisStepAccordion
+          items={TABS.map(({ key, label, description }) => ({ id: key, label, description }))}
+          activeId={activeTab}
+          onSelect={(id) => setActiveTab(id as TabKey)}
+          isLocked={(id) => id !== 'input' && !result}
+          label="خطوات تحليل انتشار الإتقان"
+        />
+      </div>
       {activeTab === 'input' && <InputTab rawScoresText={rawScoresText} onScoresChange={handleScoresChange} settings={settings} updateSetting={updateSetting} context={context} updateContext={updateContext} readiness={readiness} statusMessage={statusMessage} onAnalyze={handleAnalyze} onReset={handleReset} onUseSample={handleUseSample} />}
       {result && activeTab === 'overview' && <PrintableResultTab sectionId="mastery-overview-tab" context={buildPrintableContext(result, 'الحكم العام')}><OverviewTab result={result} /></PrintableResultTab>}
       {result && activeTab === 'charts' && <PrintableResultTab sectionId="mastery-charts-tab" context={buildPrintableContext(result, 'الرسوم والتحليلات')}><ChartsTab result={result} /></PrintableResultTab>}

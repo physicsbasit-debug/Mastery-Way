@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import { useMemo } from "react";
 import type { ComparisonResult } from "./comparisonTypes";
 import { buildComparisonKPIModel } from "./comparisonVisualModels";
 

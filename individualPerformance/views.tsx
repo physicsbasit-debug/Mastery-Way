@@ -34,6 +34,7 @@ import { ParetoChart } from '../shared/ParetoChart';
 import { RadarSkillChart } from '../shared/RadarSkillChart';
 import { MobileNumberInput, type MobileNumericValue } from '../shared/MobileNumberInput';
 import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } from '../shared/DashboardElements';
+import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 import type {
   AnalysisReadinessResult,
   ExamQuestionBlueprint,
@@ -315,30 +316,13 @@ export function IndividualPerformanceViews() {
         </section>
       )}
 
-      <nav className="mw-analysis-steps grid grid-cols-2 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-sm md:grid-cols-3 xl:grid-cols-6">
-        {TABS.map((tab) => {
-          const disabled = RESULT_TABS.includes(tab.id) && (!result || !result.validation.isValid);
-          const isActive = activeTab === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              disabled={disabled}
-              onClick={() => setActiveTab(tab.id)}
-              className={`rounded-2xl px-3 py-3 text-right transition ${
-                isActive
-                  ? 'bg-slate-900 text-white shadow-sm'
-                  : disabled
-                    ? 'cursor-not-allowed bg-slate-50 text-slate-300'
-                    : 'bg-slate-50 text-slate-700 hover:bg-slate-100'
-              }`}
-            >
-              <div className="text-sm font-black">{tab.label}</div>
-              <div className={`mt-1 text-xs ${isActive ? 'text-slate-200' : 'text-slate-400'}`}>{tab.description}</div>
-            </button>
-          );
-        })}
-      </nav>
+      <AnalysisStepAccordion
+        items={TABS}
+        activeId={activeTab}
+        onSelect={(id) => setActiveTab(id as IndividualPerformanceTab)}
+        isLocked={(id) => RESULT_TABS.includes(id as IndividualPerformanceTab) && (!result || !result.validation.isValid)}
+        label="خطوات تحليل الأداء الفردي"
+      />
 
       {activeTab === 'student-paper' ? (
         <StudentPaperTab context={context} setContext={setContext} settings={settings} setSettings={updateSettings} fillExample={fillExample} clearSavedWorkspace={clearSavedWorkspace} />

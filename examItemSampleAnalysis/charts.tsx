@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChartCard, OutsideLabelBarChart } from '../shared/UnifiedVisuals';
 import type { BalanceEntry, ExamItemsSampleAnalysisResult } from './types';
 
