@@ -1,6 +1,5 @@
 import type {
   ComparisonResult,
-  ComparisonInsights,
 } from "./comparisonTypes"
 
 /* =========================================================

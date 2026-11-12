@@ -24,11 +24,11 @@ function formatHighPriorityCount(count: number): string {
   return `${count} مفردة عالية الأولوية`;
 }
 
-export function buildSampleLimitText(result: ExamItemsSampleAnalysisResult): string {
+export function buildSampleLimitText(_result: ExamItemsSampleAnalysisResult): string {
   return `تعتمد نتائج هذا التقرير على العينة المدخلة ولا تمثل بالضرورة جميع الأوراق ما لم تكن العينة شاملة أو ممثلة بدرجة كافية. تُقرأ مؤشرات أداء المفردات والفقد والمهارات بوصفها دلائل تربوية مساعدة، لا أحكامًا نهائية مستقلة. ولا يكفي أداء المفردة وحده للحكم على جودة صياغتها؛ فقد يتأثر الأداء بسياق التدريس أو وضوح التعليمات أو طريقة التصحيح.`;
 }
 
-export function buildMethodologyText(result: ExamItemsSampleAnalysisResult): string {
+export function buildMethodologyText(_result: ExamItemsSampleAnalysisResult): string {
   return `اعتمد التحليل على حساب أداء كل مفردة من خلال مجموع درجات العينة مقارنة بالدرجة المتاحة لها، ثم تحليل الفقد ونسبة الصفر والدرجة الكاملة، وربط المفردات بالمهارات. كما تم تقدير موثوقية القراءة من خلال حجم العينة ونسبتها وطريقة اختيارها، مع اشتراط اكتمال بيانات الدرجات قبل قراءة المؤشرات.`;
 }
 

@@ -39,7 +39,7 @@ export interface ValidationIssue {
   message: string;
 }
 
-export type ScoreCellIssueType = 'empty' | 'not_numeric' | 'negative' | 'above_max';
+export type ScoreCellIssueType = 'empty' | 'not_numeric' | 'negative' | 'above_max' | 'invalid_increment';
 
 export interface ScoreCellIssue {
   rowId: string;

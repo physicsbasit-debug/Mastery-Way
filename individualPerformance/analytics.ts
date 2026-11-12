@@ -412,6 +412,20 @@ function inspectIndividualAnalysisInputs(
       });
       return;
     }
+    if (Math.abs(rawScore * 2 - Math.round(rawScore * 2)) > 1e-9) {
+      invalidScoreCount += 1;
+      issues.push({
+        code: 'invalid_score_increment',
+        questionId,
+        questionLabel,
+        field: 'score',
+        message: 'درجة الطالب يجب أن تتدرج بمقدار 0.5، مثل 0، 0.5، 1، 1.5.',
+        minValue: 0,
+        maxValue: maxScore,
+        actualValue: rawScore,
+      });
+      return;
+    }
 
     completedScoreCount += 1;
     const rawErrorType = String(input?.errorType || '').trim();

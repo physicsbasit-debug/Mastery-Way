@@ -1,4 +1,3 @@
-import React from 'react';
 import type { FishboneDiagnostic } from './diagnosticTypes';
 
 export function FishboneDiagnosticCard({ diagnostic }: { diagnostic: FishboneDiagnostic }) {

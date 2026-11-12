@@ -20,6 +20,7 @@ export type ValidationIssueCode =
   | 'non_numeric_score'
   | 'negative_score'
   | 'score_above_max'
+  | 'invalid_score_increment'
   | 'omitted_with_positive_score'
   | 'missing_other_error_detail'
   | 'invalid_pass_cutoff'

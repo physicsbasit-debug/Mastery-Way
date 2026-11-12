@@ -40,42 +40,13 @@ function resolveBasePath() {
   return "/";
 }
 
-function resolveManualChunk(id: string) {
-  if (!id.includes("node_modules")) {
-    return undefined;
-  }
-
-  if (
-    id.includes("/react/") ||
-    id.includes("/react-dom/") ||
-    id.includes("/scheduler/")
-  ) {
-    return "react-vendor";
-  }
-
-  if (
-    id.includes("/recharts/") ||
-    id.includes("/d3-") ||
-    id.includes("/internmap/")
-  ) {
-    return "charts";
-  }
-
-  if (id.includes("/framer-motion/") || id.includes("/lucide-react/")) {
-    return "ui-vendor";
-  }
-
-  if (
-    id.includes("/@radix-ui/") ||
-    id.includes("/class-variance-authority/") ||
-    id.includes("/clsx/") ||
-    id.includes("/tailwind-merge/")
-  ) {
-    return "ui-core";
-  }
-
-  return "vendor";
-}
+const manualCodeSplitGroups = [
+  { name: "react-vendor", test: /node_modules\/(?:react|react-dom|scheduler)\// },
+  { name: "charts", test: /node_modules\/(?:recharts|d3-[^/]+|internmap)\// },
+  { name: "ui-vendor", test: /node_modules\/(?:framer-motion|lucide-react)\// },
+  { name: "ui-core", test: /node_modules\/(?:@radix-ui|class-variance-authority|clsx|tailwind-merge)\// },
+  { name: "vendor", test: /node_modules\// },
+];
 
 export default defineConfig(() => {
   const port = Number(process.env.PORT || 5173);
@@ -103,9 +74,11 @@ export default defineConfig(() => {
     },
     build: {
       chunkSizeWarningLimit: 700,
-      rollupOptions: {
+      rolldownOptions: {
         output: {
-          manualChunks: resolveManualChunk,
+          codeSplitting: {
+            groups: manualCodeSplitGroups,
+          },
         },
       },
     },

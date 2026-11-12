@@ -24,6 +24,7 @@ import { MobileNumberInput, type MobileNumericValue } from '../shared/MobileNumb
 import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } from '../shared/DashboardElements';
 import type { AnalysisReadinessResult, ExamItemDefinition, ExamItemsSampleAnalysisResult, ExamItemsSampleContext, SampleScoreRow } from './types';
 import { getCurrentAcademicYear, getTodayISO } from './utils';
+import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 
 const TABS = [
   { id: 'context', title: 'بيانات الورقة والعينة', desc: 'رأس التقرير والعينة' },
@@ -298,24 +299,13 @@ function CompactTabHeader({ activeTab, result }: { activeTab: TabId; result: Exa
 
 function TabNav({ activeTab, setActiveTab, hasResult }: { activeTab: TabId; setActiveTab: (id: TabId) => void; hasResult: boolean }) {
   return (
-    <nav className="mw-analysis-steps grid grid-cols-2 gap-2 rounded-3xl border border-slate-200 bg-white p-2 shadow-sm md:grid-cols-3 xl:grid-cols-6">
-      {TABS.map((tab) => {
-        const locked = !hasResult && !['context', 'items', 'scores'].includes(tab.id);
-        const active = activeTab === tab.id;
-        return (
-          <button
-            key={tab.id}
-            type="button"
-            disabled={locked}
-            onClick={() => setActiveTab(tab.id)}
-            className={`rounded-2xl px-3 py-3 text-right transition ${active ? 'bg-slate-900 text-white shadow-sm' : locked ? 'cursor-not-allowed bg-slate-50 text-slate-300' : 'bg-slate-50 text-slate-700 hover:bg-slate-100'}`}
-          >
-            <div className="text-sm font-black">{tab.title}</div>
-            <div className={`mt-1 text-xs ${active ? 'text-slate-200' : 'text-slate-400'}`}>{tab.desc}</div>
-          </button>
-        );
-      })}
-    </nav>
+    <AnalysisStepAccordion
+      items={TABS.map(({ id, title, desc }) => ({ id, label: title, description: desc }))}
+      activeId={activeTab}
+      onSelect={(id) => setActiveTab(id as TabId)}
+      isLocked={(id) => !hasResult && !['context', 'items', 'scores'].includes(id as TabId)}
+      label="خطوات تحليل مفردات الورقة"
+    />
   );
 }
 
@@ -725,10 +715,6 @@ function DataTable({ headers, rows, title }: { headers: string[]; rows: Array<Ar
 
 function Input({ label, value, onChange, compact }: { label?: string; value: string; onChange: (value: string) => void; compact?: boolean }) {
   return <label className="block text-sm"><span className={compact ? 'sr-only' : 'mb-1 block font-bold text-slate-600'}>{label}</span><input value={value} onChange={(event) => onChange(event.target.value)} className="w-full rounded-xl border border-slate-200 px-3 py-2" /></label>;
-}
-
-function TextArea({ label, value, onChange }: { label: string; value: string; onChange: (value: string) => void }) {
-  return <label className="block text-sm"><span className="mb-1 block font-bold text-slate-600">{label}</span><textarea value={value} onChange={(event) => onChange(event.target.value)} rows={3} className="w-full rounded-xl border border-slate-200 px-3 py-2" /></label>;
 }
 
 function HalfStepScoreInput({ value, onChange }: { value: number | ''; onChange: (value: number | '') => void }) {

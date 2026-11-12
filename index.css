@@ -416,6 +416,123 @@
   }
 }
 
+@media screen {
+  .mw-analysis-stepper { --step-accent: #315ca8; }
+  .mw-track-individual .mw-analysis-stepper { --step-accent: #687b3c; }
+  .mw-track-exam .mw-analysis-stepper { --step-accent: #a97822; }
+
+  .mw-analysis-stepper__progress {
+    display: table;
+    margin: 0 0 0.45rem auto;
+    border: 1px solid color-mix(in srgb, var(--step-accent) 25%, white);
+    border-radius: 999px;
+    background: color-mix(in srgb, var(--step-accent) 7%, white);
+    padding: 0.3rem 0.75rem;
+    color: var(--step-accent);
+    font-size: 0.75rem;
+    font-weight: 800;
+  }
+
+  .mw-analysis-steps {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr));
+    gap: 0.65rem;
+    padding: 0.75rem;
+    border: 1px solid #dce2d8 !important;
+    border-radius: 1.35rem !important;
+    background: linear-gradient(145deg, #fffefa, #f7f8f2) !important;
+    box-shadow: 0 12px 32px rgba(31, 48, 36, 0.07) !important;
+  }
+
+  .mw-analysis-steps .mw-analysis-step {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    width: 100%;
+    min-width: 0;
+    min-height: 4.1rem !important;
+    padding: 0.7rem 0.8rem !important;
+    padding-inline-start: 0.8rem !important;
+    border: 1px solid #e2e7de !important;
+    border-radius: 1rem !important;
+    background: #fff !important;
+    color: #334438 !important;
+    text-align: right;
+    box-shadow: 0 4px 12px rgba(29, 48, 35, 0.04), inset 0 1px 0 #fff !important;
+    transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
+  }
+
+  .mw-analysis-steps .mw-analysis-step::before { content: none !important; display: none !important; }
+
+  .mw-analysis-steps .mw-analysis-step:hover:not(:disabled) {
+    transform: translateY(-2px);
+    border-color: color-mix(in srgb, var(--step-accent) 45%, white) !important;
+    background: #fff !important;
+    box-shadow: 0 8px 20px rgba(31, 48, 36, 0.09) !important;
+  }
+
+  .mw-analysis-steps .mw-analysis-step:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--step-accent) 35%, transparent);
+    outline-offset: 2px;
+  }
+
+  .mw-analysis-step__number {
+    display: inline-flex;
+    flex: 0 0 2.35rem;
+    width: 2.35rem;
+    height: 2.35rem;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #e4e9de;
+    border-radius: 0.8rem;
+    background: #f2f5ee;
+    color: var(--step-accent);
+    font-size: 0.73rem;
+    font-weight: 900;
+  }
+
+  .mw-analysis-step__copy { display: flex; min-width: 0; flex: 1; flex-direction: column; gap: 0.15rem; }
+  .mw-analysis-step__title { font-size: 0.85rem; font-weight: 900; line-height: 1.5; }
+  .mw-analysis-step__description { display: none; color: rgba(255, 255, 255, 0.8); font-size: 0.72rem; line-height: 1.45; }
+  .mw-analysis-step[data-active] .mw-analysis-step__description { display: block; }
+
+  .mw-analysis-step__state {
+    flex: 0 0 auto;
+    border-radius: 999px;
+    background: #f3f5f0;
+    padding: 0.28rem 0.5rem;
+    color: #71806b;
+    font-size: 0.62rem;
+    font-weight: 800;
+    white-space: nowrap;
+  }
+
+  .mw-analysis-steps .mw-analysis-step[data-active] {
+    border-color: var(--step-accent) !important;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 78%, #172554), var(--step-accent)) !important;
+    color: #fff !important;
+    box-shadow: 0 10px 24px color-mix(in srgb, var(--step-accent) 22%, transparent) !important;
+  }
+
+  .mw-analysis-step[data-active] .mw-analysis-step__number,
+  .mw-analysis-step[data-active] .mw-analysis-step__state {
+    border-color: rgba(255, 255, 255, 0.18);
+    background: rgba(255, 255, 255, 0.14);
+    color: #fff2c7;
+  }
+
+  .mw-analysis-step[data-completed] .mw-analysis-step__state { background: #e9f2e6; color: #3e6940; }
+  .mw-analysis-step[data-locked] { cursor: not-allowed; opacity: 0.58; }
+  .mw-analysis-step[data-locked] .mw-analysis-step__number { background: #f4f4f1; color: #8b9285; }
+
+  @media (max-width: 540px) {
+    .mw-analysis-steps { grid-template-columns: 1fr; gap: 0.5rem; padding: 0.55rem; }
+    .mw-analysis-steps .mw-analysis-step { min-height: 3.7rem !important; padding: 0.6rem 0.65rem !important; padding-inline-start: 0.65rem !important; }
+    .mw-analysis-steps .mw-analysis-step[data-active] { min-height: 4.6rem !important; }
+    .mw-analysis-step__state { font-size: 0.58rem; padding: 0.25rem 0.4rem; }
+  }
+}
+
 @media screen and (min-width: 768px) {
   .mw-workspace-icon { display: block; }
 }
