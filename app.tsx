@@ -84,83 +84,95 @@ export default function App() {
 
 function HomePage({ onSelectPath }: { onSelectPath: (path: ActivePath) => void }) {
   return (
-    <div className="mw-home-page mx-auto w-full max-w-[1720px] px-4 py-5 md:px-8 md:py-8">
-      <section className="mw-hero relative overflow-hidden rounded-[2.3rem] px-5 py-8 text-white md:px-10 md:py-10">
-        <AmbientBackground />
-        <div className="relative z-10 grid gap-8 xl:grid-cols-[1.08fr_0.92fr] xl:items-stretch">
-          <div className="mw-hero-content flex min-h-[28rem] flex-col justify-between rounded-[2rem] border border-white/15 bg-white/10 p-6 shadow-[0_18px_60px_rgba(2,8,23,0.18)] backdrop-blur-md md:p-9">
-            <div>
-              <div className="flex flex-wrap items-center gap-3">
-                <span className="mw-pill mw-pill-light">منصة تحليل تربوي ذكية</span>
-                <span className="mw-pill mw-pill-gold">إتقان • فجوات • قرار</span>
-              </div>
-              <CompassCheckLogo />
-              <h1 className="mt-7 text-5xl font-black leading-tight text-white drop-shadow-sm md:text-7xl">بوصلة الإتقان</h1>
-              <p className="mt-4 max-w-3xl text-xl font-black leading-9 text-indigo-100 md:text-2xl">
-                قراءة تربوية منظمة لنتائج الطلبة، تحول الأرقام إلى مؤشرات واضحة وخطط قابلة للتنفيذ.
-              </p>
-            </div>
-            <div className="mt-8 grid gap-3 sm:grid-cols-3">
-              <HeroStat value="3" label="مسارات تحليلية" />
-              <HeroStat value="A4" label="تقارير قابلة للطباعة" />
-              <HeroStat value="RTL" label="واجهة عربية رسمية" />
-            </div>
-            <p className="mt-7 text-sm font-bold leading-8 text-indigo-100/90">فكرة وتصميم: أ. وليد الهنائي | أ. محمود اليحيائي</p>
-          </div>
-
-          <div className="mw-hero-panel flex flex-col justify-between rounded-[2rem] border border-white/12 bg-white/8 p-5 shadow-[0_18px_70px_rgba(15,23,42,0.20)] backdrop-blur-md md:p-7">
-            <div>
-              <p className="text-sm font-black text-[#F6D38A]">رحلة التحليل</p>
-              <h2 className="mt-2 text-3xl font-black leading-tight text-white md:text-4xl">من إدخال البيانات إلى قرار تربوي واضح</h2>
-              <p className="mt-4 leading-8 text-indigo-100/85">
-                صُممت بوصلة الإتقان لتقود المعلم خطوة بخطوة: بيانات، تحليل، مؤشرات، قراءة تربوية، ثم تقرير رسمي.
-              </p>
-            </div>
-            <div className="mt-7 space-y-3">
-              <JourneyStep number="01" title="إدخال منظم" text="حقول واضحة، تحقق من البيانات، وحفظ تلقائي على الجهاز." />
-              <JourneyStep number="02" title="تحليل بصري" text="بطاقات مؤشرات ورسوم تساعد على قراءة المشهد دون إغراق." />
-              <JourneyStep number="03" title="قرار وتقرير" text="توصيات تربوية وتقرير تفصيلي جاهز للطباعة والتوثيق." />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="mt-6 rounded-[2rem] border border-white/70 bg-white/70 p-4 shadow-[0_20px_60px_rgba(15,23,42,0.07)] backdrop-blur md:p-6">
-        <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+    <div className="mw-home-page mx-auto w-full">
+      <header className="mw-site-header">
+        <div className="mw-brand-lockup">
+          <span className="mw-brand-mark" aria-hidden="true"><CompassCheckLogo /></span>
           <div>
-            <span className="mw-section-eyebrow">اختر المسار المناسب</span>
-            <h2 className="mt-2 text-3xl font-black text-[#172554] md:text-4xl">لوحات تحليل مصممة حسب نوع القرار</h2>
-            <p className="mt-2 max-w-3xl leading-8 text-slate-600">كل مسار مستقل في مدخلاته ومخرجاته، لكنه يعمل ضمن هوية واحدة ومنطق تربوي موحد.</p>
+            <p className="mw-brand-name">بوصلة الإتقان</p>
+            <p className="mw-brand-caption">قراءة تربوية تقود إلى قرار</p>
           </div>
-          <div className="mw-soft-note">ابدأ بالمسار الأقرب لبياناتك، ثم اطبع النتائج عند اكتمال التحليل.</div>
         </div>
+        <span className="mw-site-label">منصة التحليل التربوي</span>
+      </header>
 
-        <div className="mt-6 grid gap-5 lg:grid-cols-3">
-          {PATHS.map((path) => <PathCardButton key={path.id} path={path} onSelect={() => onSelectPath(path.id)} />)}
+      <section className="mw-hero">
+        <div className="mw-hero-grid">
+          <div className="mw-hero-content">
+            <span className="mw-eyebrow"><span aria-hidden="true" /> إتقان · فجوات · قرار</span>
+            <h1>بوصلة الإتقان</h1>
+            <p className="mw-hero-description">
+              قراءة منظّمة لنتائج الطلبة، تكشف مؤشرات التعلّم وتعينك على اختيار الخطوة التربوية المناسبة.
+            </p>
+            <div className="mw-hero-actions">
+              <button type="button" onClick={() => onSelectPath('masterySpread')} className="mw-primary-action">ابدأ تحليلًا جديدًا <span aria-hidden="true">←</span></button>
+              <a href="#analysis-paths" className="mw-secondary-action">تعرّف على المسارات</a>
+            </div>
+            <div className="mw-hero-stats">
+              <HeroStat value="3" label="مسارات تحليلية" />
+              <HeroStat value="A4" label="تقارير للطباعة" />
+              <HeroStat value="RTL" label="واجهة عربية" />
+            </div>
+          </div>
+
+          <aside className="mw-hero-panel" aria-label="مراحل التحليل">
+            <div className="mw-hero-panel-heading">
+              <div>
+                <p className="mw-panel-kicker">رحلة التحليل</p>
+                <h2>من الدرجة إلى القرار</h2>
+              </div>
+              <span className="mw-panel-count">٣ خطوات</span>
+            </div>
+            <div className="mw-journey-list">
+              <JourneyStep number="01" title="أدخل البيانات" text="حقول واضحة مع تحقق وحفظ تلقائي على الجهاز." />
+              <JourneyStep number="02" title="اقرأ المؤشرات" text="ملخصات ورسوم توضّح مستوى الأداء والفجوات." />
+              <JourneyStep number="03" title="اختر التدخل" text="توصيات وتقرير مرتب للطباعة والتوثيق." />
+            </div>
+            <p className="mw-local-note"><span aria-hidden="true">⌂</span> بياناتك محفوظة على جهازك</p>
+          </aside>
         </div>
       </section>
+
+      <section id="analysis-paths" className="mw-paths-section">
+        <div className="mw-section-heading">
+          <div>
+            <span className="mw-section-eyebrow">ابدأ من هنا</span>
+            <h2>اختر المسار المناسب لعملك</h2>
+            <p>كل مسار يقودك من إدخال واضح إلى نتائج وتوصيات قابلة للاستخدام.</p>
+          </div>
+          <span className="mw-section-side-note">اختر المسار الأقرب إلى بياناتك</span>
+        </div>
+
+        <div className="mw-path-grid">
+          {PATHS.map((path, index) => <PathCardButton key={path.id} path={path} index={index + 1} onSelect={() => onSelectPath(path.id)} />)}
+        </div>
+      </section>
+
+      <footer className="mw-home-footer">
+        <span>بوصلة الإتقان</span>
+        <span>فكرة وتصميم: أ. وليد الهنائي · أ. محمود اليحيائي</span>
+      </footer>
     </div>
   );
 }
 
-function PathCardButton({ path, onSelect }: { path: PathCard; onSelect: () => void }) {
+function PathCardButton({ path, index, onSelect }: { path: PathCard; index: number; onSelect: () => void }) {
   return (
     <button type="button" onClick={onSelect} className={`mw-path-card mw-path-card--${path.theme} group text-right`}>
-      <div className="flex min-h-[24rem] flex-col">
-        <div className="flex items-center justify-between gap-3">
+      <div className="mw-path-card-inner">
+        <div className="mw-path-card-topline">
+          <span className="mw-path-index">0{index}</span>
           <span className="mw-path-badge">{path.badge}</span>
           <IconBubble variant={path.theme} icon={path.icon} />
         </div>
-        <h3 className="mt-6 text-2xl font-black leading-10 text-[#111827]">{path.title}</h3>
-        <div className="mt-3 space-y-1 text-base leading-8 text-slate-600">
-          {path.descriptionLines.map((line) => <p key={line}>{line}</p>)}
-        </div>
-        <div className="mt-5 flex flex-wrap gap-2">
+        <h3>{path.title}</h3>
+        <p className="mw-path-description">{path.descriptionLines.join(' ')}</p>
+        <div className="mw-path-highlights">
           {path.highlights.map((item) => <span key={item} className="mw-highlight-chip">{item}</span>)}
         </div>
-        <div className="mt-auto flex items-center justify-between rounded-[1.4rem] border border-slate-200/80 bg-white/75 px-4 py-3 shadow-sm transition group-hover:border-transparent">
-          <span className="text-sm font-black text-slate-700">الدخول إلى المسار</span>
-          <span className="mw-card-arrow">←</span>
+        <div className="mw-path-card-cta">
+          <span>فتح المسار</span>
+          <span className="mw-card-arrow" aria-hidden="true">←</span>
         </div>
       </div>
     </button>
@@ -170,17 +182,17 @@ function PathCardButton({ path, onSelect }: { path: PathCard; onSelect: () => vo
 function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath: ActivePath; activePathMeta?: PathCard; onBackHome: () => void }) {
   return (
     <div className="mw-path-workspace mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-4 md:px-6">
-      <header className={`workspace-current-header mw-workspace-header mw-workspace-header--${activePathMeta?.theme ?? 'royal'} sticky top-0 z-30`}>
+      <header className={`workspace-current-header mw-workspace-header mw-workspace-header--${activePathMeta?.theme ?? 'royal'}`}>
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-start gap-4">
             <div className="mw-workspace-icon"><IconBubble variant={activePathMeta?.theme ?? 'royal'} icon={activePathMeta?.icon ?? 'spread'} compact /></div>
             <div>
-              <p className="text-xs font-black text-indigo-100/85">مساحة العمل الحالية</p>
-              <h1 className="mt-1 text-2xl font-black text-white md:text-3xl">{activePathMeta?.title ?? 'مسار التحليل'}</h1>
-              <p className="mt-2 max-w-2xl text-sm font-bold leading-7 text-indigo-100/80">واجهة عمل مهيأة للإدخال والتحليل والطباعة مع حفظ تلقائي للبيانات على هذا الجهاز.</p>
+              <p className="mw-workspace-kicker">مساحة التحليل</p>
+              <h1>{activePathMeta?.title ?? 'مسار التحليل'}</h1>
+              <p className="mw-workspace-description">أدخل البيانات، تابع المؤشرات، ثم اطبع تقريرك عند اكتمال التحليل.</p>
             </div>
           </div>
-          <button type="button" onClick={onBackHome} className="mw-back-home-button">الرجوع إلى الصفحة الرئيسية</button>
+          <button type="button" onClick={onBackHome} className="mw-back-home-button"><span aria-hidden="true">→</span> المسارات</button>
         </div>
       </header>
       <Suspense fallback={<div className="rounded-2xl border border-white/70 bg-white/80 p-6 text-center font-bold text-slate-600">جارٍ تحميل المسار…</div>}>
@@ -192,29 +204,17 @@ function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath:
   );
 }
 
-function AmbientBackground() {
-  return (
-    <div className="pointer-events-none absolute inset-0 overflow-hidden">
-      <div className="absolute -left-20 top-10 h-80 w-[32rem] rounded-full bg-[#2F6BFF]/28 blur-3xl" />
-      <div className="absolute -right-24 top-20 h-96 w-[34rem] rounded-full bg-[#D6A13D]/18 blur-3xl" />
-      <div className="absolute bottom-[-8rem] right-1/3 h-80 w-80 rounded-full bg-white/10 blur-3xl" />
-      <div className="mw-orbit mw-orbit-one" />
-      <div className="mw-orbit mw-orbit-two" />
-    </div>
-  );
-}
-
 function CompassCheckLogo() {
   return (
-    <div className="mt-8 flex h-24 w-24 items-center justify-center rounded-[2rem] border border-white/15 bg-white/10 shadow-[0_18px_45px_rgba(0,0,0,0.16)] md:h-28 md:w-28">
+    <div className="mw-compass-logo">
       <svg viewBox="0 0 120 120" className="h-[82%] w-[82%]">
         <defs>
-          <linearGradient id="compassRoyal" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop stopColor="#FFFFFF" /><stop offset="0.55" stopColor="#BFD4FF" /><stop offset="1" stopColor="#D6A13D" /></linearGradient>
+          <linearGradient id="compassRoyal" x1="0" y1="0" x2="120" y2="120" gradientUnits="userSpaceOnUse"><stop stopColor="#075B49" /><stop offset="0.55" stopColor="#176B78" /><stop offset="1" stopColor="#B78B3D" /></linearGradient>
         </defs>
         <circle cx="60" cy="60" r="38" fill="none" stroke="url(#compassRoyal)" strokeWidth="5" opacity="0.96" />
         <path d="M76 28L63 63L41 92L55 55L76 28Z" fill="#F4C56A" opacity="0.95" />
-        <circle cx="60" cy="60" r="8" fill="#ffffff" opacity="0.92" />
-        <path d="M42 72L54 83L79 50" fill="none" stroke="#FFFFFF" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
+        <circle cx="60" cy="60" r="8" fill="#F0DCA8" opacity="0.98" />
+        <path d="M42 72L54 83L79 50" fill="none" stroke="#075B49" strokeWidth="7" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
     </div>
   );
@@ -244,9 +244,9 @@ function ItemsIcon() {
 
 function HeroStat({ value, label }: { value: string; label: string }) {
   return (
-    <div className="rounded-[1.25rem] border border-white/12 bg-white/10 px-4 py-3 text-center shadow-sm backdrop-blur">
-      <div className="text-2xl font-black text-[#F6D38A]">{value}</div>
-      <div className="mt-1 text-xs font-bold text-indigo-100/85">{label}</div>
+    <div className="mw-hero-stat">
+      <div>{value}</div>
+      <span>{label}</span>
     </div>
   );
 }
@@ -254,7 +254,7 @@ function HeroStat({ value, label }: { value: string; label: string }) {
 function JourneyStep({ number, title, text }: { number: string; title: string; text: string }) {
   return (
     <div className="mw-journey-step">
-      <span>{number}</span>
+      <span className="mw-journey-number">{number}</span>
       <div>
         <h3>{title}</h3>
         <p>{text}</p>
