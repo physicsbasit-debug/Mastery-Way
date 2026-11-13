@@ -2858,3 +2858,95 @@ svg text {
   .mw-primary-action,
   .mw-secondary-action { transition: none !important; }
 }
+
+/* Tighten the mobile rhythm and override the older generic card-height rule. */
+@media screen and (max-width: 680px) {
+  .mw-home-page {
+    padding-bottom: calc(2.5rem + env(safe-area-inset-bottom));
+  }
+
+  .mw-hero {
+    padding: 0.9rem !important;
+  }
+
+  .mw-hero-grid {
+    gap: 0.85rem;
+  }
+
+  .mw-hero-content h1 {
+    font-size: clamp(1.9rem, 8.5vw, 2.35rem);
+    letter-spacing: -0.035em;
+  }
+
+  .mw-hero-description {
+    line-height: 1.65;
+  }
+
+  .mw-hero-actions {
+    gap: 0.45rem;
+  }
+
+  .mw-hero-panel {
+    padding: 0.8rem !important;
+  }
+
+  .mw-hero-panel-heading {
+    margin-bottom: 0.65rem;
+  }
+
+  .mw-journey-list {
+    gap: 0.4rem;
+  }
+
+  .mw-journey-step {
+    gap: 0.6rem;
+    padding: 0.48rem 0.58rem;
+  }
+
+  .mw-journey-step > span {
+    width: 1.9rem;
+    height: 1.9rem;
+    border-radius: 0.65rem;
+    font-size: 0.68rem;
+  }
+
+  .mw-journey-step h3 {
+    font-size: 0.8rem;
+  }
+
+  .mw-journey-step p {
+    margin-top: 0.1rem;
+    font-size: 0.68rem;
+    line-height: 1.45;
+  }
+
+  .mw-local-note {
+    margin-top: 0.6rem;
+  }
+
+  .mw-path-card > .mw-path-card-inner {
+    min-height: 0 !important;
+  }
+
+  .mw-path-card-cta {
+    margin-top: 0.65rem;
+    padding-top: 0.55rem;
+  }
+}
+
+@media screen and (max-width: 380px) {
+  .mw-site-label {
+    max-width: 8.5rem;
+    text-align: center;
+  }
+
+  .mw-hero-actions {
+    align-items: stretch;
+  }
+
+  .mw-primary-action,
+  .mw-secondary-action {
+    flex: 1 1 auto;
+    font-size: 0.72rem;
+  }
+}
