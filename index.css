@@ -2904,3 +2904,140 @@ svg text {
   .mw-section-heading p { font-size: 0.82rem; }
   .mw-path-card-inner { min-height: 0 !important; }
 }
+
+/* إعادة إبراز هوية بوصلة الإتقان مع بقاء المسارات في المقدمة. */
+@media screen {
+  .mw-site-header {
+    position: relative;
+    overflow: hidden;
+    justify-content: space-between !important;
+    min-height: 5.25rem;
+    margin-bottom: 1.15rem;
+    padding: 0.8rem 1rem !important;
+    border: 1px solid rgba(198, 155, 74, 0.62);
+    border-radius: 1.35rem;
+    background: linear-gradient(112deg, #075B49 0%, #075B49 62%, #176B78 100%);
+    box-shadow: 0 12px 28px rgba(7, 91, 73, 0.15), inset 0 1px rgba(255, 255, 255, 0.18);
+  }
+
+  .mw-site-header::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 0.28rem;
+    background: linear-gradient(180deg, #E5C77F, #C69B4A);
+  }
+
+  .mw-site-header .mw-brand-lockup { position: relative; z-index: 1; gap: 0.8rem; }
+  .mw-site-header .mw-brand-mark {
+    width: 3.45rem;
+    height: 3.45rem;
+    border: 1px solid rgba(229, 199, 127, 0.78);
+    border-radius: 1.1rem;
+    background: #FAF7EF;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.16);
+  }
+  .mw-site-header .mw-brand-name { color: #FAF7EF; font-size: 1.15rem; }
+  .mw-site-header .mw-brand-caption { color: rgba(250, 247, 239, 0.78); }
+
+  .mw-paths-section { margin-top: 0; }
+  .mw-section-heading {
+    position: relative;
+    margin-bottom: 1.15rem;
+    padding: 0.15rem 1rem 0.2rem 0;
+    border-inline-start: 3px solid #C69B4A;
+  }
+  .mw-section-eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    color: #9A742D;
+    font-size: 0.78rem;
+    font-weight: 900;
+  }
+  .mw-section-eyebrow::before {
+    content: "";
+    width: 0.48rem;
+    height: 0.48rem;
+    border-radius: 50%;
+    background: #C69B4A;
+    box-shadow: 0 0 0 0.22rem rgba(198, 155, 74, 0.15);
+  }
+  .mw-section-heading h1 { color: #075B49; }
+  .mw-section-heading p { color: #63736B; }
+
+  .mw-path-card {
+    --mw-path-tint: #EAF3ED;
+    border-color: color-mix(in srgb, var(--mw-path-color) 24%, #FAF7EF);
+    background: linear-gradient(145deg, color-mix(in srgb, var(--mw-path-tint) 52%, #FFFEFA) 0%, #FFFEFA 58%, #FAF7EF 100%);
+    box-shadow: 0 12px 28px rgba(29, 57, 47, 0.075), inset 0 1px rgba(255, 255, 255, 0.94);
+  }
+  .mw-path-card::before { height: 0.3rem; background: linear-gradient(90deg, var(--mw-path-color), color-mix(in srgb, var(--mw-path-color) 55%, #C69B4A)); }
+  .mw-path-card--royal { --mw-path-color: #075B49; --mw-path-tint: #E5F0E8; }
+  .mw-path-card--olive { --mw-path-color: #176B78; --mw-path-tint: #E5F1F2; }
+  .mw-path-card--amber { --mw-path-color: #A77B2E; --mw-path-tint: #F4EEDC; }
+  .mw-path-card-topline { min-height: 3.5rem; }
+  .mw-path-index {
+    display: grid;
+    width: 2.25rem;
+    height: 2.25rem;
+    place-items: center;
+    border: 1px solid color-mix(in srgb, var(--mw-path-color) 28%, white);
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--mw-path-tint) 72%, white);
+    color: var(--mw-path-color);
+    font-size: 0.76rem;
+  }
+  .mw-path-badge {
+    border-color: color-mix(in srgb, var(--mw-path-color) 20%, white);
+    background: color-mix(in srgb, var(--mw-path-tint) 76%, white);
+    color: var(--mw-path-color);
+  }
+  .mw-icon-bubble,
+  .mw-icon-bubble--royal,
+  .mw-icon-bubble--olive,
+  .mw-icon-bubble--amber {
+    border-color: color-mix(in srgb, var(--mw-path-color) 27%, white);
+    background: color-mix(in srgb, var(--mw-path-tint) 72%, white);
+    color: var(--mw-path-color);
+  }
+  .mw-path-card h3 { color: #123D35; }
+  .mw-path-description { color: #5E7068; }
+  .mw-path-card-cta {
+    min-height: 2.8rem;
+    margin-top: 1rem;
+    border: 0;
+    border-radius: 0.9rem;
+    background: var(--mw-path-color);
+    padding: 0.4rem 0.7rem 0.4rem 0.55rem;
+    color: #FAF7EF;
+    box-shadow: 0 6px 14px color-mix(in srgb, var(--mw-path-color) 18%, transparent);
+  }
+  .mw-card-arrow,
+  .mw-path-card--olive .mw-card-arrow,
+  .mw-path-card--amber .mw-card-arrow {
+    width: 2rem;
+    height: 2rem;
+    border: 1px solid rgba(250, 247, 239, 0.38);
+    background: rgba(250, 247, 239, 0.16);
+    color: #FAF7EF;
+  }
+  .mw-path-card:hover .mw-path-card-cta { filter: brightness(1.06); }
+}
+
+@media screen and (max-width: 680px) {
+  .mw-site-header {
+    min-height: 4.5rem;
+    margin-bottom: 1rem;
+    padding: 0.65rem 0.72rem !important;
+    border-radius: 1.1rem;
+  }
+  .mw-site-header .mw-brand-mark { width: 2.9rem; height: 2.9rem; border-radius: 0.9rem; }
+  .mw-site-header .mw-brand-mark .mw-compass-logo { width: 1.9rem; height: 1.9rem; }
+  .mw-site-header .mw-brand-name { font-size: 1rem; }
+  .mw-site-header .mw-brand-caption { font-size: 0.67rem; }
+  .mw-section-heading { padding-inline-end: 0.7rem; }
+  .mw-section-heading h1 { font-size: clamp(1.5rem, 6vw, 1.9rem); }
+  .mw-path-card { padding: 0.95rem; }
+  .mw-path-card-cta { min-height: 2.6rem; margin-top: 0.8rem; }
+}
