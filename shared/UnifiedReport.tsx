@@ -1,5 +1,4 @@
 import React from 'react';
-import { MOE_LOGO_DATA_URL } from './moeLogoData';
 import ministryLogoUrl from './moe-logo.png';
 import { normalizeDigitsInElement } from './numberFormat';
 
@@ -213,11 +212,6 @@ export function UnifiedOfficialReportHeader({
           data-report-logo="ministry"
           loading="eager"
           decoding="sync"
-          onError={(event) => {
-            if (event.currentTarget.src !== MOE_LOGO_DATA_URL) {
-              event.currentTarget.src = MOE_LOGO_DATA_URL;
-            }
-          }}
           className="mb-1 h-[22mm] max-h-20 w-auto object-contain print:h-[20mm] print:max-h-[20mm]"
         />
 
