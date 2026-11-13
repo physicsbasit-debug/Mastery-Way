@@ -14,12 +14,10 @@ type PathTheme = 'royal' | 'olive' | 'violet' | 'amber';
 type PathCard = {
   id: Exclude<ActivePath, 'home'>;
   title: string;
-  shortTitle: string;
   descriptionLines: string[];
   badge: string;
   theme: PathTheme;
   icon: 'spread' | 'student' | 'items';
-  highlights: string[];
 };
 
 const ACTIVE_PATH_KEY = 'bosla.activePath.v1';
@@ -28,32 +26,26 @@ const PATHS: PathCard[] = [
   {
     id: 'masterySpread',
     title: 'تحليل انتشار الإتقان',
-    shortTitle: 'انتشار الإتقان',
     descriptionLines: ['قياس انتشار الإتقان في مجموعة درجات نهائية،', 'مع حكم عام وفجوة وخطة جماعية قابلة للتنفيذ.'],
     badge: 'مسار جماعي',
     theme: 'royal',
     icon: 'spread',
-    highlights: ['نسبة الانتشار', 'حكم تربوي', 'خطة تدخل'],
   },
   {
     id: 'individualPerformance',
     title: 'تحليل الأداء الفردي',
-    shortTitle: 'الأداء الفردي',
     descriptionLines: ['قراءة تشخيصية لأداء طالب واحد في المفردات والمهارات،', 'مع تفسير تربوي وخطة متابعة دقيقة.'],
     badge: 'مسار فردي',
     theme: 'olive',
     icon: 'student',
-    highlights: ['مهارات الطالب', 'أنماط الخطأ', 'أولوية التدخل'],
   },
   {
     id: 'examItemSampleAnalysis',
     title: 'تحليل مفردات الورقة الامتحانية',
-    shortTitle: 'مفردات الورقة',
     descriptionLines: ['تحليل عينة من أوراق الطلبة لرصد أداء المفردات والمهارات،', 'وتوثيق توازن الورقة وموثوقية القراءة.'],
     badge: 'مسار عينة',
     theme: 'amber',
     icon: 'items',
-    highlights: ['أداء المفردات', 'توازن المهارات', 'تقرير توثيقي'],
   },
 ];
 
@@ -93,54 +85,15 @@ function HomePage({ onSelectPath }: { onSelectPath: (path: ActivePath) => void }
             <p className="mw-brand-caption">قراءة تربوية تقود إلى قرار</p>
           </div>
         </div>
-        <span className="mw-site-label">منصة التحليل التربوي</span>
       </header>
 
-      <section className="mw-hero">
-        <div className="mw-hero-grid">
-          <div className="mw-hero-content">
-            <span className="mw-eyebrow"><span aria-hidden="true" /> إتقان · فجوات · قرار</span>
-            <h1>بوصلة الإتقان</h1>
-            <p className="mw-hero-description">
-              قراءة منظّمة لنتائج الطلبة، تكشف مؤشرات التعلّم وتعينك على اختيار الخطوة التربوية المناسبة.
-            </p>
-            <div className="mw-hero-actions">
-              <button type="button" onClick={() => onSelectPath('masterySpread')} className="mw-primary-action">ابدأ تحليلًا جديدًا <span aria-hidden="true">←</span></button>
-              <a href="#analysis-paths" className="mw-secondary-action">تعرّف على المسارات</a>
-            </div>
-            <div className="mw-hero-stats">
-              <HeroStat value="3" label="مسارات تحليلية" />
-              <HeroStat value="A4" label="تقارير للطباعة" />
-              <HeroStat value="RTL" label="واجهة عربية" />
-            </div>
-          </div>
-
-          <aside className="mw-hero-panel" aria-label="مراحل التحليل">
-            <div className="mw-hero-panel-heading">
-              <div>
-                <p className="mw-panel-kicker">رحلة التحليل</p>
-                <h2>من الدرجة إلى القرار</h2>
-              </div>
-              <span className="mw-panel-count">٣ خطوات</span>
-            </div>
-            <div className="mw-journey-list">
-              <JourneyStep number="01" title="أدخل البيانات" text="حقول واضحة مع تحقق وحفظ تلقائي على الجهاز." />
-              <JourneyStep number="02" title="اقرأ المؤشرات" text="ملخصات ورسوم توضّح مستوى الأداء والفجوات." />
-              <JourneyStep number="03" title="اختر التدخل" text="توصيات وتقرير مرتب للطباعة والتوثيق." />
-            </div>
-            <p className="mw-local-note"><span aria-hidden="true">⌂</span> بياناتك محفوظة على جهازك</p>
-          </aside>
-        </div>
-      </section>
-
-      <section id="analysis-paths" className="mw-paths-section">
+      <section className="mw-paths-section">
         <div className="mw-section-heading">
           <div>
-            <span className="mw-section-eyebrow">ابدأ من هنا</span>
-            <h2>اختر المسار المناسب لعملك</h2>
-            <p>كل مسار يقودك من إدخال واضح إلى نتائج وتوصيات قابلة للاستخدام.</p>
+            <span className="mw-section-eyebrow">المسارات المتاحة</span>
+            <h1>اختر مسار التحليل</h1>
+            <p>ابدأ بالمسار المناسب لنوع البيانات التي لديك.</p>
           </div>
-          <span className="mw-section-side-note">اختر المسار الأقرب إلى بياناتك</span>
         </div>
 
         <div className="mw-path-grid">
@@ -167,9 +120,6 @@ function PathCardButton({ path, index, onSelect }: { path: PathCard; index: numb
         </div>
         <h3>{path.title}</h3>
         <p className="mw-path-description">{path.descriptionLines.join(' ')}</p>
-        <div className="mw-path-highlights">
-          {path.highlights.map((item) => <span key={item} className="mw-highlight-chip">{item}</span>)}
-        </div>
         <div className="mw-path-card-cta">
           <span>فتح المسار</span>
           <span className="mw-card-arrow" aria-hidden="true">←</span>
@@ -240,25 +190,4 @@ function StudentIcon() {
 
 function ItemsIcon() {
   return <g fill="none" stroke="currentColor" strokeWidth="3.2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 12h22l8 8v32H18z" /><path d="M40 12v10h8" /><path d="M25 29h15" /><path d="M25 37h15" /><path d="M25 45h9" /></g>;
-}
-
-function HeroStat({ value, label }: { value: string; label: string }) {
-  return (
-    <div className="mw-hero-stat">
-      <div>{value}</div>
-      <span>{label}</span>
-    </div>
-  );
-}
-
-function JourneyStep({ number, title, text }: { number: string; title: string; text: string }) {
-  return (
-    <div className="mw-journey-step">
-      <span className="mw-journey-number">{number}</span>
-      <div>
-        <h3>{title}</h3>
-        <p>{text}</p>
-      </div>
-    </div>
-  );
 }
