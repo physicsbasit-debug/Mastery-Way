@@ -62,11 +62,10 @@ export function formatScoreCount(count: number): string {
 }
 
 export function formatPercentagePointAmount(value: number): string {
-  const rounded = Number.isInteger(value) ? value : value;
-  if (rounded === 1) return 'نقطة مئوية واحدة';
-  if (rounded === 2) return 'نقطتان مئويتان';
-  if (Number.isInteger(rounded) && rounded >= 3 && rounded <= 10) return `${rounded} نقاط مئوية`;
-  return `${rounded} نقطة مئوية`;
+  if (value === 1) return 'نقطة مئوية واحدة';
+  if (value === 2) return 'نقطتان مئويتان';
+  if (Number.isInteger(value) && value >= 3 && value <= 10) return `${value} نقاط مئوية`;
+  return `${value} نقطة مئوية`;
 }
 
 export function roundPercentagesToHundred(values: number[], decimals: number): number[] {
