@@ -189,6 +189,7 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
           onSelect={(id) => setActiveTab(id as TabKey)}
           isLocked={(id) => id !== 'input' && !result}
           label="خطوات تحليل انتشار الإتقان"
+          showVisitedStatus={false}
         />
       </div>
       {activeTab === 'input' && <InputTab rawScoresText={rawScoresText} onScoresChange={handleScoresChange} settings={settings} updateSetting={updateSetting} context={context} updateContext={updateContext} readiness={readiness} statusMessage={statusMessage} onAnalyze={handleAnalyze} onReset={handleReset} onUseSample={handleUseSample} />}
@@ -224,7 +225,7 @@ function Hero({ result }: { result: MasterySpreadAnalysisResult | null }) {
 }
 
 function TabHeader({ tab, result }: { tab: { label: string; description: string }; result: MasterySpreadAnalysisResult | null }) {
-  return <section className="mw-compact-header rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-black text-[#263B80]">تحليل انتشار الإتقان</p><h2 className="mt-1 text-2xl font-black text-slate-950">{tab.label}</h2><p className="mt-1 text-sm text-slate-500">{tab.description}</p></div>{result ? <div className="grid grid-cols-3 gap-2"><MiniStat label="الانتشار" value={`${result.summary.masterySpreadPercent}%`} /><MiniStat label="الحكم" value={result.judgement.label} /><MiniStat label="المتقنون" value={result.summary.masteryCount} /></div> : null}</div></section>;
+  return <section className="mw-compact-header rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-black text-[#075B49]">تحليل انتشار الإتقان</p><h2 className="mt-1 text-2xl font-black text-slate-950">{tab.label}</h2><p className="mt-1 text-sm text-slate-500">{tab.description}</p></div>{result ? <div className="grid grid-cols-3 gap-2"><MiniStat label="الانتشار" value={`${result.summary.masterySpreadPercent}%`} /><MiniStat label="الحكم" value={result.judgement.label} /><MiniStat label="المتقنون" value={result.summary.masteryCount} /></div> : null}</div></section>;
 }
 
 function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, context, updateContext, readiness, statusMessage, onAnalyze, onReset, onUseSample }: {

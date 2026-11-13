@@ -90,6 +90,48 @@ export interface UnifiedPrintRequest {
   documentTitle?: string;
 }
 
+/** Keep a prepared report available for the browser's own Share → Print action. */
+export function prepareUnifiedPrintSession({ targetValue, areaId, documentTitle = 'تقرير بوصلة الإتقان' }: UnifiedPrintRequest): { print: () => void; dispose: () => void } | null {
+  const source = document.getElementById(areaId);
+  if (!source) return null;
+
+  const html = document.documentElement;
+  const previousTitle = document.title;
+  const browser = detectPrintBrowser();
+  html.setAttribute('data-print-target', targetValue);
+  html.setAttribute('data-print-browser', browser);
+  html.classList.add('unified-report-printing');
+  document.title = documentTitle;
+
+  let printRoot: HTMLElement;
+  try {
+    printRoot = createIsolatedPrintRoot(source, browser);
+  } catch (error) {
+    html.removeAttribute('data-print-target');
+    html.removeAttribute('data-print-browser');
+    html.classList.remove('unified-report-printing');
+    document.title = previousTitle;
+    throw error;
+  }
+
+  let disposed = false;
+  return {
+    print: () => {
+      if (!disposed) window.print();
+    },
+    dispose: () => {
+      if (disposed) return;
+      disposed = true;
+      if (document.getElementById(PRINT_ROOT_ID) !== printRoot) return;
+      printRoot.remove();
+      html.removeAttribute('data-print-target');
+      html.removeAttribute('data-print-browser');
+      html.classList.remove('unified-report-printing');
+      document.title = previousTitle;
+    },
+  };
+}
+
 export async function printUnifiedReport({ targetValue, areaId, documentTitle = 'تقرير بوصلة الإتقان' }: UnifiedPrintRequest): Promise<void> {
   const source = document.getElementById(areaId);
   if (!source) return;
@@ -149,11 +191,13 @@ export function UnifiedReportToolbar({
   description,
   actions,
   noPrintClassName,
+  suppressBrowserHeaders = false,
 }: {
   title: string;
   description: string;
   actions: UnifiedReportToolbarAction[];
   noPrintClassName: string;
+  suppressBrowserHeaders?: boolean;
 }) {
   const variantClass = (variant: UnifiedReportToolbarAction['variant'] = 'dark') => {
     if (variant === 'blue') return 'bg-blue-700 text-white hover:bg-blue-800';
@@ -180,7 +224,7 @@ export function UnifiedReportToolbar({
         ))}
       </div>
       <div className="basis-full rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-950">
-        <span className="font-black">إعدادات الطباعة الموصى بها:</span> حجم A4، وتفعيل رسومات الخلفية، وإيقاف ترويسات وتذييلات المتصفح. يطبق التطبيق تنسيقًا خاصًا لـ Firefox تلقائيًا؛ ولمنع ظهور الرابط والتاريخ ورقم الصفحة أوقف خيار الترويسات والتذييلات من نافذة الطباعة.
+        <span className="font-black">إعدادات الطباعة:</span> حجم A4. {suppressBrowserHeaders ? 'راجع معاينة الصفحات للتأكد من الهوامش وعدم ظهور رابط المتصفح.' : 'لإخفاء الرابط والتاريخ ورقم الصفحة، عطّل ترويسات وتذييلات المتصفح من نافذة الطباعة.'}
       </div>
     </div>
   );
@@ -235,6 +279,7 @@ export function UnifiedPrintStyles({
   noPrintClassName,
   dataPrintTargets,
   pageMarginMm = 10,
+  suppressBrowserHeaders = false,
   fontSizePx = 10.25,
   lineHeight = 1.45,
   extraCss = '',
@@ -243,6 +288,7 @@ export function UnifiedPrintStyles({
   noPrintClassName: string;
   dataPrintTargets?: Array<{ value: string; areaId: string }>;
   pageMarginMm?: number;
+  suppressBrowserHeaders?: boolean;
   fontSizePx?: number;
   lineHeight?: number;
   extraCss?: string;
@@ -265,7 +311,7 @@ export function UnifiedPrintStyles({
 @media print {
   @page {
     size: A4 portrait;
-    margin: ${pageMarginMm}mm;
+    margin: ${suppressBrowserHeaders ? 0 : `${pageMarginMm}mm`};
   }
 
   html,
@@ -332,6 +378,12 @@ export function UnifiedPrintStyles({
   ${allAreaSelector} {
     box-shadow: none !important;
   }
+
+  ${suppressBrowserHeaders ? `${activeAreaSelector} {
+    padding: ${pageMarginMm}mm !important;
+    -webkit-box-decoration-break: clone !important;
+    box-decoration-break: clone !important;
+  }` : ''}
 
   .${noPrintClassName},
   .no-print,
@@ -542,7 +594,7 @@ export function UnifiedPrintStyles({
   @media print {
     @page {
       size: A4 portrait;
-      margin: ${Math.max(6, pageMarginMm - 2)}mm;
+      margin: ${suppressBrowserHeaders ? 0 : `${Math.max(6, pageMarginMm - 2)}mm`};
     }
   }
 }

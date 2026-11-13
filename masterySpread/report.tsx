@@ -1,5 +1,5 @@
 import React from 'react';
-import { printUnifiedReport, UnifiedOfficialReportHeader, UnifiedPrintStyles, UnifiedReportToolbar } from '../shared/UnifiedReport';
+import { prepareUnifiedPrintSession, UnifiedOfficialReportHeader, UnifiedPrintStyles, UnifiedReportToolbar } from '../shared/UnifiedReport';
 import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock } from '../shared/DiagnosticReportBlocks';
 import { GROUP_SHAPE_THRESHOLDS, MASTERY_JUDGEMENT_SCALE } from './constants';
 import { formatPercentagePointAmount, formatStudentCount } from './utils';
@@ -9,12 +9,47 @@ import type { MasterySpreadAnalysisResult } from './types';
 export interface MasterySpreadReportViewProps { result: MasterySpreadAnalysisResult; }
 
 export function MasterySpreadReportView({ result }: MasterySpreadReportViewProps) {
+  const printSession = React.useRef<ReturnType<typeof prepareUnifiedPrintSession>>(null);
+  const [showPrintHelp, setShowPrintHelp] = React.useState(false);
+  const [printError, setPrintError] = React.useState('');
+
+  React.useEffect(() => () => printSession.current?.dispose(), []);
+
+  const tryPrint = () => {
+    try {
+      printSession.current?.print();
+      setPrintError('');
+    } catch {
+      setPrintError('تعذر فتح نافذة الطباعة من هذا المتصفح.');
+    }
+  };
+
   const printReport = () => {
-    void printUnifiedReport({
-      targetValue: 'mastery-spread-detailed',
-      areaId: 'mastery-spread-detailed-report',
-      documentTitle: 'بوصلة الإتقان - تحليل انتشار الإتقان - تقرير تفصيلي',
-    });
+    printSession.current?.dispose();
+    try {
+      printSession.current = prepareUnifiedPrintSession({
+        targetValue: 'mastery-spread-detailed',
+        areaId: 'mastery-spread-detailed-report',
+        documentTitle: 'بوصلة الإتقان - تحليل انتشار الإتقان - تقرير تفصيلي',
+      });
+      if (!printSession.current) {
+        setShowPrintHelp(false);
+        setPrintError('تعذر تجهيز التقرير للطباعة. حاول مرة أخرى.');
+        return;
+      }
+      setShowPrintHelp(true);
+      tryPrint();
+    } catch {
+      setShowPrintHelp(false);
+      setPrintError('تعذر تجهيز التقرير للطباعة. حاول مرة أخرى.');
+    }
+  };
+
+  const closePrintHelp = () => {
+    printSession.current?.dispose();
+    printSession.current = null;
+    setShowPrintHelp(false);
+    setPrintError('');
   };
 
   return <div className="space-y-5">
@@ -24,7 +59,17 @@ export function MasterySpreadReportView({ result }: MasterySpreadReportViewProps
       title="التقرير الختامي"
       description="تقرير تفصيلي توثيقي للطباعة الرسمية على A4."
       actions={[{ label: 'طباعة التقرير التفصيلي', onClick: printReport, variant: 'blue' }]}
+      suppressBrowserHeaders
     />
+    {showPrintHelp ? <div role="status" className="mastery-spread-no-print rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-7 text-emerald-950">
+      <p className="font-black">التقرير جاهز للطباعة</p>
+      <p>{printError || 'إذا لم تظهر نافذة الطباعة، استخدم زر المشاركة في المتصفح ثم اختر «طباعة».'}</p>
+      {printError ? <p>يمكنك أيضًا استخدام زر المشاركة في المتصفح ثم اختيار «طباعة».</p> : null}
+      <div className="mt-3 flex flex-wrap gap-2">
+        <button type="button" onClick={tryPrint} className="rounded-xl bg-emerald-800 px-4 py-2 font-bold text-white">إعادة محاولة الطباعة</button>
+        <button type="button" onClick={closePrintHelp} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 font-bold text-emerald-950">إغلاق</button>
+      </div>
+    </div> : printError ? <div role="alert" className="mastery-spread-no-print rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">{printError}</div> : null}
     <DetailedReport result={result} />
   </div>;
 }
@@ -55,14 +100,14 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
         { label: 'الفجوة للمستوى التالي', value: result.gapToNextLevel.hasNextLevel ? `${result.gapToNextLevel.additionalStudentsNeeded} طالب` : 'لا توجد فجوة', note: result.gapToNextLevel.hasNextLevel ? result.gapToNextLevel.nextJudgementLabel : 'المجموعة في أعلى سلم الحكم', tone: result.gapToNextLevel.hasNextLevel ? 'amber' : 'success' },
       ]}
     />
-    <section className="report-section mt-5">
+    <section className="report-section mastery-report-methodology mt-5">
       <SectionTitle number="1" title="منهجية التحليل وجودة البيانات" />
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mastery-print-grid-two mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <SmallBox title="منهجية التحليل" text="حُسب بلوغ الإتقان من الدرجة الأصلية لكل طالب مقارنة بحد الإتقان، واستُخدمت القيم الخام في الحكم والتوزيع والإحصاءات، بينما استُخدم التقريب للعرض فقط." />
         <SmallBox title="جودة بيانات المجموعة" text={result.dataQuality.interpretation} />
         <SmallBox title="المعايير الإجرائية" text={`يُعد التشتت منخفضًا إذا كان الانحراف المعياري أقل من ${GROUP_SHAPE_THRESHOLDS.lowDispersionMax} نقاط، ومرتفعًا إذا بلغ ${GROUP_SHAPE_THRESHOLDS.highDispersionMin} نقطة فأكثر. وتُعد فرصة التحسن القريب عالية عند بلوغ فئة القرب ${GROUP_SHAPE_THRESHOLDS.highOpportunityNearPercent}%، ومتوسطة عند بلوغ ${GROUP_SHAPE_THRESHOLDS.mediumOpportunityNearPercent}%. هذه معايير إجرائية داخل التطبيق وليست قانونًا قياسيًا عامًا.`} />
       </div>
-      <LimitsNote result={result} />
+      <LimitsNote />
     </section>
 
     <section className="report-page-break">
@@ -74,7 +119,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
 
     <section className="report-page-break">
       <SectionTitle number="3" title="الرسوم البيانية التوثيقية" />
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mastery-print-grid-two mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <ChartBox title="انتشار الإتقان على السلم"><ScaleBar value={result.summary.masterySpreadPercent} /></ChartBox>
         <ChartBox title="المتقنون وغير المتقنين"><BarList rows={[['حققوا الإتقان', result.summary.masteryCount, result.summary.totalStudents], ['لم يحققوا الإتقان', result.summary.nonMasteryCount, result.summary.totalStudents]]} /></ChartBox>
         <ChartBox title="الفئات حول حد الإتقان"><BarList rows={result.distribution.map((band) => [band.label, band.count, result.summary.totalStudents])} /></ChartBox>
@@ -85,7 +130,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
 
     <section className="report-flow mt-5">
       <SectionTitle number="4" title="قراءة الفجوة وشكل المجموعة" />
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mastery-print-grid-two mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <SmallBox title="الفجوة إلى المستوى التالي" text={result.gapToNextLevel.message} />
         <SmallBox title="شكل المجموعة" text={result.groupShape.interpretation} />
         <SmallBox title="القريبون من الإتقان" text={`${formatStudentCount(result.groupShape.nearMasteryCount)}، بنسبة ${result.groupShape.nearMasteryPercent}%.`} />
@@ -95,9 +140,11 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
     </section>
 
     <section className="report-flow mt-5 mastery-diagnostic-insights-section">
-      <SectionTitle number="5" title="تحليل فجوة الانتشار والأسباب المحتملة" />
-      <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
-      <div className="mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mastery-print-heading-group">
+        <SectionTitle number="5" title="تحليل فجوة الانتشار والأسباب المحتملة" />
+        <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
+      </div>
+      <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
         <ParetoReportBlock title="باريتو فئات الفجوة" description="يرتب فئات غير المتقنين حسب حجمها لتحديد نوع التدخل." entries={result.diagnostics.gapPareto} valueLabel="العدد" />
         <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
       </div>
@@ -105,7 +152,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
 
     <section className="report-page-break firefox-tight-section mastery-firefox-final-page">
       <SectionTitle number="6" title="القرار والخطة وإعادة القياس" />
-      <div className="mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
+      <div className="mastery-print-grid-three mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
         <SmallBox title="القرار" text={result.educationalDecision.decisionLabel} />
         <SmallBox title="أولوية التدخل" text={result.educationalDecision.priorityLabel} />
         <SmallBox title="الخطة" text={result.proposedPlan.title} />
@@ -125,7 +172,7 @@ function DataGrid({ result }: { result: MasterySpreadAnalysisResult }) {
     ['المجموعة', result.context.groupDescription], ['أداة القياس', result.context.assessmentName], ['العام الدراسي', result.context.academicYear], ['تاريخ التحليل', result.context.analysisDate],
     ['الدرجة الكلية', result.summary.totalScore], ['حد الإتقان', `${result.summary.masteryCutoffPercent}%`], ['الحد الحسابي', result.summary.masteryCutoffScore], ['أقل درجة صحيحة تحقق الإتقان', result.summary.minimumWholeScoreForMastery],
   ];
-  return <section className="report-section mt-4 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">{cells.map(([label, value]) => <InfoCell key={label} label={label} value={displayValue(value)} />)}</section>;
+  return <section className="report-section mastery-print-data-grid mt-4 grid grid-cols-2 gap-2 text-xs md:grid-cols-4">{cells.map(([label, value]) => <InfoCell key={label} label={label} value={displayValue(value)} />)}</section>;
 }
 
 function KeyIndicators({ result }: { result: MasterySpreadAnalysisResult }) {
@@ -156,8 +203,8 @@ function MissingDataNotice({ result }: { result: MasterySpreadAnalysisResult }) 
   return <div className="report-section mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل الطباعة الرسمية النهائية.</div>;
 }
 
-function LimitsNote({ result }: { result: MasterySpreadAnalysisResult }) {
-  return <div className="report-section mt-3 rounded-2xl border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-6 text-blue-950">يعتمد التحليل على الدرجات النهائية المدخلة، ويصف انتشار بلوغ حد الإتقان داخل المجموعة. لا يحدد وحده المهارات أو المفاهيم المرتبطة بالنتيجة، ولا يثبت أسباب الانخفاض أو الارتفاع دون بيانات تشخيصية إضافية. {result.dataQuality.interpretation}</div>;
+function LimitsNote() {
+  return <div className="report-section mt-3 rounded-2xl border border-emerald-100 bg-emerald-50 px-4 py-3 text-xs leading-6 text-emerald-950">يعتمد التحليل على الدرجات النهائية المدخلة، ويصف انتشار بلوغ حد الإتقان داخل المجموعة. لا يحدد وحده المهارات أو المفاهيم المرتبطة بالنتيجة، ولا يثبت أسباب الانخفاض أو الارتفاع دون بيانات تشخيصية إضافية.</div>;
 }
 
 function ScaleBar({ value }: { value: number }) { return <div className="pt-4" dir="ltr"><div className="relative h-5 overflow-hidden rounded-full bg-gradient-to-r from-red-500 via-amber-400 to-emerald-500"><span className="absolute -top-1 h-7 w-1 bg-slate-950" style={{ left: `${Math.max(0, Math.min(100, value))}%` }} /></div><div className="mt-2 flex justify-between text-[10px] font-bold text-slate-500">{[0, 40, 50, 60, 70, 100].map((item) => <span key={item}>{item}%</span>)}</div></div>; }
@@ -180,20 +227,19 @@ function PrintStyles() {
       { value: 'mastery-spread-detailed', areaId: 'mastery-spread-detailed-report' },
     ]}
     pageMarginMm={8}
-    fontSizePx={9.7}
-    lineHeight={1.38}
+    suppressBrowserHeaders
+    fontSizePx={11}
+    lineHeight={1.45}
     extraCss={`
       #mastery-spread-detailed-report { direction: rtl; }
       #mastery-spread-detailed-report .chart-card { min-height: 85px !important; }
       #mastery-spread-detailed-report table { table-layout: fixed !important; }
       #mastery-spread-detailed-report th, #mastery-spread-detailed-report td { white-space: normal !important; overflow-wrap: anywhere !important; }
-      #mastery-spread-detailed-report .diagnostic-report-visual .unified-chart-card { break-inside: avoid !important; page-break-inside: avoid !important; }
-      #mastery-spread-detailed-report .diagnostic-report-fishbone,
       #mastery-spread-detailed-report .diagnostic-report-block { break-inside: avoid !important; page-break-inside: avoid !important; }
 
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page {
-        font-size: 8.65px !important;
-        line-height: 1.24 !important;
+        font-size: 10.5px !important;
+        line-height: 1.4 !important;
       }
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page .grid {
         gap: 5px !important;
@@ -206,12 +252,12 @@ function PrintStyles() {
         page-break-inside: auto !important;
       }
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page table {
-        font-size: 8.2px !important;
+        font-size: 10.5px !important;
       }
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page th,
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page td {
         padding: 3px 5px !important;
-        line-height: 1.25 !important;
+        line-height: 1.4 !important;
       }
       html[data-print-browser="firefox"] #mastery-spread-detailed-report .mastery-firefox-final-page ul {
         margin-top: 3px !important;

@@ -2865,6 +2865,80 @@ svg text {
   }
 }
 
+/* مسار انتشار الإتقان: تخطيط مدمج يوازن الخطوات على الشاشات المختلفة. */
+@media screen {
+  .mw-track-mastery .mw-analysis-steps {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.55rem;
+  }
+
+  .mw-track-mastery .mw-analysis-step__state {
+    display: none;
+  }
+
+  .mw-track-mastery .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-mastery .mw-analysis-step[data-locked] .mw-analysis-step__state {
+    display: inline-flex;
+  }
+
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] {
+    border-color: #075B49 !important;
+    background: linear-gradient(135deg, #064B3D, #08735C) !important;
+    color: #fff !important;
+    box-shadow: 0 8px 18px rgba(7, 91, 73, 0.18), inset 0 0 0 1px rgba(229, 193, 119, 0.42) !important;
+  }
+
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__title {
+    color: #FFFFFF;
+  }
+
+  .mw-track-mastery .mw-analysis-step[data-locked] { opacity: 0.78; }
+
+  .mw-track-mastery .mw-analysis-step[data-active] .mw-analysis-step__description {
+    color: #E5F1EB !important;
+  }
+
+  .mw-track-mastery .mw-analysis-step[data-active] .mw-analysis-step__number {
+    border-color: rgba(229, 193, 119, 0.65);
+    background: rgba(229, 193, 119, 0.18);
+    color: #FFE1A2;
+  }
+
+  @media (max-width: 980px) {
+    .mw-track-mastery .mw-analysis-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  }
+
+  @media (max-width: 680px) {
+    .mw-track-mastery .mw-analysis-steps {
+      grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+      gap: 0.45rem;
+      padding: 0.5rem !important;
+    }
+
+    .mw-track-mastery .mw-analysis-steps .mw-analysis-step {
+      min-height: 4rem !important;
+      padding: 0.55rem !important;
+      gap: 0.45rem;
+    }
+
+    .mw-track-mastery .mw-analysis-step__number {
+      flex-basis: 2rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 0.65rem;
+    }
+
+    .mw-track-mastery .mw-analysis-step__title { font-size: 0.76rem; }
+    .mw-track-mastery .mw-analysis-step[data-active] { grid-column: 1 / -1; }
+    .mw-track-mastery .mw-analysis-step__state { white-space: normal; text-align: center; }
+  }
+
+  @media (max-width: 360px) {
+    .mw-track-mastery .mw-analysis-steps { grid-template-columns: minmax(0, 1fr) !important; }
+    .mw-track-mastery .mw-analysis-step[data-active] { grid-column: auto; }
+  }
+}
+
 @media screen and (max-width: 380px) {
   .mw-site-label {
     max-width: 8.5rem;
@@ -3040,4 +3114,229 @@ svg text {
   .mw-section-heading h1 { font-size: clamp(1.5rem, 6vw, 1.9rem); }
   .mw-path-card { padding: 0.95rem; }
   .mw-path-card-cta { min-height: 2.6rem; margin-top: 0.8rem; }
+}
+
+@media screen {
+  .mw-track-mastery .mw-track-hero--mastery {
+    border-color: rgba(207, 229, 214, 0.35) !important;
+    background: linear-gradient(135deg, #073E34 0%, #075B49 55%, #16796C 115%) !important;
+    box-shadow: 0 18px 42px rgba(7, 91, 73, 0.16), inset 0 1px 0 rgba(255, 255, 255, 0.16) !important;
+  }
+
+  .mw-track-mastery .mw-track-hero--mastery::before {
+    background: rgba(214, 161, 61, 0.13);
+  }
+
+  .mw-track-mastery .mw-kpi-card--royal {
+    --kpi-accent: #075B49;
+    --kpi-accent-soft: rgba(7, 91, 73, 0.1);
+  }
+
+  .mw-track-mastery .mw-kpi-card--featured {
+    border-color: rgba(207, 229, 214, 0.35);
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.14), transparent 13rem),
+      linear-gradient(135deg, #073E34 0%, #075B49 58%, #16796C 115%);
+    box-shadow: 0 18px 42px rgba(7, 91, 73, 0.18);
+  }
+
+  .mw-track-mastery .mw-insight-card--royal {
+    --insight-accent: #075B49;
+    background:
+      radial-gradient(circle at top left, rgba(7, 91, 73, 0.07), transparent 16rem),
+      linear-gradient(180deg, rgba(255, 253, 248, 0.98), rgba(255, 255, 255, 0.92));
+  }
+
+  .mw-track-mastery .mw-insight-card--royal .mw-insight-card__eyebrow {
+    border-color: rgba(7, 91, 73, 0.14);
+    background: rgba(7, 91, 73, 0.08);
+  }
+
+  .mw-track-mastery .mw-insight-card--royal h2 { color: #123D35; }
+
+  .premium-report-document.mw-print-report--mastery .official-report-header {
+    background:
+      radial-gradient(circle at top left, rgba(255, 255, 255, 0.16), transparent 16rem),
+      linear-gradient(135deg, #073E34 0%, #075B49 62%, #17766A 118%);
+    box-shadow: 0 18px 42px rgba(7, 91, 73, 0.16);
+  }
+
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content {
+    background:
+      radial-gradient(circle at top left, rgba(214, 161, 61, 0.2), transparent 14rem),
+      linear-gradient(135deg, #073E34, #075B49 72%);
+  }
+
+  .premium-report-document.mw-print-report--mastery .premium-report-summary {
+    background:
+      radial-gradient(circle at top left, rgba(7, 91, 73, 0.07), transparent 22rem),
+      linear-gradient(180deg, #fffdf8, #f5f8f3);
+  }
+}
+
+@media print {
+  #unified-print-root .mw-print-report--mastery .official-report-header {
+    border-bottom-color: #075B49 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .report-page-break::before {
+    background: linear-gradient(90deg, #075B49, #176B78 65%, #A77B2E) !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-summary__content {
+    border-color: #CFE2D6 !important;
+    background: #EAF3ED !important;
+    color: #123D35 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-summary__content h2,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary__content p {
+    color: #123D35 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-summary__eyebrow {
+    border-color: #D7C18E !important;
+    background: #F7F0DD !important;
+    color: #76591F !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-section-title span {
+    border-color: #075B49 !important;
+    color: #075B49 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-table thead,
+  #unified-print-root .mw-print-report--mastery .premium-report-table thead tr {
+    background: #075B49 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-section-title::after {
+    background: linear-gradient(90deg, #075B49, #D6A13D) !important;
+  }
+
+  /* Keep the first track's paper version readable across screen sizes. */
+  #unified-print-root .mw-print-report--mastery .official-report-header {
+    border: 1px solid #cfe2d6 !important;
+    border-bottom: 3px solid #075b49 !important;
+    border-radius: 10px !important;
+    background: #fff !important;
+    color: #123d35 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .official-report-header::after {
+    background: #a77b2e !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .official-report-header p,
+  #unified-print-root .mw-print-report--mastery .official-report-header h1,
+  #unified-print-root .mw-print-report--mastery .official-report-header div,
+  #unified-print-root .mw-print-report--mastery .official-report-header .space-y-0\.5,
+  #unified-print-root .mw-print-report--mastery .official-report-header p:nth-last-child(1) {
+    color: #123d35 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .official-report-header p.mt-1\.5,
+  #unified-print-root .mw-print-report--mastery .official-report-header p[class*="text-[11px]"] {
+    border-color: #e4d3a8 !important;
+    background: #f7f0dd !important;
+    color: #76591f !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-summary,
+  #unified-print-root .mw-print-report--mastery .premium-report-narrative,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-block,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone,
+  #unified-print-root .mw-print-report--mastery .premium-report-chart-card,
+  #unified-print-root .mw-print-report--mastery .unified-chart-card,
+  #unified-print-root .mw-print-report--mastery .premium-report-signature {
+    background: #fff !important;
+    border-color: #d7e3dc !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-info-cell::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-metric::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary-metric::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-narrative::before,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-block::before,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-chart-card::before,
+  #unified-print-root .mw-print-report--mastery .unified-chart-card::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-section-title::after {
+    background: #075b49 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-section-title,
+  #unified-print-root .mw-print-report--mastery .premium-report-subtitle,
+  #unified-print-root .mw-print-report--mastery h3 {
+    color: #123d35 !important;
+    break-after: avoid-page;
+    page-break-after: avoid;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-section-title span {
+    background: #075b49 !important;
+    color: #fff !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-data-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-grid-two,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-block .grid,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone .grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-grid-three {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-report-methodology .mastery-print-grid-two > :last-child {
+    grid-column: 1 / -1;
+  }
+
+  #unified-print-root .mw-print-report--mastery .premium-report-info-cell p:first-child,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary-metric__label,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary-metric__note,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary p,
+  #unified-print-root .mw-print-report--mastery .premium-report-table th,
+  #unified-print-root .mw-print-report--mastery .premium-report-table td {
+    font-size: 10.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .report-page-break,
+  html[data-print-browser="firefox"] #unified-print-root .mw-print-report--mastery .report-page-break {
+    break-before: auto !important;
+    page-break-before: auto !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .report-page-break::before {
+    content: none !important;
+    display: none !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-report-methodology,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-visual .unified-chart-card {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    overflow: visible !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-heading-group,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone .grid > div,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-visual .space-y-3 > div {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-diagnostics {
+    display: block !important;
+  }
+
+  #unified-print-root .mw-print-report--mastery .mastery-print-diagnostics > * + * {
+    margin-top: 4mm !important;
+  }
 }
