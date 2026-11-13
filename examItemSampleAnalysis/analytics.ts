@@ -89,7 +89,9 @@ export function evaluateSampleReliability(totalPapers: number, sampleSize: numbe
 }
 
 function getItemBand(percent: number) {
-  return ITEM_PERFORMANCE_BANDS.find((band) => percent >= band.min && percent < band.max) ?? ITEM_PERFORMANCE_BANDS[ITEM_PERFORMANCE_BANDS.length - 1];
+  return ITEM_PERFORMANCE_BANDS.find((band) =>
+    percent >= band.min && (percent < band.max || (band.max === 100 && percent === 100))
+  ) ?? ITEM_PERFORMANCE_BANDS[ITEM_PERFORMANCE_BANDS.length - 1];
 }
 
 function getItemPriority(performancePercent: number, totalLoss: number, totalAvailable: number, zeroPercent: number): ItemPriorityLevel {
