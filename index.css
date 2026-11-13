@@ -33,24 +33,6 @@
       radial-gradient(circle at 8% 85%, rgba(214, 161, 61, 0.18), transparent 30rem);
   }
 
-  .mw-hero {
-    border: 1px solid rgba(255, 255, 255, 0.20);
-    background:
-      linear-gradient(135deg, rgba(23, 37, 84, 0.98) 0%, rgba(38, 59, 128, 0.97) 46%, rgba(47, 107, 255, 0.90) 100%);
-    box-shadow: 0 28px 80px rgba(23, 37, 84, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.16);
-  }
-
-  .mw-hero::after {
-    content: "";
-    position: absolute;
-    inset: auto 4rem -7rem auto;
-    width: 22rem;
-    height: 22rem;
-    border-radius: 999px;
-    background: rgba(214, 161, 61, 0.20);
-    filter: blur(4px);
-  }
-
   .mw-orbit {
     position: absolute;
     border-radius: 999px;
@@ -144,8 +126,7 @@
   .mw-path-card--violet { --mw-card-accent: linear-gradient(90deg, #4C1D95, #6D5DF6); --mw-card-glow: rgba(109, 93, 246, 0.14); }
   .mw-path-card--amber { --mw-card-accent: linear-gradient(90deg, #9A6700, #D6A13D); --mw-card-glow: rgba(214, 161, 61, 0.16); }
 
-  .mw-path-badge,
-  .mw-highlight-chip {
+  .mw-path-badge {
     display: inline-flex;
     align-items: center;
     border-radius: 999px;
@@ -158,13 +139,6 @@
     color: var(--mw-primary-deep);
     padding: 0.42rem 0.78rem;
     font-size: 0.75rem;
-  }
-
-  .mw-highlight-chip {
-    background: rgba(255, 255, 255, 0.72);
-    color: #334155;
-    padding: 0.35rem 0.7rem;
-    font-size: 0.72rem;
   }
 
   .mw-card-arrow {
@@ -206,33 +180,6 @@
   .mw-icon-bubble--royal { color: #263B80; background: linear-gradient(135deg, #eef2ff, #ffffff); }
   .mw-icon-bubble--violet { color: #5B4CE8; background: linear-gradient(135deg, #f3e8ff, #ffffff); }
   .mw-icon-bubble--amber { color: #9A6700; background: linear-gradient(135deg, #fff7ed, #ffffff); }
-
-  .mw-journey-step {
-    display: grid;
-    grid-template-columns: auto 1fr;
-    gap: 1rem;
-    align-items: start;
-    border-radius: 1.35rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.10);
-    padding: 1rem;
-  }
-
-  .mw-journey-step > span {
-    display: inline-flex;
-    width: 2.65rem;
-    height: 2.65rem;
-    align-items: center;
-    justify-content: center;
-    border-radius: 999px;
-    background: rgba(214, 161, 61, 0.18);
-    color: #ffe7ad;
-    font-size: 0.78rem;
-    font-weight: 900;
-  }
-
-  .mw-journey-step h3 { margin: 0; font-size: 1rem; font-weight: 900; color: white; }
-  .mw-journey-step p { margin-top: 0.35rem; color: rgba(238, 242, 255, 0.82); font-size: 0.88rem; line-height: 1.8; }
 
   .mw-workspace-header {
     overflow: hidden;
@@ -538,25 +485,9 @@
 }
 
 @media screen and (max-width: 768px) {
-  .mw-hero {
-    border-radius: 1.6rem !important;
-    padding: 1rem !important;
-  }
-
-  .mw-hero-content,
-  .mw-hero-panel {
-    min-height: auto !important;
-    border-radius: 1.35rem !important;
-    padding: 1rem !important;
-  }
-
   .mw-path-card {
     border-radius: 1.35rem;
     padding: 1rem;
-  }
-
-  .mw-path-card > div {
-    min-height: 18rem !important;
   }
 
   .mw-analysis-steps button {
@@ -2949,4 +2880,27 @@ svg text {
     flex: 1 1 auto;
     font-size: 0.72rem;
   }
+}
+
+/* الصفحة الرئيسية المختصرة: توصل المستخدم للمسارات مباشرة. */
+@media screen {
+  .mw-site-header { justify-content: flex-start; }
+  .mw-paths-section { margin-top: clamp(0.8rem, 2vw, 1.35rem); }
+  .mw-section-heading { align-items: flex-start; margin-bottom: 1.15rem; }
+  .mw-section-heading h1 {
+    margin: 0.35rem 0 0;
+    color: #203B33;
+    font-size: clamp(1.65rem, 3vw, 2.35rem);
+    font-weight: 950;
+    letter-spacing: -0.025em;
+    line-height: 1.35;
+  }
+  .mw-section-heading p { margin-top: 0.3rem; }
+  .mw-path-card-inner { min-height: 14rem; }
+}
+
+@media screen and (max-width: 680px) {
+  .mw-section-heading h1 { font-size: clamp(1.45rem, 6vw, 1.8rem); }
+  .mw-section-heading p { font-size: 0.82rem; }
+  .mw-path-card-inner { min-height: 0 !important; }
 }
