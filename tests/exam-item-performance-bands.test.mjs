@@ -8,7 +8,7 @@ let runExamItemsSampleAnalysis;
 before(async () => {
   server = await createServer({
     configFile: './vite.config.ts',
-    server: { middlewareMode: true },
+    server: { middlewareMode: true, hmr: false, ws: false },
     appType: 'custom',
   });
   ({ runExamItemsSampleAnalysis } = await server.ssrLoadModule('/examItemSampleAnalysis/analytics.ts'));

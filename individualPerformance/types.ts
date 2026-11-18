@@ -6,6 +6,7 @@ export type IndividualPerformanceTab =
   | 'student-scores'
   | 'overview'
   | 'analysis'
+  | 'parent-contact'
   | 'report';
 
 export type PerformanceLevelCode = 'remedial' | 'support' | 'mastery' | 'excellent';

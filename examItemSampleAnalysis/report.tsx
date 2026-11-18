@@ -1,5 +1,6 @@
+import { PdfExport } from '../shared/PdfExport';
 import React from 'react';
-import { printUnifiedReport, UnifiedOfficialReportHeader, UnifiedPrintStyles, UnifiedReportToolbar } from '../shared/UnifiedReport';
+import { UnifiedOfficialReportHeader, UnifiedPrintStyles } from '../shared/UnifiedReport';
 import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock, RadarReportBlock } from '../shared/DiagnosticReportBlocks';
 import { ItemLossChart, ItemPerformanceChart, ReliabilityBadgeChart, SkillBalanceChart, SkillPerformanceChart, ZeroRateChart } from './charts';
 import {
@@ -15,24 +16,12 @@ import type { ExamItemsSampleAnalysisResult } from './types';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
 
 export function ExamItemsSampleReports({ result }: { result: ExamItemsSampleAnalysisResult }) {
-  const printReport = () => {
-    void printUnifiedReport({
-      targetValue: 'exam-items-detailed',
-      areaId: 'exam-items-detailed-report',
-      documentTitle: 'بوصلة الإتقان - تحليل مفردات الورقة - تقرير تفصيلي',
-    });
-  };
 
   return (
     <div className="space-y-5">
       <PrintStyles />
-      <UnifiedReportToolbar
-        noPrintClassName="exam-items-no-print"
-        title="التقرير الختامي"
-        description="تقرير تفصيلي توثيقي للطباعة الرسمية على A4."
-        actions={[{ label: 'طباعة التقرير التفصيلي', onClick: printReport, variant: 'blue' }]}
-      />
-      <DetailedReport result={result} />
+      <PdfExport areaId="exam-items-detailed-report" filename="exam-items-report.pdf" />
+    <DetailedReport result={result} />
     </div>
   );
 }
@@ -67,7 +56,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
         <Narrative title="حدود التفسير" text={buildSampleLimitText(result)} />
       </ReportSection>
 
-      <ReportSection number="2" title="المؤشرات العامة وتحليل المفردات" pageBreak>
+      <ReportSection number="2" title="المؤشرات العامة وتحليل المفردات">
         <div className="grid grid-cols-2 gap-2 md:grid-cols-4">
           <Metric label="المفردات المحتسبة" value={result.summary.totalItems} />
           <Metric label="الدرجة الكلية" value={result.summary.paperTotalScore} />
@@ -85,7 +74,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
         <Narrative title="مفردات تحتاج مراجعة" text={buildPriorityItemRecommendation(result)} />
       </ReportSection>
 
-      <ReportSection number="3" title="تحليل المهارات وتوازن الورقة" pageBreak>
+      <ReportSection number="3" title="تحليل المهارات وتوازن الورقة">
         <DataTable headers={['المهارة', 'عدد المفردات', 'الأداء', 'الفقد', 'الحكم', 'التوصية']} rows={result.skills.map((skill) => [skill.skill, skill.itemCount, `${skill.performancePercent}%`, skill.totalLoss, skill.judgement, skill.recommendation])} />
         <Narrative title="قراءة توازن المهارات" text={result.balanceReading.skillReading} />
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
@@ -94,7 +83,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
         </div>
       </ReportSection>
 
-      <ReportSection number="4" title="تحليل الأولويات والأسباب المحتملة" pageBreak>
+      <ReportSection number="4" title="تحليل الأولويات والأسباب المحتملة">
         <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           <ParetoReportBlock title="باريتو الفقد حسب المفردات" description="يرتب المفردات حسب مساهمتها في الفقد الكلي لتحديد نقطة البدء." entries={result.diagnostics.itemLossPareto} valueLabel="الفقد" />
@@ -106,7 +95,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
         </div>
       </ReportSection>
 
-      <ReportSection number="5" title="الرسوم البيانية التوثيقية" pageBreak>
+      <ReportSection number="5" title="الرسوم البيانية التوثيقية">
         <div className="grid gap-3 lg:grid-cols-2">
           <ReliabilityBadgeChart result={result} />
           <ItemPerformanceChart result={result} />
@@ -116,7 +105,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
         </div>
       </ReportSection>
 
-      <ReportSection number="6" title="القرار والتوصيات" pageBreak>
+      <ReportSection number="6" title="القرار والتوصيات">
         <div className="grid gap-3 lg:grid-cols-2">
           <Narrative title="القراءة العامة" text={buildOverallReadingText(result)} />
           <Narrative title="القرار التدريسي" text={buildTeachingDecisionText(result)} />
@@ -154,7 +143,7 @@ function MissingDataNotice({ result }: { result: ExamItemsSampleAnalysisResult }
     ['عنوان الورقة', result.context.paperTitle],
   ].filter(([, value]) => !String(value || '').trim());
   if (!missing.length) return null;
-  return <section className="report-section mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل الطباعة الرسمية النهائية.</section>;
+  return <section className="report-section mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل تصدير التقرير النهائي.</section>;
 }
 
 function ReportSection({ number, title, children, pageBreak = false }: { number: string; title: string; children: React.ReactNode; pageBreak?: boolean }) {
@@ -169,11 +158,15 @@ function SignatureSection() { return <section className="signature-section mt-6 
 function Signature({ label }: { label: string }) { return <div className="premium-report-signature rounded-xl border border-slate-200 p-3"><div className="font-black">{label}</div><div className="mt-8 border-t border-slate-300 pt-2">الاسم والتوقيع</div></div>; }
 
 function PrintStyles() {
-  return <UnifiedPrintStyles printAreaId="exam-items-detailed-report" noPrintClassName="exam-items-no-print" pageMarginMm={8} fontSizePx={9.4} lineHeight={1.36} extraCss={`
-    #exam-items-detailed-report .unified-chart-card { min-height: 0 !important; }
-    #exam-items-detailed-report .diagnostic-report-visual .unified-chart-card { break-inside: avoid !important; page-break-inside: avoid !important; }
-    #exam-items-detailed-report .diagnostic-report-fishbone,
-    #exam-items-detailed-report .diagnostic-report-block { break-inside: avoid !important; page-break-inside: avoid !important; }
-    #exam-items-detailed-report table { table-layout: auto !important; }
+  return <UnifiedPrintStyles printAreaId="exam-items-detailed-report" noPrintClassName="exam-items-no-print" pageMarginMm={8} fontSizePx={10.5} lineHeight={1.4} extraCss={`
+    #unified-print-root #exam-items-detailed-report .unified-chart-card { min-height: 0 !important; }
+    #unified-print-root #exam-items-detailed-report .diagnostic-report-visual .unified-chart-card { break-inside: avoid !important; page-break-inside: avoid !important; }
+    #unified-print-root #exam-items-detailed-report .diagnostic-report-fishbone,
+    #unified-print-root #exam-items-detailed-report .diagnostic-report-block { break-inside: auto !important; page-break-inside: auto !important; overflow: visible !important; }
+    #unified-print-root #exam-items-detailed-report .diagnostic-report-fishbone .grid > div,
+    #unified-print-root #exam-items-detailed-report .diagnostic-report-block .space-y-3 > div { break-inside: avoid; page-break-inside: avoid; }
+    #unified-print-root #exam-items-detailed-report .premium-report-table { overflow: visible !important; break-inside: auto !important; page-break-inside: auto !important; }
+    #unified-print-root #exam-items-detailed-report h2, #unified-print-root #exam-items-detailed-report h3 { break-after: avoid-page; page-break-after: avoid; }
+    #unified-print-root #exam-items-detailed-report table { table-layout: auto !important; }
   `} />;
 }

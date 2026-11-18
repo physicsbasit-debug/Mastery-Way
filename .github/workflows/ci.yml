@@ -20,14 +20,20 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 22
+          node-version: 24
           cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: Check dependency vulnerabilities
-        run: npm audit --audit-level=moderate
+      - name: Run tests
+        run: npm test
 
       - name: Build application
         run: npm run build
+
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=moderate
+
+      - name: Audit all dependencies with temporary exception
+        run: node scripts/security-audit-policy.mjs

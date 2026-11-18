@@ -363,6 +363,26 @@
   }
 }
 
+/* Individual track: preserve the table on larger screens and make each row a usable mobile card. */
+@media screen and (max-width: 767px) {
+  .individual-mobile-table { display: block; min-width: 0 !important; width: 100%; }
+  .individual-mobile-table thead { display: none; }
+  .individual-mobile-table tbody { display: grid; gap: 12px; padding: 12px; }
+  .individual-mobile-table tr { display: grid; gap: 8px; border: 1px solid #dbe5d7; border-radius: 16px; background: #fff; padding: 14px; }
+  .individual-mobile-table td { display: grid; gap: 4px; padding: 0 !important; min-width: 0; }
+  .individual-mobile-table td::before { color: #52695a; font-size: 12px; font-weight: 800; }
+  .individual-mobile-blueprint td:nth-child(1)::before, .individual-mobile-scores td:nth-child(1)::before { content: 'السؤال'; }
+  .individual-mobile-blueprint td:nth-child(2)::before { content: 'الدرجة الكلية'; }
+  .individual-mobile-blueprint td:nth-child(3)::before, .individual-mobile-scores td:nth-child(2)::before { content: 'المهارة'; }
+  .individual-mobile-scores td:nth-child(3)::before { content: 'الدرجة الكلية'; }
+  .individual-mobile-scores td:nth-child(4)::before { content: 'درجة الطالب'; }
+  .individual-mobile-scores td:nth-child(5)::before { content: 'نوع الخطأ'; }
+  .individual-mobile-scores td:nth-child(6)::before { content: 'توضيح أخرى'; }
+  .individual-mobile-scores td:nth-child(7)::before { content: 'ملاحظة المعلم'; }
+  .individual-mobile-scores td:nth-child(6):not(:has(input)) { display: none; }
+  .individual-mobile-table input, .individual-mobile-table select { width: 100% !important; max-width: 100%; }
+}
+
 @media screen {
   .mw-analysis-stepper { --step-accent: #315ca8; }
   .mw-track-individual .mw-analysis-stepper { --step-accent: #687b3c; }
@@ -3339,4 +3359,265 @@ svg text {
   #unified-print-root .mw-print-report--mastery .mastery-print-diagnostics > * + * {
     margin-top: 4mm !important;
   }
+}
+
+@media screen {
+  .individual-analysis-group { overflow: hidden; border: 1px solid #d5e1d3; border-radius: 20px; background: #fffef9; box-shadow: 0 8px 22px rgba(32, 65, 46, .06); }
+  .individual-analysis-group > summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; cursor: pointer; padding: 18px 20px; color: #244838; font-weight: 800; list-style: none; }
+  .individual-analysis-group > summary::-webkit-details-marker { display: none; }
+  .individual-analysis-group > summary::after { content: '+'; display: grid; place-items: center; flex: 0 0 32px; height: 32px; border-radius: 10px; color: #fff; background: #5f6f3a; font-size: 21px; }
+  .individual-analysis-group[open] > summary::after { content: '−'; }
+  .individual-analysis-group > summary:focus-visible { outline: 3px solid #b18d42; outline-offset: -4px; }
+  .individual-analysis-group__content { border-top: 1px solid #e4eade; padding: 16px; }
+}
+@media print {
+  #unified-print-root .individual-analysis-group > summary { font-weight: 800; color: #33482d; margin: 8px 0; break-after: avoid-page; }
+  #unified-print-root .individual-analysis-group { break-inside: auto; }
+}
+
+/* الهوية البصرية لمسار الأداء الفردي على جميع أحجام الشاشات. */
+@media screen {
+  .mw-track-individual .mw-kpi-card--royal {
+    --kpi-accent: #526638;
+    --kpi-accent-soft: rgba(110, 130, 74, 0.13);
+  }
+
+  .mw-track-individual .mw-kpi-card--featured {
+    border-color: rgba(108, 128, 74, 0.36);
+    background: linear-gradient(135deg, #293d2d, #526638 68%, #75884f);
+    box-shadow: 0 22px 54px rgba(45, 68, 42, 0.19);
+  }
+
+  .mw-track-individual .mw-kpi-card--featured .mw-kpi-card__label,
+  .mw-track-individual .mw-kpi-card--featured .mw-kpi-card__hint { color: #edf2e4; }
+
+  .premium-report-document.mw-print-report--individual {
+    border-color: #dfe6d7 !important;
+    background: linear-gradient(180deg, #fffdf8, #f6f8f1) !important;
+  }
+
+  .premium-report-document.mw-print-report--individual::before {
+    background: linear-gradient(90deg, #2f4934, #73874c, #c3a05a);
+  }
+
+  .premium-report-document.mw-print-report--individual .official-report-header,
+  .premium-report-document.mw-print-report--individual .premium-report-summary__content {
+    background: linear-gradient(135deg, #293d2d, #526638 68%, #75884f);
+    box-shadow: 0 18px 42px rgba(45, 68, 42, 0.16);
+  }
+
+  .premium-report-document.mw-print-report--individual .premium-report-summary {
+    border-color: #dce5d5;
+    background: linear-gradient(180deg, #fffdf8, #f4f7ed);
+  }
+
+  .premium-report-document.mw-print-report--individual .premium-report-summary-metric--royal,
+  .premium-report-document.mw-print-report--individual .premium-report-summary-metric--violet,
+  .premium-report-document.mw-print-report--individual .premium-report-summary-metric--slate {
+    --summary-accent: #5f6f3a;
+  }
+
+  .premium-report-document.mw-print-report--individual .premium-report-summary-metric__value,
+  .premium-report-document.mw-print-report--individual .premium-report-section-title,
+  .premium-report-document.mw-print-report--individual .premium-report-subtitle { color: #293d2d; }
+
+  .premium-report-document.mw-print-report--individual .premium-report-section-title span,
+  .premium-report-document.mw-print-report--individual .premium-report-table thead {
+    background: linear-gradient(135deg, #3b5133, #75884f) !important;
+  }
+
+  .premium-report-document.mw-print-report--individual .premium-report-metric::before {
+    background: linear-gradient(90deg, #3b5133, #75884f, #c3a05a);
+  }
+}
+
+/* هوية مسار تحليل مفردات الورقة وتنظيم أقسامه. */
+@media screen {
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] {
+    border-color: #dbc18d !important;
+    background: #fbf4e6 !important;
+    color: #684717 !important;
+    box-shadow: inset -3px 0 #a87526 !important;
+  }
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step__number { background: #f4ead5; color: #80591e; }
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__number { background: #91631e; color: #fff; }
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state { color: #80591e !important; }
+  .mw-track-exam .mw-analysis-stepper__progress { border-color: #e8d8b9; background: #fbf5e9; color: #80591e; }
+  .mw-path-workspace .mw-track-exam input:focus,
+  .mw-path-workspace .mw-track-exam select:focus { border-color: #a87526 !important; box-shadow: 0 0 0 3px rgba(168,117,38,.14) !important; }
+  .mw-track-exam button[class*="bg-slate-900"] { background: #805719; }
+  .mw-track-exam button[class*="bg-slate-900"]:hover { background: #684515; }
+  .mw-track-exam .exam-items-no-print button { background: #805719; color: white; }
+  .mw-track-exam .exam-items-no-print button:hover { background: #684515; }
+  .mw-track-exam .exam-items-no-print button:last-child:not(:first-child) { background: #fff; color: #684515; }
+  .mw-track-exam .mw-kpi-card--royal { --kpi-accent: #94651f; --kpi-accent-soft: rgba(168,117,38,.12); }
+  .mw-track-exam .mw-kpi-card--featured {
+    border-color: #c5a369;
+    background: linear-gradient(135deg, #634316, #966927 70%, #b28743);
+    box-shadow: 0 18px 42px rgba(108,74,24,.16);
+  }
+  .mw-track-exam .mw-kpi-card--featured .mw-kpi-card__label,
+  .mw-track-exam .mw-kpi-card--featured .mw-kpi-card__hint { color: #fff3d9; }
+  .exam-analysis-group, .exam-score-paper {
+    overflow: hidden;
+    border: 1px solid #ead9ba;
+    border-radius: 18px;
+    background: #fffefa;
+    box-shadow: 0 6px 20px rgba(91,64,24,.05);
+  }
+  .exam-analysis-group > summary, .exam-score-paper > summary {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    cursor: pointer;
+    padding: 15px 16px;
+    color: #684717;
+    font-weight: 800;
+    list-style: none;
+  }
+  .exam-analysis-group > summary::-webkit-details-marker, .exam-score-paper > summary::-webkit-details-marker { display: none; }
+  .exam-analysis-group > summary::after, .exam-score-paper > summary::after {
+    content: '+';
+    display: grid;
+    place-items: center;
+    flex: 0 0 30px;
+    height: 30px;
+    border-radius: 9px;
+    background: #91631e;
+    color: #fff;
+    font-size: 20px;
+  }
+  .exam-analysis-group[open] > summary::after, .exam-score-paper[open] > summary::after { content: '−'; }
+  .exam-analysis-group > summary:focus-visible, .exam-score-paper > summary:focus-visible { outline: 3px solid #a87526; outline-offset: -4px; }
+  .exam-analysis-group strong, .exam-analysis-group small { display: block; }
+  .exam-analysis-group small { margin-top: 3px; color: #776a58; font-size: .75rem; font-weight: 600; line-height: 1.5; }
+  .exam-analysis-group__content, .exam-score-paper__content { border-top: 1px solid #f0e5d2; padding: 15px; }
+  .exam-score-paper > summary { padding: 12px 14px; }
+  .exam-score-paper__status { margin-inline-start: auto; color: #78623e; font-size: .75rem; font-weight: 700; }
+  .premium-report-document.mw-print-report--exam { border-color: #eadcc1 !important; background: linear-gradient(180deg, #fffefa, #fbf6eb) !important; }
+  .premium-report-document.mw-print-report--exam::before { background: linear-gradient(90deg, #76501b, #ad7e35, #dcc08a); }
+  .premium-report-document.mw-print-report--exam .official-report-header,
+  .premium-report-document.mw-print-report--exam .premium-report-summary__content {
+    background: linear-gradient(135deg, #5a3e18, #8e6427 68%, #b28b4a);
+    box-shadow: 0 18px 42px rgba(98,67,23,.16);
+  }
+  .premium-report-document.mw-print-report--exam .premium-report-summary { border-color: #eadcc1; background: linear-gradient(180deg, #fffefa, #faf4e8); }
+  .premium-report-document.mw-print-report--exam .premium-report-summary-metric--royal,
+  .premium-report-document.mw-print-report--exam .premium-report-summary-metric--violet,
+  .premium-report-document.mw-print-report--exam .premium-report-summary-metric--slate { --summary-accent: #a87526; }
+  .premium-report-document.mw-print-report--exam .premium-report-summary-metric__value,
+  .premium-report-document.mw-print-report--exam .premium-report-section-title,
+  .premium-report-document.mw-print-report--exam .premium-report-subtitle { color: #684717; }
+  .premium-report-document.mw-print-report--exam .premium-report-section-title span,
+  .premium-report-document.mw-print-report--exam .premium-report-table thead { background: linear-gradient(135deg, #76501b, #a87526) !important; }
+  .premium-report-document.mw-print-report--exam .premium-report-metric::before { background: linear-gradient(90deg, #76501b, #ad7e35, #dcc08a); }
+}
+
+@media print {
+  #unified-print-root .mw-print-report--exam .official-report-header,
+  #unified-print-root .mw-print-report--exam .premium-report-summary__content { background: linear-gradient(135deg, #5a3e18, #8e6427 68%, #b28b4a) !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-summary { background: #fffaf0 !important; border-color: #e3d2b2 !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-info-cell::before,
+  #unified-print-root .mw-print-report--exam .premium-report-metric::before,
+  #unified-print-root .mw-print-report--exam .premium-report-summary-metric::before,
+  #unified-print-root .mw-print-report--exam .premium-report-narrative::before,
+  #unified-print-root .mw-print-report--exam .diagnostic-report-block::before,
+  #unified-print-root .mw-print-report--exam .diagnostic-report-fishbone::before,
+  #unified-print-root .mw-print-report--exam .unified-chart-card::before { background: linear-gradient(90deg, #76501b, #ad7e35, #dcc08a) !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-section-title,
+  #unified-print-root .mw-print-report--exam .premium-report-subtitle,
+  #unified-print-root .mw-print-report--exam h3,
+  #unified-print-root .mw-print-report--exam .premium-report-summary-metric__value,
+  #unified-print-root .mw-print-report--exam .premium-report-info-cell div:last-child,
+  #unified-print-root .mw-print-report--exam .premium-report-metric div:last-child { color: #684717 !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-section-title span,
+  #unified-print-root .mw-print-report--exam .premium-report-table thead,
+  #unified-print-root .mw-print-report--exam .premium-report-table thead tr { background: #8a601f !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-table { overflow: visible !important; break-inside: auto !important; page-break-inside: auto !important; }
+  #unified-print-root .mw-print-report--exam .premium-report-table th,
+  #unified-print-root .mw-print-report--exam .premium-report-table td { font-size: 10px !important; }
+  #unified-print-root .exam-analysis-group > summary { font-weight: 800; color: #684717; margin: 8px 0; break-after: avoid-page; }
+  #unified-print-root .exam-analysis-group > summary small { display: block; font-weight: 500; }
+}
+
+/* تقرير انتشار الإتقان: هوية رسمية هادئة للشاشة والورق. */
+@media screen {
+  .premium-report-document.mw-print-report--mastery { background: #fff !important; border-color: #d9e5de !important; }
+  .premium-report-document.mw-print-report--mastery .official-report-header { background: #f4f8f5 !important; color: #173c32 !important; border: 1px solid #dce8df !important; border-bottom: 3px solid #17634f !important; border-radius: 12px !important; box-shadow: none !important; }
+  .premium-report-document.mw-print-report--mastery .official-report-header h1 { color: #173c32 !important; }
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content { background: #eaf3ed !important; color: #173c32 !important; }
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content h2,
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content p { color: #173c32 !important; }
+}
+@media print {
+  #unified-print-root .mw-print-report--mastery { background: #fff !important; color: #1d302b !important; }
+  #unified-print-root .mw-print-report--mastery .official-report-header { background: #fff !important; border: 0 !important; border-bottom: 2px solid #17634f !important; border-radius: 0 !important; padding: 4px 8px 9px !important; color: #173c32 !important; }
+  #unified-print-root .mw-print-report--mastery .official-report-header::after { display: none !important; }
+  #unified-print-root .mw-print-report--mastery .official-report-header img { height: 13mm !important; max-height: 13mm !important; padding: 0 !important; }
+  #unified-print-root .mw-print-report--mastery .official-report-header h1 { color: #173c32 !important; font-size: 17px !important; }
+  #unified-print-root .mw-print-report--mastery .official-report-header p { font-size: 10px !important; color: #334b42 !important; }
+  #unified-print-root .mw-print-report--mastery .mastery-print-data-grid { gap: 4px !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-info-cell { border: 0 !important; border-bottom: 1px solid #dce6df !important; border-radius: 0 !important; background: #fff !important; padding: 5px 6px !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-info-cell::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-summary-metric::before,
+  #unified-print-root .mw-print-report--mastery .premium-report-metric::before { display: none !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-summary { border: 1px solid #cfded4 !important; border-radius: 8px !important; background: #fff !important; padding: 7px !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-summary__content { border-radius: 5px !important; background: #edf5ef !important; color: #173c32 !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-summary-metric { border: 1px solid #e1e9e2 !important; border-radius: 5px !important; background: #fff !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-narrative,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-block,
+  #unified-print-root .mw-print-report--mastery .diagnostic-report-fishbone,
+  #unified-print-root .mw-print-report--mastery .unified-chart-card { border-radius: 6px !important; background: #fff !important; box-shadow: none !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-table { overflow: visible !important; border-radius: 0 !important; }
+  #unified-print-root .mw-print-report--mastery .premium-report-table th,
+  #unified-print-root .mw-print-report--mastery .premium-report-table td { font-size: 10.5px !important; }
+  #unified-print-root .mw-print-report--mastery h2,
+  #unified-print-root .mw-print-report--mastery h3 { break-after: avoid-page !important; page-break-after: avoid !important; }
+}
+
+/* تنسيق موحّد للتقارير المطبوعة مع لون مستقل لكل مسار. */
+@media print {
+  #unified-print-root .mw-print-report--mastery { --report-ink: #175a48; --report-tint: #edf5ef; --report-line: #cdded4; }
+  #unified-print-root .mw-print-report--individual { --report-ink: #526638; --report-tint: #f1f5e9; --report-line: #d9e2ce; }
+  #unified-print-root .mw-print-report--exam { --report-ink: #805719; --report-tint: #fbf4e6; --report-line: #e8d8b9; }
+  #unified-print-root .mw-print-report {
+    background: #fff !important; color: #202e28 !important;
+  }
+  #unified-print-root .mw-print-report .official-report-header {
+    background: #fff !important; color: var(--report-ink) !important;
+    border: 0 !important; border-bottom: 2px solid var(--report-ink) !important;
+    border-radius: 0 !important; padding: 4px 8px 9px !important;
+    box-shadow: none !important;
+  }
+  #unified-print-root .mw-print-report .official-report-header::after { display: none !important; }
+  #unified-print-root .mw-print-report .official-report-header img { height: 13mm !important; max-height: 13mm !important; padding: 0 !important; }
+  #unified-print-root .mw-print-report .official-report-header h1,
+  #unified-print-root .mw-print-report .official-report-header p,
+  #unified-print-root .mw-print-report .official-report-header div { color: var(--report-ink) !important; }
+  #unified-print-root .mw-print-report .official-report-header h1 { font-size: 17px !important; }
+  #unified-print-root .mw-print-report .official-report-header p { font-size: 10px !important; }
+  #unified-print-root .mw-print-report .premium-report-summary { border: 1px solid var(--report-line) !important; border-radius: 8px !important; background: #fff !important; padding: 7px !important; }
+  #unified-print-root .mw-print-report .premium-report-summary__content { background: var(--report-tint) !important; color: var(--report-ink) !important; border-radius: 5px !important; }
+  #unified-print-root .mw-print-report .premium-report-summary__content h2,
+  #unified-print-root .mw-print-report .premium-report-summary__content p { color: var(--report-ink) !important; }
+  #unified-print-root .mw-print-report .premium-report-info-cell,
+  #unified-print-root .mw-print-report .premium-report-summary-metric,
+  #unified-print-root .mw-print-report .premium-report-metric { border: 1px solid var(--report-line) !important; border-radius: 5px !important; background: #fff !important; }
+  #unified-print-root .mw-print-report .premium-report-info-cell::before,
+  #unified-print-root .mw-print-report .premium-report-summary-metric::before,
+  #unified-print-root .mw-print-report .premium-report-metric::before { display: none !important; }
+  #unified-print-root .mw-print-report .premium-report-section-title,
+  #unified-print-root .mw-print-report .premium-report-subtitle { color: var(--report-ink) !important; break-after: avoid-page !important; page-break-after: avoid !important; }
+  #unified-print-root .mw-print-report .premium-report-section-title span,
+  #unified-print-root .mw-print-report .premium-report-table thead,
+  #unified-print-root .mw-print-report .premium-report-table thead tr { background: var(--report-ink) !important; color: #fff !important; }
+  #unified-print-root .mw-print-report .premium-report-section-title::after { background: var(--report-ink) !important; }
+  #unified-print-root .mw-print-report .premium-report-table { overflow: visible !important; border-radius: 0 !important; break-inside: auto !important; }
+  #unified-print-root .mw-print-report .premium-report-table th,
+  #unified-print-root .mw-print-report .premium-report-table td { font-size: 10.5px !important; line-height: 1.45 !important; }
+  #unified-print-root .mw-print-report .report-page-break { break-before: auto !important; page-break-before: auto !important; }
+  #unified-print-root .mw-print-report .report-page-break::before { display: none !important; content: none !important; }
+  #unified-print-root .mw-print-report h2,
+  #unified-print-root .mw-print-report h3 { break-after: avoid-page; page-break-after: avoid; }
 }

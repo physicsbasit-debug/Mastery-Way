@@ -19,7 +19,7 @@ export function getAnalysisStepStatus({
   active,
   locked,
   visited,
-  showVisitedStatus = true,
+  showVisitedStatus = false,
 }: {
   active: boolean;
   locked: boolean;
@@ -33,7 +33,7 @@ export function getAnalysisStepStatus({
 }
 
 /** RTL step navigator shared by the three analysis tracks. */
-export function AnalysisStepAccordion({ items, activeId, onSelect, isLocked, label, showVisitedStatus = true }: AnalysisStepAccordionProps) {
+export function AnalysisStepAccordion({ items, activeId, onSelect, isLocked, label, showVisitedStatus = false }: AnalysisStepAccordionProps) {
   const [visited, setVisited] = useState<Set<string>>(() => new Set([activeId]));
 
   useEffect(() => {

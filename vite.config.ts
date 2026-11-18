@@ -56,6 +56,7 @@ export default defineConfig(() => {
     base: resolveBasePath(),
     plugins: [react(), tailwindcss()],
     resolve: {
+      dedupe: ["react", "react-dom"],
       alias: {
         "@": path.resolve(__dirname, "."),
       },
