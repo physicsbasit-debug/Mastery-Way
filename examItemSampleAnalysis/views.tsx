@@ -25,6 +25,8 @@ import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } fr
 import type { AnalysisReadinessResult, ExamItemDefinition, ExamItemsSampleAnalysisResult, ExamItemsSampleContext, SampleScoreRow } from './types';
 import { getCurrentAcademicYear, getTodayISO } from './utils';
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
+import { NextStepCard } from '../shared/NextStepCard';
+import { sampleNextStep } from '../shared/nextSteps';
 
 const TABS = [
   { id: 'context', title: 'بيانات الورقة والعينة', desc: 'رأس التقرير والعينة' },
@@ -606,6 +608,7 @@ function SummaryTab({ result }: { result: ExamItemsSampleAnalysisResult }) {
   const prioritySkill = result.decision.prioritySkills[0];
   return (
     <div className="mw-dashboard-space">
+      <NextStepCard step={sampleNextStep(result)} tone="amber" />
       <div className="mw-dashboard-grid mw-dashboard-grid--five">
         <Metric label="متوسط أداء المفردات" value={`${result.summary.averagePaperPercent}%`} hint="المؤشر العام لأداء العينة" icon="%" tone="amber" featured />
         <Metric label="متوسط الدرجة المرصودة" value={`${result.summary.averagePaperScore} من ${result.summary.paperTotalScore}`} hint="متوسط درجات أوراق العينة" icon="◉" tone="royal" />

@@ -37,6 +37,8 @@ import { RadarSkillChart } from '../shared/RadarSkillChart';
 import { MobileNumberInput, type MobileNumericValue } from '../shared/MobileNumberInput';
 import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } from '../shared/DashboardElements';
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
+import { NextStepCard } from '../shared/NextStepCard';
+import { individualNextStep } from '../shared/nextSteps';
 import type {
   AnalysisReadinessResult,
   ExamQuestionBlueprint,
@@ -577,6 +579,7 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
   const firstPriority = result.priorities[0];
   return (
     <div className="mw-dashboard-space">
+      <NextStepCard step={individualNextStep(result)} tone="olive" />
       <div className="mw-dashboard-grid mw-dashboard-grid--four">
         <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="royal" />
         <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="royal" featured />
