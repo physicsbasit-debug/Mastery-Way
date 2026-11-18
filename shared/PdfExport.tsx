@@ -34,6 +34,20 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       await frameDoc.fonts?.ready;
       Object.assign(frameDoc.body.style, { margin: '0', width: '794px', background: '#fff', direction: 'rtl' });
       const clone = source.cloneNode(true) as HTMLElement;
+      clone.classList.add('pdf-export-render');
+      const pdfStyle = frameDoc.createElement('style');
+      pdfStyle.textContent = `
+        .pdf-export-render.mw-print-report--individual .official-report-header { padding: 12px 16px !important; box-shadow: none !important; }
+        .pdf-export-render.mw-print-report--individual .official-report-header img { height: 46px !important; max-height: 46px !important; padding: 3px !important; margin-bottom: 3px !important; }
+        .pdf-export-render.mw-print-report--individual .official-report-header p { line-height: 1.35 !important; }
+        .pdf-export-render.mw-print-report--individual .individual-data-table table { font-size: 12.5px !important; line-height: 1.45 !important; }
+        .pdf-export-render.mw-print-report--individual .individual-data-table th,
+        .pdf-export-render.mw-print-report--individual .individual-data-table td { padding: 5px 7px !important; overflow-wrap: break-word; }
+        .pdf-export-render.mw-print-report--individual .signature-section { margin-top: 14px !important; gap: 6px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-signature { padding: 7px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-signature > div:last-child { margin-top: 15px !important; }
+      `;
+      frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
       // Canvas rendering with nonzero letter spacing breaks Arabic joining.
       [clone, ...Array.from(clone.querySelectorAll<HTMLElement>('*'))].forEach(element => element.style.setProperty('letter-spacing', 'normal', 'important'));
@@ -41,8 +55,15 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       frameDoc.body.appendChild(clone);
       await Promise.all(Array.from(clone.querySelectorAll('img')).map(image => image.decode().catch(() => undefined)));
       const base = clone.getBoundingClientRect();
-      const ranges: Array<[number, number]> = Array.from(clone.querySelectorAll('tr, p, h1, h2, h3, h4, li')).map(el => {
+      // Charts and signatures must travel as a whole when they fit on a page.
+      // Rows and paragraphs remain individually splittable for long tables.
+      const ranges: Array<[number, number]> = Array.from(clone.querySelectorAll('tr, p, h1, h2, h3, h4, li, .unified-chart-card, .diagnostic-report-visual, .signature-section, [data-pdf-keep]')).map(el => {
         const rect = el.getBoundingClientRect(); return [Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 3] as [number, number];
+      });
+      // Keep each section title with at least the beginning of its content.
+      clone.querySelectorAll('.premium-report-section-title').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        ranges.push([Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 55]);
       });
       const pages = paginateReport(Math.ceil(base.height), 1088, ranges);
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });

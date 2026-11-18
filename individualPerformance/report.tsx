@@ -4,11 +4,7 @@ import React from 'react';
 import { UnifiedOfficialReportHeader, UnifiedPrintStyles } from '../shared/UnifiedReport';
 import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock, RadarReportBlock } from '../shared/DiagnosticReportBlocks';
 import {
-  ErrorPatternsChart,
   ItemStatusChart,
-  PriorityLineChart,
-  SkillLossChart,
-  SkillPerformanceChart,
   StudentMasteryPositionChart,
   TopLossItemsChart,
 } from './charts';
@@ -73,8 +69,8 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
       </ReportSection>
 
       <ReportSection number="3" title="تحليل المهارات" pageBreak>
-        <DataTable headers={['المهارة', 'عدد المفردات', 'الدرجة', 'الأداء', 'الفقد', 'الحكم', 'حدود القراءة']} rows={result.skills.map((skill) => [skill.skill, skill.questionCount, `${skill.score} من ${skill.maxScore}`, `${skill.percent}%`, skill.loss, skill.judgement, skill.representationNote])} />
-        <div className="mt-4 grid gap-3 lg:grid-cols-2"><SkillPerformanceChart result={result} compact /><SkillLossChart result={result} compact /></div>
+        <DataTable headers={['المهارة', 'عدد المفردات', 'الدرجة', 'الأداء', 'الفقد', 'الحكم']} rows={result.skills.map((skill) => [skill.skill, skill.questionCount, `${skill.score} من ${skill.maxScore}`, `${skill.percent}%`, skill.loss, skill.judgement])} />
+        {result.skills.some((skill) => skill.questionCount === 1) && <p className="mt-2 text-xs leading-6 text-slate-700">المهارة الممثلة بمفردة واحدة تُقرأ نتيجتها بوصفها إشارة أولية، وتحتاج إلى شواهد إضافية.</p>}
       </ReportSection>
 
       <ReportSection number="4" title="أنماط الأخطاء وملاحظات المعلم" pageBreak className="individual-diagnostics-section">
@@ -84,7 +80,6 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
         </div>
         <Narrative title="مؤشر التشخيص" text={result.narratives.diagnosisIndicator} />
         <Narrative title="ملاحظات المعلم بوصفها دليلًا داعمًا" text={result.narratives.teacherNotesReading} />
-        <div className="individual-print-chart-grid mt-4 grid gap-3 lg:grid-cols-2"><ErrorPatternsChart result={result} compact /></div>
       </ReportSection>
 
       <ReportSection number="5" title="خريطة التشخيص وأولويات التدخل" pageBreak className="individual-diagnostic-insights-section">
@@ -104,7 +99,6 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
           <StudentMasteryPositionChart result={result} compact />
           <ItemStatusChart result={result} compact />
           <TopLossItemsChart result={result} compact />
-          <PriorityLineChart result={result} compact />
         </div>
       </ReportSection>
 
