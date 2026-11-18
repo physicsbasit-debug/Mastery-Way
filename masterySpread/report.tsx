@@ -1,5 +1,6 @@
+import { PdfExport } from '../shared/PdfExport';
 import React from 'react';
-import { prepareUnifiedPrintSession, UnifiedOfficialReportHeader, UnifiedPrintStyles, UnifiedReportToolbar } from '../shared/UnifiedReport';
+import { UnifiedOfficialReportHeader, UnifiedPrintStyles } from '../shared/UnifiedReport';
 import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock } from '../shared/DiagnosticReportBlocks';
 import { GROUP_SHAPE_THRESHOLDS, MASTERY_JUDGEMENT_SCALE } from './constants';
 import { formatPercentagePointAmount, formatStudentCount } from './utils';
@@ -9,67 +10,10 @@ import type { MasterySpreadAnalysisResult } from './types';
 export interface MasterySpreadReportViewProps { result: MasterySpreadAnalysisResult; }
 
 export function MasterySpreadReportView({ result }: MasterySpreadReportViewProps) {
-  const printSession = React.useRef<ReturnType<typeof prepareUnifiedPrintSession>>(null);
-  const [showPrintHelp, setShowPrintHelp] = React.useState(false);
-  const [printError, setPrintError] = React.useState('');
-
-  React.useEffect(() => () => printSession.current?.dispose(), []);
-
-  const tryPrint = () => {
-    try {
-      printSession.current?.print();
-      setPrintError('');
-    } catch {
-      setPrintError('تعذر فتح نافذة الطباعة من هذا المتصفح.');
-    }
-  };
-
-  const printReport = () => {
-    printSession.current?.dispose();
-    try {
-      printSession.current = prepareUnifiedPrintSession({
-        targetValue: 'mastery-spread-detailed',
-        areaId: 'mastery-spread-detailed-report',
-        documentTitle: 'بوصلة الإتقان - تحليل انتشار الإتقان - تقرير تفصيلي',
-      });
-      if (!printSession.current) {
-        setShowPrintHelp(false);
-        setPrintError('تعذر تجهيز التقرير للطباعة. حاول مرة أخرى.');
-        return;
-      }
-      setShowPrintHelp(true);
-      tryPrint();
-    } catch {
-      setShowPrintHelp(false);
-      setPrintError('تعذر تجهيز التقرير للطباعة. حاول مرة أخرى.');
-    }
-  };
-
-  const closePrintHelp = () => {
-    printSession.current?.dispose();
-    printSession.current = null;
-    setShowPrintHelp(false);
-    setPrintError('');
-  };
 
   return <div className="space-y-5">
     <PrintStyles />
-    <UnifiedReportToolbar
-      noPrintClassName="mastery-spread-no-print"
-      title="التقرير الختامي"
-      description="تقرير تفصيلي توثيقي للطباعة الرسمية على A4."
-      actions={[{ label: 'طباعة التقرير التفصيلي', onClick: printReport, variant: 'blue' }]}
-      suppressBrowserHeaders
-    />
-    {showPrintHelp ? <div role="status" className="mastery-spread-no-print rounded-2xl border border-emerald-200 bg-emerald-50 p-4 text-sm leading-7 text-emerald-950">
-      <p className="font-black">التقرير جاهز للطباعة</p>
-      <p>{printError || 'إذا لم تظهر نافذة الطباعة، استخدم زر المشاركة في المتصفح ثم اختر «طباعة».'}</p>
-      {printError ? <p>يمكنك أيضًا استخدام زر المشاركة في المتصفح ثم اختيار «طباعة».</p> : null}
-      <div className="mt-3 flex flex-wrap gap-2">
-        <button type="button" onClick={tryPrint} className="rounded-xl bg-emerald-800 px-4 py-2 font-bold text-white">إعادة محاولة الطباعة</button>
-        <button type="button" onClick={closePrintHelp} className="rounded-xl border border-emerald-300 bg-white px-4 py-2 font-bold text-emerald-950">إغلاق</button>
-      </div>
-    </div> : printError ? <div role="alert" className="mastery-spread-no-print rounded-xl border border-amber-200 bg-amber-50 p-3 text-sm text-amber-950">{printError}</div> : null}
+    <PdfExport areaId="mastery-spread-detailed-report" filename="mastery-report.pdf" />
     <DetailedReport result={result} />
   </div>;
 }
@@ -200,7 +144,7 @@ function PlanTable({ result }: { result: MasterySpreadAnalysisResult }) {
 function MissingDataNotice({ result }: { result: MasterySpreadAnalysisResult }) {
   const missing = [['المديرية', result.context.educationDirectorate], ['المدرسة', result.context.schoolName], ['اسم المعلم', result.context.teacherName], ['المادة', result.context.subject], ['الصف', result.context.grade], ['المجموعة', result.context.groupDescription], ['أداة القياس', result.context.assessmentName]].filter(([, value]) => !value || value === 'غير محدد');
   if (!missing.length) return null;
-  return <div className="report-section mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل الطباعة الرسمية النهائية.</div>;
+  return <div className="report-section mt-3 rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-xs font-bold text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل تصدير التقرير النهائي.</div>;
 }
 
 function LimitsNote() {

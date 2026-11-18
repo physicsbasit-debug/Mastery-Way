@@ -436,7 +436,16 @@ function ItemsTab({ items, setItems, paperTotalScore, itemCount, setItemCount, r
         <NumberInput label="عدد المفردات" value={itemCount} onChange={setItemCount} />
         <button type="button" onClick={rebuildItems} className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white">إعادة بناء الجدول</button>
       </div>
-      <div className="overflow-x-auto rounded-2xl border border-slate-200">
+      <div className="grid gap-3 md:hidden">
+        {items.map((item, index) => <div key={item.id} className="rounded-2xl border border-amber-200 bg-amber-50/30 p-3">
+          <div className="grid grid-cols-2 gap-3">
+            <Input label="المفردة" value={item.label} onChange={(value) => updateItem(index, 'label', value)} />
+            <label className="block text-sm font-bold text-slate-600"><span className="mb-1 block">الدرجة</span><HalfStepScoreInput value={item.maxScore} onChange={(value) => updateItem(index, 'maxScore', value)} /></label>
+          </div>
+          <div className="mt-3"><Select label="المهارة" value={item.skill} options={SKILL_OPTIONS} onChange={(value) => updateItem(index, 'skill', value)} /></div>
+        </div>)}
+      </div>
+      <div className="hidden md:block overflow-x-auto rounded-2xl border border-slate-200">
         <table className="min-w-[620px] w-full text-sm">
           <thead className="bg-slate-900 text-white"><tr>{['المفردة', 'الدرجة', 'المهارة'].map((head) => <th key={head} className="px-3 py-2 text-right">{head}</th>)}</tr></thead>
           <tbody>
@@ -527,12 +536,32 @@ function ScoresTab({
           type="button"
           onClick={runAnalysis}
           disabled={!readiness.valid}
-          className={`rounded-xl px-5 py-2 text-sm font-bold text-white ${readiness.valid ? 'bg-blue-700 hover:bg-blue-800' : 'cursor-not-allowed bg-slate-300'}`}
+          className={`rounded-xl px-5 py-2 text-sm font-bold text-white ${readiness.valid ? 'bg-amber-800 hover:bg-amber-900' : 'cursor-not-allowed bg-slate-300'}`}
         >
           تشغيل تحليل المفردات
         </button>
       </div>
-      <div className="max-h-[520px] overflow-auto rounded-2xl border border-slate-200">
+      <div className="grid gap-3 md:hidden">
+        {rows.map((row, rowIndex) => {
+          const filled = items.filter((item) => row.scores[item.id] !== '' && row.scores[item.id] != null).length;
+          const invalid = items.filter((item) => {
+            const issue = issueByCell.get(`${row.id}:${item.id}`);
+            return issue && issue.type !== 'empty';
+          }).length;
+          return <details key={row.id} className="exam-score-paper">
+            <summary><span>{row.label}</span><span className="exam-score-paper__status">{filled} / {items.length} مدخلة{invalid ? ` · ${invalid} تحتاج تصحيحًا` : ''}</span></summary>
+            <div className="exam-score-paper__content grid grid-cols-2 gap-3">{items.map((item) => {
+              const issue = issueByCell.get(`${row.id}:${item.id}`);
+              const fieldClass = issue?.type === 'empty' ? 'border-amber-300 bg-amber-50' : issue ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white';
+              return <label key={item.id} className="text-sm font-bold text-slate-700">{item.label} <span className="text-slate-500">(من {item.maxScore || '—'})</span>
+                <MobileNumberInput compact value={row.scores[item.id] ?? ''} min={0} max={typeof item.maxScore === 'number' ? item.maxScore : undefined} step="any" align="center" onChange={(value) => updateScore(rowIndex, item.id, value === '' ? '' : String(value))} inputClassName={`mt-1 w-full rounded-lg border px-2 py-2 text-center ${fieldClass}`} ariaInvalid={Boolean(issue && issue.type !== 'empty')} title={issue?.message ?? `${row.label}، ${item.label}`} />
+                {issue && issue.type !== 'empty' ? <span className="block text-xs text-red-700">{issue.message}</span> : null}
+              </label>;
+            })}</div>
+          </details>;
+        })}
+      </div>
+      <div className="hidden md:block max-h-[520px] overflow-auto rounded-2xl border border-slate-200">
         <table className="min-w-full text-sm">
           <thead className="sticky top-0 bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الورقة</th>{items.map((item) => <th key={item.id} className="px-3 py-2 text-center">{item.label}<div className="text-[10px] text-slate-300">من {item.maxScore || '—'}</div></th>)}</tr></thead>
           <tbody>
@@ -606,12 +635,19 @@ function SummaryTab({ result }: { result: ExamItemsSampleAnalysisResult }) {
 function AnalysisTab({ result }: { result: ExamItemsSampleAnalysisResult }) {
   return (
     <div className="mw-dashboard-space">
-      <ItemAnalysisTab result={result} />
-      <SkillAnalysisTab result={result} />
-      <BalanceTab result={result} />
-      <DiagnosticInsightsTab result={result} />
+      <AnalysisGroup title="أداء المفردات والفقد" description="الأداء والفقد ونسب الصفر لكل مفردة" initiallyOpen><ItemAnalysisTab result={result} /></AnalysisGroup>
+      <AnalysisGroup title="أداء المهارات" description="نتائج المهارات وتوصيات المتابعة"><SkillAnalysisTab result={result} /></AnalysisGroup>
+      <AnalysisGroup title="توازن الورقة" description="توزيع درجات الورقة بين المهارات"><BalanceTab result={result} /></AnalysisGroup>
+      <AnalysisGroup title="الأولويات والأسباب المحتملة" description="باريتو والرادار ومحاور المراجعة"><DiagnosticInsightsTab result={result} /></AnalysisGroup>
     </div>
   );
+}
+
+function AnalysisGroup({ title, description, children, initiallyOpen = false }: { title: string; description: string; children: React.ReactNode; initiallyOpen?: boolean }) {
+  return <details open={initiallyOpen} className="exam-analysis-group">
+    <summary><span><strong>{title}</strong><small>{description}</small></span></summary>
+    <div className="exam-analysis-group__content">{children}</div>
+  </details>;
 }
 
 function DiagnosticInsightsTab({ result }: { result: ExamItemsSampleAnalysisResult }) {

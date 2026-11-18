@@ -36,12 +36,3 @@ export function formatLatinDate(value?: string): string {
     day: '2-digit',
   }).format(parsed);
 }
-
-export function normalizeDigitsInElement(root: ParentNode): void {
-  const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
-  let current = walker.nextNode();
-  while (current) {
-    if (current.nodeValue) current.nodeValue = toLatinDigits(current.nodeValue);
-    current = walker.nextNode();
-  }
-}

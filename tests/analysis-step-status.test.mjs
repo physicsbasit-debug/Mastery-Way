@@ -6,7 +6,7 @@ let server;
 let getAnalysisStepStatus;
 
 before(async () => {
-  server = await createServer({ configFile: './vite.config.ts', server: { middlewareMode: true }, appType: 'custom' });
+  server = await createServer({ configFile: './vite.config.ts', server: { middlewareMode: true, hmr: false, ws: false }, appType: 'custom' });
   ({ getAnalysisStepStatus } = await server.ssrLoadModule('/shared/AnalysisStepAccordion.tsx'));
 });
 
@@ -14,6 +14,10 @@ after(async () => server?.close());
 
 test('لا يصف زيارة الخطوة بأنها إنجاز مكتمل', () => {
   assert.equal(getAnalysisStepStatus({ active: false, locked: false, visited: true, showVisitedStatus: false }), 'متاحة');
+});
+
+test('لا تُعد الخطوة مكتملة افتراضيًا بمجرد زيارتها', () => {
+  assert.equal(getAnalysisStepStatus({ active: false, locked: false, visited: true }), 'متاحة');
 });
 
 test('يحافظ على حالة الخطوة الحالية والقفل', () => {

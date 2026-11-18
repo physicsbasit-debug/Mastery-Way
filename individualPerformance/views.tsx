@@ -26,6 +26,8 @@ import {
   TopLossItemsChart,
 } from './charts';
 import { IndividualPerformanceReportView } from './report';
+import { ParentContactPanel } from './ParentContactPanel';
+import { studentRecordKey, type ParentRecords } from './parentCommunication';
 import { clearWorkspace, getAutosaveTimestamp, loadWorkspace, saveWorkspace } from '../shared/workspaceAutosave';
 import { PrintableResultTab } from '../shared/PrintableResultTab';
 import { DiagnosticDecisionCard } from '../shared/DiagnosticCards';
@@ -54,10 +56,11 @@ const TABS: Array<{ id: IndividualPerformanceTab; label: string; description: st
   { id: 'student-scores', label: 'إدخال درجات الطالب', description: 'الدرجات والأخطاء' },
   { id: 'overview', label: 'ملخص الأداء', description: 'النسبة والقرار' },
   { id: 'analysis', label: 'تحليل المفردات والمهارات', description: 'الفقد والتشخيص' },
+  { id: 'parent-contact', label: 'التواصل مع ولي الأمر', description: 'الرسالة والتوثيق والمتابعة' },
   { id: 'report', label: 'الخطة والتقرير الختامي', description: 'تقرير تفصيلي' },
 ];
 
-const RESULT_TABS: IndividualPerformanceTab[] = ['overview', 'analysis', 'report'];
+const RESULT_TABS: IndividualPerformanceTab[] = ['overview', 'analysis', 'parent-contact', 'report'];
 
 type IndividualPerformanceStoredWorkspace = {
   version: 1;
@@ -68,6 +71,7 @@ type IndividualPerformanceStoredWorkspace = {
   blueprint: ExamQuestionBlueprint[];
   studentInputs: StudentQuestionInput[];
   hadResult: boolean;
+  parentRecords?: ParentRecords;
   savedAt: string;
 };
 
@@ -79,6 +83,7 @@ type IndividualPerformanceInitialWorkspace = {
   blueprint: ExamQuestionBlueprint[];
   studentInputs: StudentQuestionInput[];
   result: IndividualPerformanceAnalysisResult | null;
+  parentRecords: ParentRecords;
 };
 
 function normalizeLegacyTab(tab: string): IndividualPerformanceTab {
@@ -110,6 +115,7 @@ function createFreshIndividualPerformanceWorkspace(): IndividualPerformanceIniti
     blueprint: freshBlueprint,
     studentInputs: createStudentInputsFromBlueprint(freshBlueprint),
     result: null,
+    parentRecords: {},
   };
 }
 
@@ -149,6 +155,7 @@ function loadInitialIndividualPerformanceWorkspace(): IndividualPerformanceIniti
     blueprint,
     studentInputs,
     result: restoredResult,
+    parentRecords: saved.parentRecords && typeof saved.parentRecords === 'object' && !Array.isArray(saved.parentRecords) ? saved.parentRecords : {},
   };
 }
 
@@ -161,6 +168,8 @@ export function IndividualPerformanceViews() {
   const [blueprint, setBlueprint] = useState<ExamQuestionBlueprint[]>(initialWorkspace.blueprint);
   const [studentInputs, setStudentInputs] = useState<StudentQuestionInput[]>(initialWorkspace.studentInputs);
   const [result, setResult] = useState<IndividualPerformanceAnalysisResult | null>(initialWorkspace.result);
+  const [parentRecords, setParentRecords] = useState<ParentRecords>(initialWorkspace.parentRecords);
+  const recordKey = studentRecordKey(context);
   const [analysisError, setAnalysisError] = useState<string | null>(null);
   const [analysisNotice, setAnalysisNotice] = useState<string | null>(null);
 
@@ -187,9 +196,10 @@ export function IndividualPerformanceViews() {
       blueprint,
       studentInputs,
       hadResult: Boolean(result?.validation.isValid),
+      parentRecords,
       savedAt: getAutosaveTimestamp(),
     });
-  }, [activeTab, context, settings, questionCount, blueprint, studentInputs, result]);
+  }, [activeTab, context, settings, questionCount, blueprint, studentInputs, result, parentRecords]);
 
   const clearSavedWorkspace = () => {
     clearWorkspace(WORKSPACE_KEY);
@@ -203,6 +213,12 @@ export function IndividualPerformanceViews() {
     setResult(null);
     setAnalysisError(null);
     setAnalysisNotice(null);
+  };
+
+  const clearAllIndividualData = () => {
+    if (!window.confirm('سيُحذف التحليل الحالي وجميع سجلات التواصل المحفوظة على هذا المتصفح. هل تريد المتابعة؟')) return;
+    clearSavedWorkspace();
+    setParentRecords({});
   };
 
   const invalidateAnalysis = () => {
@@ -322,10 +338,11 @@ export function IndividualPerformanceViews() {
         onSelect={(id) => setActiveTab(id as IndividualPerformanceTab)}
         isLocked={(id) => RESULT_TABS.includes(id as IndividualPerformanceTab) && (!result || !result.validation.isValid)}
         label="خطوات تحليل الأداء الفردي"
+        showVisitedStatus={false}
       />
 
       {activeTab === 'student-paper' ? (
-        <StudentPaperTab context={context} setContext={setContext} settings={settings} setSettings={updateSettings} fillExample={fillExample} clearSavedWorkspace={clearSavedWorkspace} />
+        <StudentPaperTab context={context} setContext={setContext} settings={settings} setSettings={updateSettings} fillExample={fillExample} clearSavedWorkspace={clearSavedWorkspace} clearAllIndividualData={clearAllIndividualData} />
       ) : null}
       {activeTab === 'exam-structure' ? (
         <ExamStructureTab questionCount={questionCount} setQuestionCount={setQuestionCount} blueprint={blueprint} setBlueprint={updateBlueprint} totalExamScore={totalExamScore} rebuildBlueprint={rebuildBlueprint} />
@@ -335,18 +352,20 @@ export function IndividualPerformanceViews() {
       ) : null}
       {activeTab === 'overview' ? <ResultGate result={result} render={(analysis) => <PrintableResultTab sectionId="individual-overview-tab" context={{ directorate: analysis.context.educationDirectorate, schoolName: analysis.context.schoolName, teacherName: analysis.context.teacherName, trackLabel: 'بوصلة الإتقان — تحليل الأداء الفردي', title: 'ملخص الأداء الفردي', fields: [{ label: 'الطالب', value: analysis.context.studentName }, { label: 'المادة', value: analysis.context.subject }, { label: 'الصف / الشعبة', value: `${analysis.context.grade} / ${analysis.context.section || 'لم يحدد'}` }] }}><OverviewTab result={analysis} /></PrintableResultTab>} /> : null}
       {activeTab === 'analysis' ? <ResultGate result={result} render={(analysis) => <PrintableResultTab sectionId="individual-analysis-tab" context={{ directorate: analysis.context.educationDirectorate, schoolName: analysis.context.schoolName, teacherName: analysis.context.teacherName, trackLabel: 'بوصلة الإتقان — تحليل الأداء الفردي', title: 'تحليل المفردات والمهارات', fields: [{ label: 'الطالب', value: analysis.context.studentName }, { label: 'المادة', value: analysis.context.subject }, { label: 'الصف / الشعبة', value: `${analysis.context.grade} / ${analysis.context.section || 'لم يحدد'}` }] }}><AnalysisTab result={analysis} /></PrintableResultTab>} /> : null}
-      {activeTab === 'report' ? <ResultGate result={result} render={(analysis) => <IndividualPerformanceReportView result={analysis} />} /> : null}
+      {activeTab === 'parent-contact' ? <ResultGate result={result} render={(analysis) => recordKey ? <ParentContactPanel key={recordKey} result={analysis} record={parentRecords[recordKey]} onChange={(record) => setParentRecords(previous => ({...previous, [recordKey]: record}))} /> : <div className="rounded-2xl border border-amber-200 bg-amber-50 p-5 text-amber-950">أدخل اسم الطالب وعنوان الورقة أولًا لربط سجل التواصل بالتحليل الصحيح.</div>} /> : null}
+      {activeTab === 'report' ? <ResultGate result={result} render={(analysis) => <IndividualPerformanceReportView result={analysis} parentRecord={recordKey ? parentRecords[recordKey] : undefined} />} /> : null}
     </main>
   );
 }
 
-function StudentPaperTab({ context, setContext, settings, setSettings, fillExample, clearSavedWorkspace }: {
+function StudentPaperTab({ context, setContext, settings, setSettings, fillExample, clearSavedWorkspace, clearAllIndividualData }: {
   context: IndividualReportContext;
   setContext: React.Dispatch<React.SetStateAction<IndividualReportContext>>;
   settings: IndividualPerformanceSettings;
   setSettings: React.Dispatch<React.SetStateAction<IndividualPerformanceSettings>>;
   fillExample: () => void;
   clearSavedWorkspace: () => void;
+  clearAllIndividualData: () => void;
 }) {
   return (
     <div className="grid grid-cols-1 gap-4 xl:grid-cols-3">
@@ -378,11 +397,12 @@ function StudentPaperTab({ context, setContext, settings, setSettings, fillExamp
         <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
           <div>
             <h3 className="text-base font-black text-slate-900">إجراءات بداية المسار</h3>
-            <p className="mt-1 text-sm text-slate-500">تُحفظ بيانات العمل مؤقتًا في هذا المتصفح لاستكمالها لاحقًا. عند استخدام جهاز مشترك، اضغط «مسح بيانات الطالب وبدء تحليل جديد» بعد الانتهاء.</p>
+            <p className="mt-1 text-sm text-slate-500">تُحفظ بيانات التحليل وسجلات التواصل في هذا المتصفح على الجهاز. بدء تحليل جديد يحتفظ بسجلات التواصل؛ ولإزالتها من جهاز مشترك استخدم خيار حذف جميع البيانات.</p>
           </div>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={fillExample} className="rounded-xl border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-800 transition hover:border-slate-500">تعبئة مثال</button>
-            <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-bold text-red-700 transition hover:border-red-400">مسح بيانات الطالب وبدء تحليل جديد</button>
+            <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-[#bac7ab] bg-[#f7f8f3] px-5 py-2.5 text-sm font-bold text-[#40502f]">بدء تحليل جديد مع الاحتفاظ بسجل التواصل</button>
+            <button type="button" onClick={clearAllIndividualData} className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-bold text-red-700">حذف جميع بيانات المسار وسجلات التواصل</button>
           </div>
         </div>
       </section>
@@ -410,7 +430,7 @@ function ExamStructureTab({ questionCount, setQuestionCount, blueprint, setBluep
       </div>
       <p className="mb-3 text-sm leading-7 text-slate-600">تبدأ خلية درجة كل مفردة فارغة، ويكتبها المعلم يدويًا. يجب أن تكون الدرجة 0.5 فأكثر، وتتدرج بمقدار 0.5، ولا تقبل الصفر أو القيم السالبة.</p>
       <div className="overflow-x-auto rounded-2xl border border-slate-200">
-        <table className="w-full min-w-[620px] text-sm">
+        <table className="individual-mobile-table individual-mobile-blueprint w-full min-w-[620px] text-sm">
           <thead className="bg-slate-900 text-white"><tr><th className="px-3 py-3 text-right">السؤال</th><th className="px-3 py-3 text-right">الدرجة الكلية</th><th className="px-3 py-3 text-right">المهارة</th></tr></thead>
           <tbody>{blueprint.map((question) => <tr key={question.id} className="border-b border-slate-100 last:border-b-0"><td className="px-3 py-2 font-black">{question.label}</td><td className="px-3 py-2"><SmallNumber value={question.maxScore} min={0.5} step={0.5} onChange={(value) => updateQuestion(question.id, { maxScore: value })} /></td><td className="px-3 py-2"><SmallSelect value={question.skill} options={SKILL_OPTIONS} onChange={(value) => updateQuestion(question.id, { skill: value })} /></td></tr>)}</tbody>
         </table>
@@ -486,7 +506,7 @@ function StudentScoresTab({ blueprint, studentInputs, setStudentInputs, analyze,
       </div>
 
       <div className="overflow-x-auto rounded-2xl border border-slate-200">
-        <table className="w-full min-w-[1250px] text-sm">
+        <table className="individual-mobile-table individual-mobile-scores w-full min-w-[1250px] text-sm">
           <thead className="bg-slate-900 text-white">
             <tr>
               <th className="px-3 py-3 text-right">السؤال</th>
@@ -561,11 +581,11 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
         <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="royal" />
         <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="royal" featured />
         <Metric label="التصنيف" value={<StatusBadge tone={levelTone(result.level.code)}>{result.level.label}</StatusBadge>} hint={result.level.planType} icon="◆" tone={levelTone(result.level.code)} />
+        <Metric label="أولوية التدخل" value={firstPriority ? firstPriority.skill : 'لا توجد أولوية'} hint={firstPriority ? `${firstPriority.percent}% أداء في المهارة` : 'لا توجد فجوة مهارية بارزة'} icon="★" tone="amber" />
         <Metric label="الفجوة عن الإتقان" value={`${result.summary.gapToMasteryPoints} درجة`} hint={result.summary.achievedMastery ? 'لا توجد فجوة حرجة عن الإتقان' : 'الفارق المطلوب للوصول إلى حد الإتقان'} icon="△" tone={result.summary.achievedMastery ? 'royal' : 'amber'} />
         <Metric label="حالة الإتقان" value={result.summary.achievedMastery ? 'حقق الإتقان' : 'لم يحقق الإتقان'} hint="مقارنة مباشرة بحد الإتقان" icon="✓" tone={result.summary.achievedMastery ? 'royal' : 'danger'} />
         <Metric label="جودة القراءة" value={result.readingQuality.label} hint={result.readingQuality.totalQuestions ? `${result.readingQuality.totalQuestions} مفردة ممثلة` : 'قراءة تشخيصية'} icon="◎" tone="olive" />
         <Metric label="ترميز الأخطاء" value={`${result.codingCompleteness.percent}%`} hint={result.codingCompleteness.label} icon="⌁" tone="slate" />
-        <Metric label="أولوية التدخل" value={firstPriority ? firstPriority.skill : 'لا توجد أولوية'} hint={firstPriority ? `${firstPriority.percent}% أداء في المهارة` : 'لا توجد فجوة مهارية بارزة'} icon="★" tone="amber" />
       </div>
       <PremiumPanel title="مشهد الأداء الفردي" description="موضع الطالب من حد الإتقان وتوزيع حالة الإجابات." tone="olive">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
@@ -586,7 +606,7 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
 function AnalysisTab({ result }: { result: IndividualPerformanceAnalysisResult }) {
   return (
     <div className="space-y-5">
-      <Card title="تحليل المفردات">
+      <AnalysisGroup title="تحليل المفردات" defaultOpen>
         <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           <Metric label="صحيحة" value={result.itemStatus.correctCount} />
           <Metric label="جزئية" value={result.itemStatus.partialCount} />
@@ -600,9 +620,9 @@ function AnalysisTab({ result }: { result: IndividualPerformanceAnalysisResult }
         <div className="mt-4">
           <SimpleTable headers={['المفردة', 'المهارة', 'درجة الطالب', 'الفقد', 'نوع الخطأ', 'ملاحظة المعلم', 'الأولوية']} rows={result.topLossItems.map((question) => [question.label, question.skill, `${question.score} من ${question.maxScore}`, question.loss, question.errorType, question.teacherNote || '—', question.priority])} />
         </div>
-      </Card>
+      </AnalysisGroup>
 
-      <Card title="تحليل المهارات">
+      <AnalysisGroup title="تحليل المهارات">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <SkillPerformanceChart result={result} />
           <SkillLossChart result={result} />
@@ -610,9 +630,9 @@ function AnalysisTab({ result }: { result: IndividualPerformanceAnalysisResult }
         <div className="mt-4">
           <SimpleTable headers={['المهارة', 'عدد المفردات', 'درجة الطالب', 'النسبة', 'الحكم', 'قراءة التمثيل']} rows={result.skills.map((skill) => [skill.skill, skill.questionCount, `${skill.score} من ${skill.maxScore}`, `${skill.percent}%`, skill.judgement, skill.representationNote])} />
         </div>
-      </Card>
+      </AnalysisGroup>
 
-      <Card title="أنماط الأخطاء وملاحظات المعلم">
+      <AnalysisGroup title="أنماط الأخطاء وملاحظات المعلم">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <ErrorPatternsChart result={result} />
           <PriorityLineChart result={result} />
@@ -625,11 +645,11 @@ function AnalysisTab({ result }: { result: IndividualPerformanceAnalysisResult }
           <NoteBox title="مؤشر التشخيص" text={result.narratives.diagnosisIndicator} />
           <NoteBox title="دور ملاحظات المعلم" text={result.narratives.teacherNotesReading} />
         </div>
-      </Card>
+      </AnalysisGroup>
 
-      <DiagnosticInsightsPanel result={result} />
+      <AnalysisGroup title="التشخيص وأولويات التدخل"><DiagnosticInsightsPanel result={result} /></AnalysisGroup>
 
-      <Card title="الخطة التربوية وإعادة القياس">
+      <AnalysisGroup title="الخطة التربوية وإعادة القياس">
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
           <NoteBox title="رسالة إلى الطالب" text={result.plan.studentMessage} />
           <NoteBox title="مدة الخطة" text={`${result.plan.title} — ${result.plan.duration}`} />
@@ -643,9 +663,13 @@ function AnalysisTab({ result }: { result: IndividualPerformanceAnalysisResult }
           <List title="المعلم / المدرسة" items={result.plan.teacherRole} />
           <List title="الطالب" items={result.plan.studentActions} />
         </div>
-      </Card>
+      </AnalysisGroup>
     </div>
   );
+}
+
+function AnalysisGroup({ title, children, defaultOpen = false }: { title: string; children: React.ReactNode; defaultOpen?: boolean }) {
+  return <details className="individual-analysis-group" open={defaultOpen || undefined}><summary>{title}</summary><div className="individual-analysis-group__content">{children}</div></details>;
 }
 
 

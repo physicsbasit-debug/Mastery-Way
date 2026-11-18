@@ -1,5 +1,7 @@
+import { PdfExport } from '../shared/PdfExport';
+import { compareFollowup, type ParentRecord } from './parentCommunication';
 import React from 'react';
-import { printUnifiedReport, UnifiedOfficialReportHeader, UnifiedPrintStyles, UnifiedReportToolbar } from '../shared/UnifiedReport';
+import { UnifiedOfficialReportHeader, UnifiedPrintStyles } from '../shared/UnifiedReport';
 import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock, RadarReportBlock } from '../shared/DiagnosticReportBlocks';
 import {
   ErrorPatternsChart,
@@ -13,30 +15,18 @@ import {
 import type { IndividualPerformanceAnalysisResult, ValidatedQuestionResult } from './types';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
 
-export function IndividualPerformanceReportView({ result }: { result: IndividualPerformanceAnalysisResult }) {
-  const printReport = () => {
-    void printUnifiedReport({
-      targetValue: 'individual-performance-detailed',
-      areaId: 'individual-performance-detailed-report',
-      documentTitle: 'بوصلة الإتقان - تحليل الأداء الفردي - تقرير تفصيلي',
-    });
-  };
+export function IndividualPerformanceReportView({ result, parentRecord }: { result: IndividualPerformanceAnalysisResult; parentRecord?: ParentRecord }) {
 
   return (
     <div className="space-y-5">
       <PrintStyles />
-      <UnifiedReportToolbar
-        noPrintClassName="individual-performance-no-print"
-        title="الخطة والتقرير الختامي"
-        description="تقرير تفصيلي توثيقي للطباعة الرسمية على A4."
-        actions={[{ label: 'طباعة التقرير التفصيلي', onClick: printReport, variant: 'dark' }]}
-      />
-      <DetailedReport result={result} />
+      <PdfExport areaId="individual-performance-detailed-report" filename="individual-report.pdf" />
+    <DetailedReport result={result} parentRecord={parentRecord} />
     </div>
   );
 }
 
-function DetailedReport({ result }: { result: IndividualPerformanceAnalysisResult }) {
+function DetailedReport({ result, parentRecord }: { result: IndividualPerformanceAnalysisResult; parentRecord?: ParentRecord }) {
   return (
     <article id="individual-performance-detailed-report" className="premium-report-document mw-print-report mw-print-report--individual individual-report-print-polish rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-sm" dir="rtl">
       <UnifiedOfficialReportHeader
@@ -112,7 +102,6 @@ function DetailedReport({ result }: { result: IndividualPerformanceAnalysisResul
           <StudentMasteryPositionChart result={result} compact />
           <ItemStatusChart result={result} compact />
           <TopLossItemsChart result={result} compact />
-          <SkillPerformanceChart result={result} compact />
           <PriorityLineChart result={result} compact />
         </div>
       </ReportSection>
@@ -125,8 +114,21 @@ function DetailedReport({ result }: { result: IndividualPerformanceAnalysisResul
         </div>
         <div className="individual-priority-table mt-4"><DataTable headers={['الترتيب', 'المهارة', 'الأداء', 'الفقد', 'سبب الترتيب']} rows={result.priorities.map((priority) => [priority.rank, priority.skill, `${priority.percent}%`, priority.loss, priority.reason])} /></div>
         <div className="mt-4 grid gap-3 md:grid-cols-3"><BulletCard title="دور الطالب" items={result.plan.studentActions} /><BulletCard title="دور المعلم / المدرسة" items={result.plan.teacherRole} /><BulletCard title="دور ولي الأمر" items={result.plan.parentRole} /></div>
-        <SignatureSection />
       </ReportSection>
+      {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" pageBreak>
+        {parentRecord.contacts.map(entry => {
+          const comparison = compareFollowup(entry.baseline, entry.followupPercent);
+          return <div key={entry.id} className="premium-report-narrative report-section mt-3 rounded-xl border border-slate-200 p-3 text-sm leading-7">
+            <p><strong>التاريخ:</strong> {entry.date} · <strong>الوسيلة:</strong> {entry.method} · <strong>النتيجة:</strong> {entry.status}</p>
+            {entry.agreement && <p><strong>الإجراء المتفق عليه:</strong> {entry.agreement}</p>}
+            {entry.evidence && <p><strong>ملاحظة أو مرجع الشاهد:</strong> {entry.evidence}</p>}
+            {entry.skill && <p><strong>المهارة:</strong> {entry.skill} · <strong>النتيجة قبل المتابعة:</strong> {entry.baseline}%</p>}
+            <p><strong>المتابعة:</strong> {comparison ? `بعد: ${comparison.after}%، الفرق: ${comparison.difference > 0 ? '+' : ''}${comparison.difference} نقطة مئوية${entry.followupDate ? `، التاريخ: ${entry.followupDate}` : ''}` : 'بانتظار إعادة القياس'}</p>
+            {entry.followupNote && <p><strong>ملاحظة المتابعة:</strong> {entry.followupNote}</p>}
+          </div>;
+        })}
+      </ReportSection> : null}
+      <SignatureSection />
     </article>
   );
 }
@@ -156,7 +158,7 @@ function MissingDataNotice({ result }: { result: IndividualPerformanceAnalysisRe
     ['عنوان الورقة', result.context.paperTitle],
   ].filter(([, value]) => !String(value || '').trim());
   if (!missing.length) return null;
-  return <section className="report-section mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل الطباعة الرسمية النهائية.</section>;
+  return <section className="report-section mt-3 rounded-xl border border-amber-200 bg-amber-50 px-3 py-2 text-xs leading-6 text-amber-950">تنبيه اعتماد: توجد بيانات تعريفية غير مكتملة ({missing.map(([label]) => label).join('، ')}). يفضل إكمالها قبل تصدير التقرير النهائي.</section>;
 }
 
 function QuestionTable({ rows }: { rows: ValidatedQuestionResult[] }) {
@@ -171,7 +173,30 @@ function DataTable({ headers, rows, title, emptyText = 'لا توجد بيانا
 function BulletCard({ title, items }: { title: string; items: string[] }) { return <div className="premium-report-narrative rounded-xl border border-slate-200 p-3"><h3 className="font-black">{title}</h3><ul className="mt-2 space-y-1 text-sm leading-6 text-slate-700">{items.map((item) => <li key={item}>• {item}</li>)}</ul></div>; }
 function SignatureSection() { return <section className="signature-section mt-6 grid grid-cols-4 gap-3 text-center text-xs"><Signature label="ولي الأمر" /><Signature label="المعلم" /><Signature label="المعلم الأول / المشرف" /><Signature label="إدارة المدرسة" /></section>; }
 function Signature({ label }: { label: string }) { return <div className="premium-report-signature rounded-xl border border-slate-200 p-3"><div className="font-black">{label}</div><div className="mt-8 border-t border-slate-300 pt-2">الاسم والتوقيع</div></div>; }
-function PrintStyles() { return <UnifiedPrintStyles printAreaId="individual-performance-detailed-report" noPrintClassName="individual-performance-no-print" pageMarginMm={8} fontSizePx={9.4} lineHeight={1.36} extraCss={`
+function PrintStyles() { return <UnifiedPrintStyles printAreaId="individual-performance-detailed-report" noPrintClassName="individual-performance-no-print" pageMarginMm={8} fontSizePx={11} lineHeight={1.45} extraCss={`
+  #unified-print-root #individual-performance-detailed-report .official-report-header { background: #fff !important; color: #33482d !important; border: 1px solid #d5dfce !important; border-bottom: 3px solid #5f6f3a !important; }
+  #unified-print-root #individual-performance-detailed-report .official-report-header p,
+  #unified-print-root #individual-performance-detailed-report .official-report-header h1,
+  #unified-print-root #individual-performance-detailed-report .official-report-header div,
+  #unified-print-root #individual-performance-detailed-report .official-report-header .space-y-0\\.5,
+  #unified-print-root #individual-performance-detailed-report .official-report-header p:nth-last-child(1) { color: #33482d !important; }
+  #unified-print-root #individual-performance-detailed-report .official-report-header p.mt-1\\.5,
+  #unified-print-root #individual-performance-detailed-report .official-report-header p[class*="text-[11px]"] { background: #f5f2e5 !important; color: #67542a !important; }
+  #unified-print-root #individual-performance-detailed-report .premium-report-summary,
+  #unified-print-root #individual-performance-detailed-report .premium-report-narrative,
+  #unified-print-root #individual-performance-detailed-report .diagnostic-report-block,
+  #unified-print-root #individual-performance-detailed-report .diagnostic-report-fishbone,
+  #unified-print-root #individual-performance-detailed-report .unified-chart-card { background: #fff !important; border-color: #d5dfce !important; }
+  #unified-print-root #individual-performance-detailed-report .premium-report-narrative::before,
+  #unified-print-root #individual-performance-detailed-report .diagnostic-report-block::before,
+  #unified-print-root #individual-performance-detailed-report .diagnostic-report-fishbone::before,
+  #unified-print-root #individual-performance-detailed-report .unified-chart-card::before { background: #5f6f3a !important; }
+  #unified-print-root #individual-performance-detailed-report .premium-report-table th,
+  #unified-print-root #individual-performance-detailed-report .premium-report-table td { font-size: 10.5px !important; line-height: 1.5 !important; }
+  #unified-print-root #individual-performance-detailed-report .premium-report-section-title { break-after: avoid-page; page-break-after: avoid; }
+  #unified-print-root #individual-performance-detailed-report .report-page-break,
+  html[data-print-browser="firefox"] #unified-print-root #individual-performance-detailed-report .report-page-break { break-before: auto !important; page-break-before: auto !important; }
+  #unified-print-root #individual-performance-detailed-report .report-page-break::before { display: none !important; content: none !important; }
   #unified-print-root #individual-performance-detailed-report table { table-layout: fixed !important; }
   #unified-print-root #individual-performance-detailed-report th { white-space: normal !important; overflow-wrap: normal !important; word-break: keep-all !important; }
   #unified-print-root #individual-performance-detailed-report td { overflow-wrap: break-word !important; word-break: normal !important; }

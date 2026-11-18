@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  printUnifiedReport,
   UnifiedOfficialReportHeader,
   UnifiedPrintStyles,
 } from './UnifiedReport';
@@ -24,26 +23,8 @@ export function PrintableResultTab({
   context: PrintableResultContext;
   children: React.ReactNode;
 }) {
-  const print = () => {
-    void printUnifiedReport({
-      targetValue: sectionId,
-      areaId: sectionId,
-      documentTitle: `بوصلة الإتقان - ${context.title}`,
-    });
-  };
-
   return (
     <div className="space-y-3">
-      <div className="result-tab-no-print flex justify-end">
-        <button
-          type="button"
-          onClick={print}
-          className="rounded-xl bg-slate-900 px-4 py-2 text-sm font-bold text-white shadow-sm transition hover:bg-slate-700"
-        >
-          طباعة هذا التبويب
-        </button>
-      </div>
-
       <section id={sectionId} className="printable-result-tab space-y-4" dir="rtl">
         <div className="result-tab-print-header">
           <UnifiedOfficialReportHeader

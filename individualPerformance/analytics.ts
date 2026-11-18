@@ -759,6 +759,7 @@ function buildIndividualDiagnostics(
   const topSkill = skillLossPareto[0];
   const topItem = itemLossPareto[0];
   const topError = errorPareto[0];
+  const tiedTopErrors = topError ? errorPareto.filter((entry) => entry.value === topError.value) : [];
   const lowConfidence = readingQuality.code === 'limited';
   const confidence = confidenceFromSignals({
     lowReliability: lowConfidence,
@@ -782,7 +783,7 @@ function buildIndividualDiagnostics(
       },
       {
         title: 'فهم المطلوب',
-        evidence: topError ? `النمط الأبرز: ${topError.label}.` : 'لا يوجد نمط خطأ مرمز غالب.',
+        evidence: tiedTopErrors.length > 1 ? `أنماط متساوية في أعلى تكرار: ${tiedTopErrors.map((entry) => entry.label).join('، ')}.` : topError ? `النمط الأبرز: ${topError.label}.` : 'لا يوجد نمط خطأ مرمز غالب.',
         prompts: [
           'هل يقرأ الطالب المطلوب كاملًا قبل الحل؟',
           'هل يخلط بين المعطيات والمطلوب؟',

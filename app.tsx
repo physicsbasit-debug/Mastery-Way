@@ -139,7 +139,7 @@ function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath:
             <div>
               <p className="mw-workspace-kicker">مساحة التحليل</p>
               <h1>{activePathMeta?.title ?? 'مسار التحليل'}</h1>
-              <p className="mw-workspace-description">أدخل البيانات، تابع المؤشرات، ثم اطبع تقريرك عند اكتمال التحليل.</p>
+              <p className="mw-workspace-description">أدخل البيانات، تابع المؤشرات، ثم صدّر تقريرك عند اكتمال التحليل.</p>
             </div>
           </div>
           <button type="button" onClick={onBackHome} className="mw-back-home-button"><span aria-hidden="true">→</span> المسارات</button>

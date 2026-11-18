@@ -5,7 +5,7 @@ export function ItemPerformanceChart({ result }: { result: ExamItemsSampleAnalys
   const data = result.items.map((item) => ({ name: item.label, value: item.performancePercent }));
   return (
     <ChartCard title="أداء المفردات" description="يعرض نسبة أداء العينة في كل مفردة." compact>
-      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="الأداء" fill="#2563eb" domain={[0, 100]} />
+      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="الأداء" fill="#a87526" domain={[0, 100]} />
     </ChartCard>
   );
 }
@@ -43,7 +43,7 @@ function BalanceBarChart({ title, description, entries }: { title: string; descr
   const data = entries.map((entry) => ({ name: entry.name, value: entry.scoreWeightPercent }));
   return (
     <ChartCard title={title} description={description} compact>
-      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="وزن الدرجة" fill="#7c3aed" domain={[0, 100]} />
+      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="وزن الدرجة" fill="#956a36" domain={[0, 100]} />
     </ChartCard>
   );
 }
@@ -62,7 +62,7 @@ export function ReliabilityBadgeChart({ result }: { result: ExamItemsSampleAnaly
           <span>{percent}%</span>
         </div>
         <div className="mt-2 h-4 overflow-hidden rounded-full bg-slate-200">
-          <div className="h-full rounded-full bg-blue-600" style={{ width: `${Math.min(100, Math.max(0, percent))}%` }} />
+          <div className="h-full rounded-full bg-amber-700" style={{ width: `${Math.min(100, Math.max(0, percent))}%` }} />
         </div>
         <div className="mt-2 text-center text-sm font-black text-slate-900">{result.reliability.label}</div>
         <div className="mt-2 space-y-1 text-center text-xs text-slate-500">
