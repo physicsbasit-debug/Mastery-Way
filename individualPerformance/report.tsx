@@ -14,6 +14,8 @@ import {
 } from './charts';
 import type { IndividualPerformanceAnalysisResult, ValidatedQuestionResult } from './types';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
+import { InterventionFollowupReport } from '../shared/InterventionFollowupReport';
+import { followupIdentity } from '../shared/interventionFollowup';
 
 export function IndividualPerformanceReportView({ result, parentRecord }: { result: IndividualPerformanceAnalysisResult; parentRecord?: ParentRecord }) {
 
@@ -114,6 +116,7 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
         </div>
         <div className="individual-priority-table mt-4"><DataTable headers={['الترتيب', 'المهارة', 'الأداء', 'الفقد', 'سبب الترتيب']} rows={result.priorities.map((priority) => [priority.rank, priority.skill, `${priority.percent}%`, priority.loss, priority.reason])} /></div>
         <div className="mt-4 grid gap-3 md:grid-cols-3"><BulletCard title="دور الطالب" items={result.plan.studentActions} /><BulletCard title="دور المعلم / المدرسة" items={result.plan.teacherRole} /><BulletCard title="دور ولي الأمر" items={result.plan.parentRole} /></div>
+        <InterventionFollowupReport identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       </ReportSection>
       {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" pageBreak>
         {parentRecord.contacts.map(entry => {
