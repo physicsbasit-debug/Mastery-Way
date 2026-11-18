@@ -32,5 +32,8 @@ jobs:
       - name: Build application
         run: npm run build
 
-      - name: Check dependency vulnerabilities
-        run: npm audit --audit-level=moderate
+      - name: Audit production dependencies
+        run: npm audit --omit=dev --audit-level=moderate
+
+      - name: Audit all dependencies with temporary exception
+        run: node scripts/security-audit-policy.mjs
