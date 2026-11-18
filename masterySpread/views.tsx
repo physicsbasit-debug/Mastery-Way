@@ -43,6 +43,8 @@ import { MobileNumberInput } from '../shared/MobileNumberInput';
 import { toLatinDigits } from '../shared/numberFormat';
 import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } from '../shared/DashboardElements';
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
+import { NextStepCard } from '../shared/NextStepCard';
+import { groupNextStep } from '../shared/nextSteps';
 
  type TabKey = 'input' | 'overview' | 'charts' | 'gap' | 'decision' | 'plan' | 'report';
 const WORKSPACE_KEY = 'bosla.workspace.masterySpread.v2';
@@ -282,6 +284,7 @@ function Metadata({ context, updateContext }: { context: MasterySpreadContext; u
 function OverviewTab({ result }: { result: MasterySpreadAnalysisResult }) {
   return (
     <section className="mw-dashboard-space">
+      <NextStepCard step={groupNextStep(result)} tone="emerald" />
       <div className="mw-dashboard-grid mw-dashboard-grid--five">
         <MetricCard label="عدد الطلبة" value={result.summary.totalStudents} hint={result.dataQuality.label} icon="👥" tone="slate" />
         <MetricCard label="حققوا الإتقان" value={result.summary.masteryCount} hint={`حد الإتقان ${result.summary.masteryCutoffPercent}%`} icon="✓" tone="royal" />

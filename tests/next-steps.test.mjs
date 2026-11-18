@@ -1,0 +1,11 @@
+import { before, after, test } from 'node:test';
+import assert from 'node:assert/strict';
+import { createServer } from 'vite';
+let server, m;
+before(async () => {server=await createServer({configFile:'./vite.config.ts',server:{middlewareMode:true,hmr:false,ws:false},appType:'custom'});m=await server.ssrLoadModule('/shared/nextSteps.ts')});
+after(async()=>server?.close());
+test('الفردي يختار مهارة دون حد الإتقان ويقترح تمرينًا قابلًا للتنفيذ',()=>{const s=m.individualNextStep({summary:{masteryCutoffPercent:75},skills:[{skill:'الفهم',percent:45},{skill:'التطبيق',percent:80}]});assert.match(s.observation,/الفهم/);assert.match(s.action,/سؤال/);assert.match(s.check,/الفهم/)});
+test('الفردي يعرض التعادل ولا يصف مهارة متقنة بأنها ضعيفة',()=>{const tied=m.individualNextStep({summary:{masteryCutoffPercent:75},skills:[{skill:'الفهم',percent:45},{skill:'التطبيق',percent:45}]});assert.match(tied.observation,/الفهم/);assert.match(tied.observation,/التطبيق/);const mastered=m.individualNextStep({summary:{masteryCutoffPercent:75},skills:[{skill:'الفهم',percent:90}]});assert.doesNotMatch(mastered.observation,/دعم|أقل/);assert.match(mastered.action,/إثراء|جديد/)});
+test('العينة تصف نتائج العينة دون تعميم وتراعي تعادل المهارات',()=>{const s=m.sampleNextStep({summary:{masteryCutoffPercent:75},skills:[{skill:'التطبيق',performancePercent:40},{skill:'الفهم',performancePercent:40}]});assert.match(s.observation,/العينة/);assert.match(s.observation,/التطبيق/);assert.match(s.observation,/الفهم/);assert.match(s.check,/العينة|مماثل/)});
+test('الجماعي يستند إلى أعداد الطلبة دون ادعاء معرفة مهارة',()=>{const s=m.groupNextStep({summary:{totalStudents:20,masteryCount:12,nonMasteryCount:8,masteryCutoffPercent:75,masterySpreadPercent:60}});assert.match(s.observation,/8/);assert.doesNotMatch(s.observation,/مهارة/);assert.match(s.check,/الإتقان/)});
+test('الجماعي عند إتقان الجميع يقترح إثراء وليس علاجًا',()=>{const s=m.groupNextStep({summary:{totalStudents:5,masteryCount:5,nonMasteryCount:0,masteryCutoffPercent:75,masterySpreadPercent:100}});assert.match(s.action,/إثرائ/);assert.doesNotMatch(s.observation,/لم يحقق/)});
