@@ -14,19 +14,20 @@ import {
 } from './reportText';
 import type { ExamItemsSampleAnalysisResult } from './types';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
+import { InterventionFollowupReport } from '../shared/InterventionFollowupReport';
 
-export function ExamItemsSampleReports({ result }: { result: ExamItemsSampleAnalysisResult }) {
+export function ExamItemsSampleReports({ result, followupIdentity }: { result: ExamItemsSampleAnalysisResult; followupIdentity?: string }) {
 
   return (
     <div className="space-y-5">
       <PrintStyles />
       <PdfExport areaId="exam-items-detailed-report" filename="exam-items-report.pdf" />
-    <DetailedReport result={result} />
+    <DetailedReport result={result} followupIdentity={followupIdentity} />
     </div>
   );
 }
 
-function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
+function DetailedReport({ result, followupIdentity }: { result: ExamItemsSampleAnalysisResult; followupIdentity?: string }) {
   return (
     <article id="exam-items-detailed-report" className="premium-report-document mw-print-report mw-print-report--exam rounded-3xl border border-slate-200 bg-white p-6 text-slate-900 shadow-sm" dir="rtl">
       <UnifiedOfficialReportHeader
@@ -112,6 +113,7 @@ function DetailedReport({ result }: { result: ExamItemsSampleAnalysisResult }) {
           <Narrative title="مراجعة الورقة القادمة" text={buildPaperReviewDecisionText(result)} />
         </div>
         <BulletList items={buildTeachingRecommendations(result)} />
+        {followupIdentity && <InterventionFollowupReport identity={followupIdentity} metrics={result.skills.map(s => ({skill:s.skill,value:s.performancePercent}))} />}
         <SignatureSection />
       </ReportSection>
     </article>

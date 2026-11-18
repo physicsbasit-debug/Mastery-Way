@@ -6,6 +6,8 @@ import { GROUP_SHAPE_THRESHOLDS, MASTERY_JUDGEMENT_SCALE } from './constants';
 import { formatPercentagePointAmount, formatStudentCount } from './utils';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
 import type { MasterySpreadAnalysisResult } from './types';
+import { InterventionFollowupReport } from '../shared/InterventionFollowupReport';
+import { followupIdentity } from '../shared/interventionFollowup';
 
 export interface MasterySpreadReportViewProps { result: MasterySpreadAnalysisResult; }
 
@@ -105,6 +107,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
       <ListBox title="التوصيات" items={result.educationalDecision.recommendations} />
       <PlanTable result={result} />
       <Narrative title="إعادة القياس" text={result.educationalDecision.retestRecommendation} />
+      <InterventionFollowupReport identity={followupIdentity('group', result.context, [result.settings, result.validScores])} metrics={[{skill:'انتشار الإتقان',value:result.summary.masterySpreadPercent}]} />
       <SignatureSection />
     </section>
   </article>;
