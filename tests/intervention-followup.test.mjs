@@ -1,0 +1,10 @@
+import {test,before,after} from 'node:test';
+import assert from 'node:assert/strict';
+import {createServer} from 'vite';
+let server, f;
+before(async()=>{server=await createServer({configFile:'./vite.config.ts',server:{middlewareMode:true,hmr:false,ws:false},appType:'custom'}); f=await server.ssrLoadModule('/shared/interventionFollowup.ts')});
+after(async()=>server?.close());
+test('المقارنة تتطلب تأكيد قابلية القياسين للمقارنة',()=>{assert.equal(f.comparePercent(40,'60',false),null);assert.deepEqual(f.comparePercent(40,'60',true),{before:40,after:60,difference:20})});
+test('يقبل الصفر والأرقام العربية ويرفض الفارغ والنسب غير الصالحة',()=>{assert.equal(f.parsePercent(''),null);assert.equal(f.parsePercent('٠'),0);assert.equal(f.parsePercent('١٠٠'),100);for(const n of ['101','-1','abc'])assert.equal(f.parsePercent(n),null)});
+test('هوية المتابعة تميز المسارات والتحليلات المختلفة',()=>{const a=f.followupIdentity('individual',{student:'أحمد'},[{skill:'الفهم',value:40}]);assert.notEqual(a,f.followupIdentity('individual',{student:'سعيد'},[{skill:'الفهم',value:40}]));assert.notEqual(a,f.followupIdentity('sample',{student:'أحمد'},[{skill:'الفهم',value:40}]));assert.equal(a,f.followupIdentity('individual',{student:'أحمد'},[{skill:'الفهم',value:40}]))});
+test('لا يعيد بيانات محفوظة تخص تحليلاً آخر أو سجلا غير صالح',()=>{const row={identity:'a',action:'تدريب',date:'',skill:'الفهم',after:'60',comparable:true,note:''};assert.equal(f.validFollowup(row,'a'),true);assert.equal(f.validFollowup(row,'b'),false);assert.equal(f.validFollowup({...row,comparable:'yes'},'a'),false)});

@@ -27,6 +27,8 @@ import { getCurrentAcademicYear, getTodayISO } from './utils';
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 import { NextStepCard } from '../shared/NextStepCard';
 import { sampleNextStep } from '../shared/nextSteps';
+import { InterventionFollowup } from '../shared/InterventionFollowup';
+import { followupIdentity } from '../shared/interventionFollowup';
 
 const TABS = [
   { id: 'context', title: 'بيانات الورقة والعينة', desc: 'رأس التقرير والعينة' },
@@ -238,7 +240,7 @@ export function ExamItemsSampleAnalysisViews() {
       {activeTab === 'context' && <ContextTab context={context} updateContext={updateContext} reliability={reliabilityPreview} itemCount={itemCount} setItemCount={setItemCount} rebuildItems={rebuildItems} clearSavedWorkspace={clearSavedWorkspace} />}
       {activeTab === 'items' && <ItemsTab items={items} setItems={updateItems} paperTotalScore={paperTotalScore} itemCount={itemCount} setItemCount={setItemCount} rebuildItems={rebuildItems} />}
       {activeTab === 'scores' && <ScoresTab items={items} rows={sampleRows} setRows={updateSampleRows} rebuildSampleRows={rebuildSampleRows} runAnalysis={runAnalysis} readiness={analysisReadiness} analysisError={analysisError} />}
-      {activeTab === 'summary' && <RequireResult result={result}><PrintableResultTab sectionId="exam-items-summary-tab" context={{ directorate: result!.context.educationDirectorate, schoolName: result!.context.schoolName, teacherName: result!.context.teacherName, trackLabel: 'بوصلة الإتقان — تحليل مفردات الورقة', title: 'ملخص تحليل مفردات الورقة', fields: [{ label: 'المادة', value: result!.context.subject }, { label: 'الصف', value: result!.context.grade }, { label: 'الورقة', value: result!.context.paperTitle }] }}><SummaryTab result={result!} /></PrintableResultTab></RequireResult>}
+      {activeTab === 'summary' && <RequireResult result={result}><PrintableResultTab sectionId="exam-items-summary-tab" context={{ directorate: result!.context.educationDirectorate, schoolName: result!.context.schoolName, teacherName: result!.context.teacherName, trackLabel: 'بوصلة الإتقان — تحليل مفردات الورقة', title: 'ملخص تحليل مفردات الورقة', fields: [{ label: 'المادة', value: result!.context.subject }, { label: 'الصف', value: result!.context.grade }, { label: 'الورقة', value: result!.context.paperTitle }] }}><SummaryTab result={result!} sampleRows={sampleRows} /></PrintableResultTab></RequireResult>}
       {activeTab === 'analysis' && <RequireResult result={result}><PrintableResultTab sectionId="exam-items-analysis-tab" context={{ directorate: result!.context.educationDirectorate, schoolName: result!.context.schoolName, teacherName: result!.context.teacherName, trackLabel: 'بوصلة الإتقان — تحليل مفردات الورقة', title: 'تحليل المفردات والمهارات', fields: [{ label: 'المادة', value: result!.context.subject }, { label: 'الصف', value: result!.context.grade }, { label: 'الورقة', value: result!.context.paperTitle }] }}><AnalysisTab result={result!} /></PrintableResultTab></RequireResult>}
       {activeTab === 'reports' && <RequireResult result={result}><ExamItemsSampleReports result={result!} /></RequireResult>}
     </section>
@@ -603,12 +605,13 @@ function ScoresTab({
   );
 }
 
-function SummaryTab({ result }: { result: ExamItemsSampleAnalysisResult }) {
+function SummaryTab({ result, sampleRows }: { result: ExamItemsSampleAnalysisResult; sampleRows: SampleScoreRow[] }) {
   const priorityItem = result.decision.priorityItems[0] || result.decision.highestLossItems[0];
   const prioritySkill = result.decision.prioritySkills[0];
   return (
     <div className="mw-dashboard-space">
       <NextStepCard step={sampleNextStep(result)} tone="amber" />
+      <InterventionFollowup tone="amber" track="sample" identity={followupIdentity('sample', result.context, [result.items, sampleRows])} metrics={result.skills.map(s => ({skill:s.skill,value:s.performancePercent}))} />
       <div className="mw-dashboard-grid mw-dashboard-grid--five">
         <Metric label="متوسط أداء المفردات" value={`${result.summary.averagePaperPercent}%`} hint="المؤشر العام لأداء العينة" icon="%" tone="amber" featured />
         <Metric label="متوسط الدرجة المرصودة" value={`${result.summary.averagePaperScore} من ${result.summary.paperTotalScore}`} hint="متوسط درجات أوراق العينة" icon="◉" tone="royal" />

@@ -45,6 +45,8 @@ import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } fr
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 import { NextStepCard } from '../shared/NextStepCard';
 import { groupNextStep } from '../shared/nextSteps';
+import { InterventionFollowup } from '../shared/InterventionFollowup';
+import { followupIdentity } from '../shared/interventionFollowup';
 
  type TabKey = 'input' | 'overview' | 'charts' | 'gap' | 'decision' | 'plan' | 'report';
 const WORKSPACE_KEY = 'bosla.workspace.masterySpread.v2';
@@ -285,6 +287,7 @@ function OverviewTab({ result }: { result: MasterySpreadAnalysisResult }) {
   return (
     <section className="mw-dashboard-space">
       <NextStepCard step={groupNextStep(result)} tone="emerald" />
+      <InterventionFollowup tone="emerald" track="group" identity={followupIdentity('group', result.context, [result.settings, result.validScores])} metrics={[{skill:'انتشار الإتقان',value:result.summary.masterySpreadPercent}]} />
       <div className="mw-dashboard-grid mw-dashboard-grid--five">
         <MetricCard label="عدد الطلبة" value={result.summary.totalStudents} hint={result.dataQuality.label} icon="👥" tone="slate" />
         <MetricCard label="حققوا الإتقان" value={result.summary.masteryCount} hint={`حد الإتقان ${result.summary.masteryCutoffPercent}%`} icon="✓" tone="royal" />

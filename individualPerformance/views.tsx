@@ -39,6 +39,8 @@ import { InsightNarrativeCard, PremiumMetricCard, PremiumPanel, StatusBadge } fr
 import { AnalysisStepAccordion } from '../shared/AnalysisStepAccordion';
 import { NextStepCard } from '../shared/NextStepCard';
 import { individualNextStep } from '../shared/nextSteps';
+import { InterventionFollowup } from '../shared/InterventionFollowup';
+import { followupIdentity } from '../shared/interventionFollowup';
 import type {
   AnalysisReadinessResult,
   ExamQuestionBlueprint,
@@ -580,6 +582,7 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
   return (
     <div className="mw-dashboard-space">
       <NextStepCard step={individualNextStep(result)} tone="olive" />
+      <InterventionFollowup tone="olive" track="individual" identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       <div className="mw-dashboard-grid mw-dashboard-grid--four">
         <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="royal" />
         <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="royal" featured />
