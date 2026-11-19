@@ -82,23 +82,22 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
         <Narrative title="ملاحظات المعلم بوصفها دليلًا داعمًا" text={result.narratives.teacherNotesReading} />
       </ReportSection>
 
-      <ReportSection number="5" title="خريطة التشخيص وأولويات التدخل" pageBreak className="individual-diagnostic-insights-section">
-        <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
+      <ReportSection number="5" title="خريطة التشخيص وأولويات التدخل" pageBreak className="individual-diagnostic-insights-section" headingContent={<DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />}>
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           <ParetoReportBlock title="باريتو الفقد حسب المهارات" description="يرتب المهارات حسب مساهمتها في فقد الطالب." entries={result.diagnostics.skillLossPareto} valueLabel="الفقد" />
           <ParetoReportBlock title="باريتو أنماط الأخطاء" description="يرتب أنماط الأخطاء المرمزة حسب التكرار." entries={result.diagnostics.errorPareto} valueLabel="التكرار" />
         </div>
         <div className="mt-4 grid gap-3 lg:grid-cols-2">
           <RadarReportBlock title="رادار مهارات الطالب" description="يعرض صورة عامة للفجوات بين مهارات الطالب في هذه الورقة." data={result.diagnostics.skillRadar} />
-          <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
+          <TopLossItemsChart result={result} compact />
         </div>
+        <div className="mt-4"><FishboneReportBlock diagnostic={result.diagnostics.fishbone} /></div>
       </ReportSection>
 
       <ReportSection number="6" title="الرسوم البيانية التوثيقية" pageBreak className="individual-charts-section">
         <div className="individual-print-chart-grid grid gap-3 lg:grid-cols-2">
           <StudentMasteryPositionChart result={result} compact />
           <ItemStatusChart result={result} compact />
-          <TopLossItemsChart result={result} compact />
         </div>
       </ReportSection>
 
@@ -112,7 +111,7 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
         <div className="mt-4 grid gap-3 md:grid-cols-3"><BulletCard title="دور الطالب" items={result.plan.studentActions} /><BulletCard title="دور المعلم / المدرسة" items={result.plan.teacherRole} /><BulletCard title="دور ولي الأمر" items={result.plan.parentRole} /></div>
         <InterventionFollowupReport identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       </ReportSection>
-      {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" pageBreak>
+      {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" pageBreak keepTogether>
         {parentRecord.contacts.map(entry => {
           const comparison = compareFollowup(entry.baseline, entry.followupPercent);
           return <div key={entry.id} className="premium-report-narrative report-section mt-3 rounded-xl border border-slate-200 p-3 text-sm leading-7">
@@ -162,7 +161,10 @@ function QuestionTable({ rows }: { rows: ValidatedQuestionResult[] }) {
   return <DataTable headers={['المفردة', 'المهارة', 'الدرجة', 'الأداء', 'الفقد', 'نوع الخطأ', 'ملاحظة المعلم']} rows={rows.map((item) => [item.label, item.skill, `${item.score} من ${item.maxScore}`, `${item.percent}%`, item.loss, formatErrorTypeForReport(item), item.teacherNote || '—'])} />;
 }
 function formatErrorTypeForReport(item: ValidatedQuestionResult) { return item.errorType || 'لم يرمز نوع الخطأ'; }
-function ReportSection({ number, title, children, pageBreak = false, className = '' }: { number: string; title: string; children: React.ReactNode; pageBreak?: boolean; className?: string }) { return <section className={`report-flow mt-5 ${pageBreak ? 'report-page-break' : ''} ${className}`}><h2 className="premium-report-section-title mb-3 text-lg font-black"><span>{number}</span>{title}</h2>{children}</section>; }
+function ReportSection({ number, title, children, pageBreak = false, className = '', headingContent, keepTogether = false }: { number: string; title: string; children: React.ReactNode; pageBreak?: boolean; className?: string; headingContent?: React.ReactNode; keepTogether?: boolean }) {
+  const heading = <h2 className="premium-report-section-title mb-3 text-lg font-black"><span>{number}</span>{title}</h2>;
+  return <section className={`report-flow mt-5 ${pageBreak ? 'report-page-break' : ''} ${className}`} data-pdf-keep={keepTogether ? 'true' : undefined}>{headingContent ? <div data-pdf-keep="true">{heading}{headingContent}</div> : heading}{children}</section>;
+}
 function InfoCell({ label, value }: { label: string; value: React.ReactNode }) { return <div className="premium-report-info-cell rounded-xl border border-slate-200 bg-slate-50 px-3 py-2"><div className="font-bold text-slate-500">{label}</div><div className="mt-1 font-black text-slate-900">{value}</div></div>; }
 function Metric({ label, value }: { label: string; value: React.ReactNode }) { return <div className="premium-report-metric rounded-xl border border-slate-200 bg-slate-50 p-3 text-center"><div className="text-xs font-bold text-slate-500">{label}</div><div className="mt-1 text-lg font-black">{value}</div></div>; }
 function Narrative({ title, text }: { title: string; text: string }) { return <div className="premium-report-narrative report-section mt-3 rounded-xl border border-slate-200 bg-slate-50 p-3"><h3 className="font-black">{title}</h3><p className="mt-1 whitespace-pre-line text-sm leading-6 text-slate-700">{text}</p></div>; }

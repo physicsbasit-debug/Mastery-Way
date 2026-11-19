@@ -46,6 +46,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .signature-section { margin-top: 14px !important; gap: 6px !important; }
         .pdf-export-render.mw-print-report--individual .premium-report-signature { padding: 7px !important; }
         .pdf-export-render.mw-print-report--individual .premium-report-signature > div:last-child { margin-top: 15px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
