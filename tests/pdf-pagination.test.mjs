@@ -20,3 +20,8 @@ test('يحمي الرسم والتوقيعات ويضمن استمرار تقس�
     assert.deepEqual(paginateReport(1200,1000,[[100,1050]]),[[0,100],[100,1100],[1100,1200]]);
   } finally {await server.close();}
 });
+
+test('يحافظ على لوحة قرار أو توثيق قصيرة دون فقد محتوى عند تجاوز صفحة', async () => {
+ const server=await createServer({configFile:'./vite.config.ts',server:{middlewareMode:true,hmr:false,ws:false},appType:'custom'});
+ try {const {paginateReport}=await server.ssrLoadModule('/shared/pdfPagination.ts');const pages=paginateReport(2200,1000,[[700,1200],[1650,2050]]);assert.deepEqual(pages,[[0,700],[700,1650],[1650,2200]]);assert.equal(pages.at(-1)[1],2200);} finally {await server.close()}
+});
