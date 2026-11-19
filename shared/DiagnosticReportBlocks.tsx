@@ -26,7 +26,7 @@ export function DiagnosticDecisionReportBlock({ decision }: { decision: Diagnost
 }
 
 export function ParetoReportBlock({ title, description, entries, valueLabel = 'الفقد' }: { title: string; description?: string; entries: ParetoEntry[]; valueLabel?: string }) {
-  return <div className="diagnostic-report-visual"><ParetoChart title={title} description={description} entries={entries} valueLabel={valueLabel} compact /></div>;
+  return <div className="diagnostic-report-visual diagnostic-report-pareto"><ParetoChart title={title} description={description} entries={entries} valueLabel={valueLabel} compact /></div>;
 }
 
 export function RadarReportBlock({ title, description, data }: { title: string; description?: string; data: RadarSkillEntry[] }) {

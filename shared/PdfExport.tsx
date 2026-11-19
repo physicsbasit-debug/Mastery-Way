@@ -47,6 +47,32 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .premium-report-signature { padding: 7px !important; }
         .pdf-export-render.mw-print-report--individual .premium-report-signature > div:last-child { margin-top: 15px !important; }
         .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; }
+        /* Compact spacing, not the text: the report must remain readable on A4. */
+        .pdf-export-render.mw-print-report--individual .premium-report-summary { gap: 8px !important; padding: 8px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-summary__content,
+        .pdf-export-render.mw-print-report--individual .premium-report-summary-metric { padding: 9px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-summary__metrics { gap: 6px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-summary h2 { margin-top: 5px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-summary p { margin-top: 5px !important; line-height: 1.55 !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-info-cell,
+        .pdf-export-render.mw-print-report--individual .premium-report-metric,
+        .pdf-export-render.mw-print-report--individual .premium-report-narrative { padding: 8px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-narrative p,
+        .pdf-export-render.mw-print-report--individual .premium-report-narrative ul { line-height: 1.55 !important; }
+        .pdf-export-render.mw-print-report--individual .report-flow { margin-top: 14px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-block,
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone { padding: 10px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-block > div:nth-child(2),
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone > div:nth-child(2) { margin-top: 7px !important; gap: 6px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-block > div:nth-child(2) > div,
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 7px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-block > p { margin-top: 7px !important; padding: 7px !important; line-height: 1.5 !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-block > div:nth-child(2) > div > div { line-height: 1.5 !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .unified-chart-card { padding: 9px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > * + * { margin-top: 6px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div { padding: 7px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div > div:first-child { margin-bottom: 5px !important; }
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div > div:nth-child(3) { margin-top: 5px !important; }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
