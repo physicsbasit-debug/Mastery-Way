@@ -73,6 +73,14 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div { padding: 7px !important; }
         .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div > div:first-child { margin-bottom: 5px !important; }
         .pdf-export-render.mw-print-report--individual .diagnostic-report-pareto .space-y-3 > div > div:nth-child(3) { margin-top: 5px !important; }
+        /* Final A4 polish: avoid stretching compact chart cards to match neighbours. */
+        .pdf-export-render.mw-print-report--individual .individual-diagnostic-insights-section .grid,
+        .pdf-export-render.mw-print-report--individual .individual-charts-section .individual-print-chart-grid { align-items: start !important; }
+        .pdf-export-render.mw-print-report--individual .individual-diagnostic-insights-section .unified-chart-card { height: auto !important; min-height: 0 !important; }
+        /* Reduce empty space around signatures without reducing the type size. */
+        .pdf-export-render.mw-print-report--individual .signature-section { margin-top: 10px !important; }
+        .pdf-export-render.mw-print-report--individual .premium-report-signature > div:last-child { margin-top: 12px !important; }
+        .pdf-export-render.mw-print-report--individual .individual-priority-table table { font-size: 13px !important; line-height: 1.5 !important; }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
