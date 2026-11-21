@@ -294,9 +294,9 @@ export function ExamItemsSampleAnalysisViews() {
       )}
       <TabNav activeTab={activeTab} setActiveTab={setActiveTab} hasResult={!!result} />
       {activeTab === 'context' && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
-          <button type="button" onClick={fillExampleAndAnalyze} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال وعرض النتائج</button>
-          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 ورقة و5 مفردات. يستبدل المثال البيانات الحالية، ويعرض التحليل والتقرير مباشرة.</p>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={fillExampleAndAnalyze} className="block w-full rounded-xl bg-[#80591e] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#684615]">تعبئة مثال وعرض النتائج</button>
+          <p className="mt-3 text-right text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 ورقة و5 مفردات. يستبدل المثال البيانات الحالية، ويعرض التحليل والتقرير مباشرة.</p>
         </div>
       )}
 
