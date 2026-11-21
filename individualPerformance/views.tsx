@@ -269,26 +269,41 @@ export function IndividualPerformanceViews() {
       { id: 'q5', label: 'س5', maxScore: 5, skill: 'القدرات العليا' },
     ];
 
-    setQuestionCount(exampleBlueprint.length);
-    setBlueprint(exampleBlueprint);
-    setStudentInputs([
+    const exampleInputs: StudentQuestionInput[] = [
       { questionId: 'q1', score: 4, errorType: DEFAULT_ERROR_TYPE, otherErrorDetail: '', teacherNote: 'أداء جيد في هذه المفردة' },
       { questionId: 'q2', score: 2, errorType: 'تفسير غير مكتمل', otherErrorDetail: '', teacherNote: 'أظهر فهمًا جزئيًا للمطلوب' },
       { questionId: 'q3', score: 1, errorType: 'خطأ في تنفيذ خطوات الحل', otherErrorDetail: '', teacherNote: 'يحتاج إلى ترتيب خطوات الحل' },
       { questionId: 'q4', score: 0, errorType: 'خطأ في قراءة المطلوب', otherErrorDetail: '', teacherNote: 'يحتاج إلى قراءة السؤال بتركيز أكبر' },
       { questionId: 'q5', score: 0, errorType: 'ترك السؤال', otherErrorDetail: '', teacherNote: 'يحتاج إلى تشجيع على المحاولة حتى عند عدم التأكد' },
-    ]);
-    setContext((previous) => ({
-      ...previous,
+    ];
+    const exampleContext: IndividualReportContext = {
+      ...createDefaultIndividualContext(),
       studentName: 'طالب تجريبي',
       paperTitle: 'اختبار قصير في مهارات تطبيقية',
-      schoolName: previous.schoolName || 'مدرسة تجريبية',
-      teacherName: previous.teacherName || 'المعلم',
-    }));
-    setResult(null);
-    setAnalysisError(null);
-    setAnalysisNotice(null);
-    setActiveTab('student-scores');
+      schoolName: 'مدرسة تجريبية',
+      teacherName: 'معلم تجريبي',
+    };
+    const exampleSettings = createDefaultSettings();
+    const readiness = validateIndividualAnalysisReadiness(exampleBlueprint, exampleInputs, exampleSettings);
+    if (!readiness.isValid) {
+      setAnalysisError('تعذر تشغيل المثال التجريبي: بيانات المثال غير مكتملة.');
+      return;
+    }
+    try {
+      const exampleResult = runIndividualPerformanceAnalysis(exampleContext, exampleBlueprint, exampleInputs, exampleSettings);
+      setQuestionCount(exampleBlueprint.length);
+      setBlueprint(exampleBlueprint);
+      setStudentInputs(exampleInputs);
+      setContext(exampleContext);
+      setSettings(exampleSettings);
+      setResult(exampleResult);
+      setAnalysisError(null);
+      setAnalysisNotice(null);
+      setActiveTab('overview');
+    } catch (error) {
+      setAnalysisError(error instanceof Error ? error.message : 'تعذر تشغيل المثال التجريبي.');
+      setActiveTab('student-scores');
+    }
   };
 
   const analyze = () => {
@@ -346,9 +361,9 @@ export function IndividualPerformanceViews() {
       />
 
       {activeTab === 'student-paper' && (
-        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
-          <button type="button" onClick={fillExample} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال</button>
-          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: طالب واحد و5 مفردات. يستبدل المثال بيانات التحليل الحالية، ثم يمكنك تشغيل التحليل.</p>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={fillExample} className="block w-full rounded-xl bg-[#80591e] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#684615]">تعبئة مثال وعرض النتائج</button>
+          <p className="mt-3 text-right text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: طالب واحد و5 مفردات. يستبدل المثال البيانات الحالية ويعرض التحليل والتقرير مباشرة.</p>
         </div>
       )}
       {activeTab === 'student-paper' ? (

@@ -178,9 +178,29 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
   };
 
   const handleUseSample = () => {
-    invalidateResult();
-    setRawScoresText(SAMPLE_TEXT);
-    setSettings((current) => ({ ...current, totalScore: 40, masteryCutoffPercent: 75, expectedStudentCount: 12 }));
+    const exampleSettings = { ...createFreshSettings(), totalScore: 40, masteryCutoffPercent: 75, expectedStudentCount: 12 };
+    const exampleContext = {
+      ...createFreshContext(),
+      schoolName: 'مدرسة تجريبية',
+      teacherName: 'معلم تجريبي',
+      groupDescription: 'مجموعة تجريبية',
+      subject: 'العلوم',
+      grade: 'الصف التاسع',
+      assessmentName: 'اختبار تجريبي',
+    };
+    try {
+      const next = runMasterySpreadAnalysis({ rawScoresText: SAMPLE_TEXT, settings: exampleSettings, context: exampleContext });
+      setRawScoresText(SAMPLE_TEXT);
+      setSettings(exampleSettings);
+      setContext(exampleContext);
+      setResult(next);
+      onAnalysisChange?.(next);
+      setStatusMessage('');
+      setActiveTab('overview');
+    } catch (error) {
+      setStatusMessage(error instanceof Error ? error.message : 'تعذر تشغيل المثال التجريبي.');
+      setActiveTab('input');
+    }
   };
 
   return (
@@ -197,9 +217,9 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
         />
       </div>
       {activeTab === 'input' && (
-        <div className="mastery-spread-no-print flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
-          <button type="button" onClick={handleUseSample} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال</button>
-          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 درجة من 40. يستبدل المثال درجات المجموعة الحالية، ثم يمكنك تشغيل التحليل.</p>
+        <div className="mastery-spread-no-print rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={handleUseSample} className="block w-full rounded-xl bg-[#80591e] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#684615]">تعبئة مثال وعرض النتائج</button>
+          <p className="mt-3 text-right text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 درجة من 40. يستبدل المثال البيانات الحالية ويعرض التحليل والتقرير مباشرة.</p>
         </div>
       )}
       {activeTab === 'input' && <InputTab rawScoresText={rawScoresText} onScoresChange={handleScoresChange} settings={settings} updateSetting={updateSetting} context={context} updateContext={updateContext} readiness={readiness} statusMessage={statusMessage} onAnalyze={handleAnalyze} onReset={handleReset} />}
