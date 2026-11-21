@@ -34,5 +34,7 @@ test('تظهر الرسالة وسجل التواصل القابل للمراج�
 test('يجمع عنوان التشخيص مع لوحة القرار وعنوان التواصل مع سجله',()=>{
  const html=renderToStaticMarkup(React.createElement(Report,{result:analyze(context,questions,inputs),parentRecord:record}));
  assert.match(html,/data-pdf-keep="true"[^>]*>\s*<h2[^>]*>.*?خريطة التشخيص وأولويات التدخل.*?لوحة القرار التشخيصي/s);
- assert.match(html,/<section[^>]*data-pdf-keep="true"[^>]*>\s*<h2[^>]*>.*?توثيق التواصل مع ولي الأمر والمتابعة.*?متابعة تدريب/s);
+ assert.match(html,/<section[^>]*class="[^"]*individual-parent-followup-section[^"]*"[^>]*>\s*<h2[^>]*>.*?توثيق التواصل مع ولي الأمر والمتابعة.*?متابعة تدريب/s);
+ assert.doesNotMatch(html,/<section[^>]*class="[^"]*individual-parent-followup-section[^"]*"[^>]*data-pdf-keep="true"/s);
+ assert.match(html, /class="[^"]*signature-section[^"]*"/);
 });
