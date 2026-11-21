@@ -217,8 +217,8 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
         />
       </div>
       {activeTab === 'input' && (
-        <div className="mastery-spread-no-print rounded-2xl border border-amber-200 bg-amber-50 p-3">
-          <button type="button" onClick={handleUseSample} className="block w-full rounded-xl bg-[#80591e] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#684615]">تعبئة مثال وعرض النتائج</button>
+        <div className="mastery-spread-no-print rounded-2xl border border-amber-200 bg-amber-50 p-3 mw-demo-card">
+          <button type="button" onClick={handleUseSample} className="mw-demo-card__button block w-full rounded-xl px-5 py-3 text-center text-sm font-black text-white transition">تعبئة مثال وعرض النتائج</button>
           <p className="mt-3 text-right text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 درجة من 40. يستبدل المثال البيانات الحالية ويعرض التحليل والتقرير مباشرة.</p>
         </div>
       )}

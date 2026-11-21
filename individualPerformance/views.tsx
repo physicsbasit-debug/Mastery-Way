@@ -361,8 +361,8 @@ export function IndividualPerformanceViews() {
       />
 
       {activeTab === 'student-paper' && (
-        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3">
-          <button type="button" onClick={fillExample} className="block w-full rounded-xl bg-[#80591e] px-5 py-3 text-center text-sm font-black text-white transition hover:bg-[#684615]">تعبئة مثال وعرض النتائج</button>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-3 mw-demo-card">
+          <button type="button" onClick={fillExample} className="mw-demo-card__button block w-full rounded-xl px-5 py-3 text-center text-sm font-black text-white transition">تعبئة مثال وعرض النتائج</button>
           <p className="mt-3 text-right text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: طالب واحد و5 مفردات. يستبدل المثال البيانات الحالية ويعرض التحليل والتقرير مباشرة.</p>
         </div>
       )}
