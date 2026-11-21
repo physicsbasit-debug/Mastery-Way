@@ -1,7 +1,7 @@
 import { PdfExport } from '../shared/PdfExport';
 import React from 'react';
 import { UnifiedOfficialReportHeader, UnifiedPrintStyles } from '../shared/UnifiedReport';
-import { DiagnosticDecisionReportBlock, FishboneReportBlock, ParetoReportBlock } from '../shared/DiagnosticReportBlocks';
+import { DiagnosticDecisionReportBlock, ParetoReportBlock } from '../shared/DiagnosticReportBlocks';
 import { GROUP_SHAPE_THRESHOLDS, MASTERY_JUDGEMENT_SCALE } from './constants';
 import { formatPercentagePointAmount, formatStudentCount } from './utils';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
@@ -93,7 +93,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
       </div>
       <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 items-start gap-3">
         <ParetoReportBlock title="باريتو فئات الفجوة" description="يرتب فئات غير المتقنين حسب حجمها لتحديد نوع التدخل." entries={result.diagnostics.gapPareto} valueLabel="العدد" />
-        <div className="mastery-fishbone-full"><FishboneReportBlock diagnostic={result.diagnostics.fishbone} /></div>
+        <MasteryCompactFishbone diagnostic={result.diagnostics.fishbone} />
       </div>
     </section>
 
@@ -112,6 +112,22 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
       <SignatureSection />
     </section>
   </article>;
+}
+
+function MasteryCompactFishbone({ diagnostic }: { diagnostic: MasterySpreadAnalysisResult['diagnostics']['fishbone'] }) {
+  return <section className="mastery-fishbone-full report-section rounded-2xl border border-emerald-100 bg-white p-4">
+    <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
+      <div><h3 className="text-sm font-black text-slate-900">{diagnostic.title}</h3><p className="mt-1 text-xs leading-5 text-slate-600">{diagnostic.caution}</p></div>
+      <span className="rounded-full bg-emerald-50 px-3 py-1 text-[10px] font-black text-emerald-900">أسباب محتملة لا أحكام قطعية</span>
+    </div>
+    <div className="mastery-fishbone-grid grid grid-cols-1 gap-2 md:grid-cols-3">
+      {diagnostic.categories.slice(0, 6).map(category => <div key={category.title} className="mastery-fishbone-card rounded-xl border border-emerald-100 bg-slate-50 p-3" data-pdf-keep="true">
+        <h4 className="text-xs font-black text-slate-900">{category.title}</h4>
+        {category.evidence ? <p className="mt-1 text-[11px] font-bold leading-5 text-slate-600">{category.evidence}</p> : null}
+        <ul className="mt-2 space-y-1 text-[11px] leading-5 text-slate-700">{category.prompts.slice(0, 3).map(prompt => <li key={prompt}>• {prompt}</li>)}</ul>
+      </div>)}
+    </div>
+  </section>;
 }
 
 function DataGrid({ result }: { result: MasterySpreadAnalysisResult }) {
