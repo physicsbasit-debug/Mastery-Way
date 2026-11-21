@@ -207,6 +207,63 @@ export function ExamItemsSampleAnalysisViews() {
     setActiveTab('scores');
   };
 
+  const fillExampleAndAnalyze = () => {
+    // Synthetic teaching data only. Never combine the demo with saved real scores.
+    const exampleItems: ExamItemDefinition[] = [
+      { id: 'q1', label: 'س1', maxScore: 2, skill: 'المعرفة' },
+      { id: 'q2', label: 'س2', maxScore: 3, skill: 'الفهم' },
+      { id: 'q3', label: 'س3', maxScore: 4, skill: 'التطبيق' },
+      { id: 'q4', label: 'س4', maxScore: 3, skill: 'الاستدلال' },
+      { id: 'q5', label: 'س5', maxScore: 3, skill: 'القدرات العليا' },
+    ];
+    const exampleContext: ExamItemsSampleContext = {
+      ...createDefaultContext(),
+      schoolName: 'مدرسة تجريبية',
+      teacherName: 'معلم تجريبي',
+      paperTitle: 'ورقة تجريبية لتحليل المفردات',
+      totalPapers: 12,
+      sampleSize: 12,
+      analysisMethod: 'تحليل جميع الأوراق',
+      sampleSelectionMethod: 'ممثلة لمستويات الأداء',
+    };
+    const exampleScores = [
+      [2, 3, 4, 3, 3],
+      [2, 3, 4, 2, 2],
+      [2, 3, 3, 2, 2],
+      [2, 2, 3, 2, 1],
+      [2, 2, 3, 1, 1],
+      [2, 2, 2, 1, 1],
+      [2, 2, 2, 1, 0],
+      [2, 1, 2, 1, 0],
+      [1, 2, 2, 0, 0],
+      [1, 1, 1, 1, 0],
+      [1, 1, 1, 0, 0],
+      [1, 0, 1, 0, 0],
+    ];
+    const exampleRows: SampleScoreRow[] = exampleScores.map((scores, index) => ({
+      id: `paper${index + 1}`,
+      label: `ورقة ${index + 1}`,
+      scores: Object.fromEntries(exampleItems.map((item, itemIndex) => [item.id, scores[itemIndex]])),
+    }));
+    const readiness = validateAnalysisReadiness(exampleContext, exampleItems, exampleRows);
+    if (!readiness.valid) {
+      setAnalysisError(readiness.issues.map((issue) => issue.message).join(' '));
+      return;
+    }
+    try {
+      const exampleResult = runExamItemsSampleAnalysis(exampleContext, exampleItems, exampleRows);
+      setContext(exampleContext);
+      setItemCount(exampleItems.length);
+      setItems(exampleItems);
+      setSampleRows(exampleRows);
+      setResult(exampleResult);
+      setAnalysisError(null);
+      setActiveTab('summary');
+    } catch (error) {
+      setAnalysisError(error instanceof Error ? error.message : 'تعذر تحميل المثال التجريبي.');
+    }
+  };
+
   const runAnalysis = () => {
     const readiness = validateAnalysisReadiness(context, items, sampleRows);
     if (!readiness.valid) {
@@ -236,6 +293,12 @@ export function ExamItemsSampleAnalysisViews() {
         <CompactTabHeader activeTab={activeTab} result={result} />
       )}
       <TabNav activeTab={activeTab} setActiveTab={setActiveTab} hasResult={!!result} />
+      {activeTab === 'context' && (
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={fillExampleAndAnalyze} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال وعرض النتائج</button>
+          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 ورقة و5 مفردات. يستبدل المثال البيانات الحالية، ويعرض التحليل والتقرير مباشرة.</p>
+        </div>
+      )}
 
       {activeTab === 'context' && <ContextTab context={context} updateContext={updateContext} reliability={reliabilityPreview} itemCount={itemCount} setItemCount={setItemCount} rebuildItems={rebuildItems} clearSavedWorkspace={clearSavedWorkspace} />}
       {activeTab === 'items' && <ItemsTab items={items} setItems={updateItems} paperTotalScore={paperTotalScore} itemCount={itemCount} setItemCount={setItemCount} rebuildItems={rebuildItems} />}
