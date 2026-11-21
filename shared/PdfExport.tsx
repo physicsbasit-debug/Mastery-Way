@@ -107,6 +107,31 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .signature-section { margin-top: 12px !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature > div:last-child { margin-top: 16px !important; }
+        /* Mastery uses the individual report's dark official cover language, not its track color. */
+        .pdf-export-render.mw-print-report--mastery .official-report-header {
+          background: linear-gradient(110deg, #203f34 0%, #456844 72%, #768849 100%) !important;
+          border-color: #b59a58 !important; border-radius: 24px !important;
+          padding: 20px 18px !important; margin-bottom: 14px !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .official-report-header h1,
+        .pdf-export-render.mw-print-report--mastery .official-report-header p,
+        .pdf-export-render.mw-print-report--mastery .official-report-header .text-slate-800,
+        .pdf-export-render.mw-print-report--mastery .official-report-header .text-slate-500 { color: #fff !important; }
+        .pdf-export-render.mw-print-report--mastery .official-report-header img {
+          background: #fff !important; border-radius: 12px !important; padding: 4px !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          align-items: start !important; gap: 9px !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card {
+          padding: 11px !important; break-inside: avoid !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card ul { margin-top: 6px !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card li { line-height: 1.55 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table,
+        .pdf-export-render.mw-print-report--mastery .mastery-distribution-table { break-inside: avoid !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-indicators-section > .mastery-indicator-highlights { margin-bottom: 10px !important; }
         /* Match the individual report design family while keeping the mastery olive palette. */
         .pdf-export-render.mw-print-report--mastery .premium-report-section-title { color: #183f33 !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-section-title span { background: #315a42 !important; }
