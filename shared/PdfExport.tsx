@@ -123,6 +123,17 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone li { line-height: 1.5 !important; }
+        /* Mastery: use the individual report's strong header composition with the mastery palette. */
+        .pdf-export-render.mw-print-report--mastery .official-report-header { background: linear-gradient(115deg, #193d36 0%, #446348 65%, #728b50 100%) !important; border-radius: 18px !important; border-color: #a89154 !important; color: #fff !important; }
+        .pdf-export-render.mw-print-report--mastery .official-report-header h1,
+        .pdf-export-render.mw-print-report--mastery .official-report-header h2,
+        .pdf-export-render.mw-print-report--mastery .official-report-header p,
+        .pdf-export-render.mw-print-report--mastery .official-report-header span { color: #fff !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-grid { display: grid !important; grid-template-columns: repeat(3, minmax(0, 1fr)) !important; align-items: start !important; gap: 8px !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card { padding: 9px !important; break-inside: avoid !important; page-break-inside: avoid !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card li { line-height: 1.5 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table h3,
+        .pdf-export-render.mw-print-report--mastery .mastery-distribution-table h3 { break-after: avoid !important; page-break-after: avoid !important; }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
