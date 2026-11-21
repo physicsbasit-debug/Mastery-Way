@@ -56,14 +56,15 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
       <LimitsNote />
     </section>
 
-    <section className="report-page-break">
+    <section className="report-flow mt-5 mastery-indicators-section">
       <SectionTitle number="2" title="المؤشرات العامة وسلم الحكم" />
+      <div className="mastery-indicator-highlights mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">{([["عدد الطلبة", result.summary.totalStudents], ["المتقنون", result.summary.masteryCount], ["غير المتقنين", result.summary.nonMasteryCount], ["انتشار الإتقان", `${result.summary.masterySpreadPercent}%`]] as Array<[string, React.ReactNode]>).map(([label, value]) => <InfoCell key={label} label={label} value={value} />)}</div>
       <KeyIndicators result={result} />
-      <JudgementTable current={result.judgement.code} />
+      <div className="mastery-judgement-group" data-pdf-keep="true"><JudgementTable current={result.judgement.code} /></div>
       <DistributionTable result={result} />
     </section>
 
-    <section className="report-page-break">
+    <section className="report-flow mt-5 mastery-charts-section">
       <SectionTitle number="3" title="الرسوم البيانية التوثيقية" />
       <div className="mastery-print-grid-two mt-3 grid grid-cols-1 gap-3 md:grid-cols-2">
         <ChartBox title="انتشار الإتقان على السلم"><ScaleBar value={result.summary.masterySpreadPercent} /></ChartBox>
@@ -90,13 +91,13 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
         <SectionTitle number="5" title="تحليل فجوة الانتشار والأسباب المحتملة" />
         <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
       </div>
-      <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 gap-3 md:grid-cols-2">
+      <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 items-start gap-3 md:grid-cols-2">
         <ParetoReportBlock title="باريتو فئات الفجوة" description="يرتب فئات غير المتقنين حسب حجمها لتحديد نوع التدخل." entries={result.diagnostics.gapPareto} valueLabel="العدد" />
         <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
       </div>
     </section>
 
-    <section className="report-page-break firefox-tight-section mastery-firefox-final-page">
+    <section className="report-flow mt-5 firefox-tight-section mastery-firefox-final-page">
       <SectionTitle number="6" title="القرار والخطة وإعادة القياس" />
       <div className="mastery-print-grid-three mt-3 grid grid-cols-1 gap-3 md:grid-cols-3">
         <SmallBox title="القرار" text={result.educationalDecision.decisionLabel} />
@@ -132,11 +133,11 @@ function KeyIndicators({ result }: { result: MasterySpreadAnalysisResult }) {
 }
 
 function JudgementTable({ current }: { current: string }) {
-  return <section className="report-section mt-4"><h3 className="premium-report-subtitle">سلم الحكم</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الحكم</th><th className="px-3 py-2 text-right">النطاق</th></tr></thead><tbody>{MASTERY_JUDGEMENT_SCALE.map((item) => <tr key={item.code} className={item.code === current ? 'bg-emerald-50 font-black' : ''}><td className="border-b px-3 py-2">{item.label}</td><td className="border-b px-3 py-2">{item.code === 'distinguished' ? '70% فأكثر' : item.code === 'rapid_intervention' ? 'أقل من 40%' : `${item.minPercent}% إلى أقل من ${item.maxPercent}%`}</td></tr>)}</tbody></table></div></section>;
+  return <section className="report-section mastery-judgement-table mt-4"><h3 className="premium-report-subtitle">سلم الحكم</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الحكم</th><th className="px-3 py-2 text-right">النطاق</th></tr></thead><tbody>{MASTERY_JUDGEMENT_SCALE.map((item) => <tr key={item.code} className={item.code === current ? 'bg-emerald-50 font-black' : ''}><td className="border-b px-3 py-2">{item.label}</td><td className="border-b px-3 py-2">{item.code === 'distinguished' ? '70% فأكثر' : item.code === 'rapid_intervention' ? 'أقل من 40%' : `${item.minPercent}% إلى أقل من ${item.maxPercent}%`}</td></tr>)}</tbody></table></div></section>;
 }
 
 function DistributionTable({ result }: { result: MasterySpreadAnalysisResult }) {
-  return <section className="report-section mt-4"><h3 className="premium-report-subtitle">توزيع المجموعة حول حد الإتقان</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-slate-100"><tr><th className="px-3 py-2 text-right">الفئة</th><th className="px-3 py-2 text-right">العدد</th><th className="px-3 py-2 text-right">النسبة</th><th className="px-3 py-2 text-right">الدلالة</th></tr></thead><tbody>{result.distribution.map((band) => <tr key={band.key}><td className="border-b px-3 py-2 font-bold">{band.label}</td><td className="border-b px-3 py-2">{band.count}</td><td className="border-b px-3 py-2">{band.percent}%</td><td className="border-b px-3 py-2 leading-6">{band.interpretation}</td></tr>)}</tbody></table></div></section>;
+  return <section className="report-section mastery-distribution-table mt-4"><h3 className="premium-report-subtitle">توزيع المجموعة حول حد الإتقان</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-slate-100"><tr><th className="px-3 py-2 text-right">الفئة</th><th className="px-3 py-2 text-right">العدد</th><th className="px-3 py-2 text-right">النسبة</th><th className="px-3 py-2 text-right">الدلالة</th></tr></thead><tbody>{result.distribution.map((band) => <tr key={band.key}><td className="border-b px-3 py-2 font-bold">{band.label}</td><td className="border-b px-3 py-2">{band.count}</td><td className="border-b px-3 py-2">{band.percent}%</td><td className="border-b px-3 py-2 leading-6">{band.interpretation}</td></tr>)}</tbody></table></div></section>;
 }
 
 function PlanTable({ result }: { result: MasterySpreadAnalysisResult }) {
@@ -155,15 +156,15 @@ function LimitsNote() {
 }
 
 function ScaleBar({ value }: { value: number }) { return <div className="pt-4" dir="ltr"><div className="relative h-5 overflow-hidden rounded-full bg-gradient-to-r from-red-500 via-amber-400 to-emerald-500"><span className="absolute -top-1 h-7 w-1 bg-slate-950" style={{ left: `${Math.max(0, Math.min(100, value))}%` }} /></div><div className="mt-2 flex justify-between text-[10px] font-bold text-slate-500">{[0, 40, 50, 60, 70, 100].map((item) => <span key={item}>{item}%</span>)}</div></div>; }
-function BarList({ rows, columns = 1 }: { rows: Array<[string, number, number]>; columns?: number }) { return <div className={`grid gap-2 ${columns > 1 ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-1'}`}>{rows.map(([label, value, max]) => <div key={label}><div className="flex justify-between gap-2 text-[11px] font-bold"><span>{label}</span><span>{value}</span></div><div className="mt-1 h-3 rounded-full bg-slate-100"><div className="h-3 rounded-full bg-slate-800" style={{ width: `${max > 0 ? Math.min(100, value / max * 100) : 0}%` }} /></div></div>)}</div>; }
-function PercentBarList({ rows }: { rows: Array<[string, number]> }) { return <div className="space-y-2">{rows.map(([label, value]) => <div key={label}><div className="flex justify-between text-[11px] font-bold"><span>{label}</span><span>{value}%</span></div><div className="mt-1 h-3 rounded-full bg-slate-100"><div className="h-3 rounded-full bg-blue-700" style={{ width: `${Math.max(0, Math.min(100, value))}%` }} /></div></div>)}</div>; }
-function ChartBox({ title, children }: { title: string; children: React.ReactNode }) { return <div className="premium-report-chart-card chart-card rounded-2xl border border-slate-200 p-4"><h3 className="premium-report-subtitle">{title}</h3><div className="mt-3">{children}</div></div>; }
+function BarList({ rows, columns = 1 }: { rows: Array<[string, number, number]>; columns?: number }) { return <div className={`grid gap-2 ${columns > 1 ? 'grid-cols-2 md:grid-cols-5' : 'grid-cols-1'}`}>{rows.map(([label, value, max]) => <div key={label}><div className="flex justify-between gap-2 text-[11px] font-bold"><span>{label}</span><span>{value}</span></div><div className="mt-1 h-3 rounded-full bg-slate-100"><div className="h-3 rounded-full bg-emerald-900" style={{ width: `${max > 0 ? Math.min(100, value / max * 100) : 0}%` }} /></div></div>)}</div>; }
+function PercentBarList({ rows }: { rows: Array<[string, number]> }) { return <div className="space-y-2">{rows.map(([label, value]) => <div key={label}><div className="flex justify-between text-[11px] font-bold"><span>{label}</span><span>{value}%</span></div><div className="mt-1 h-3 rounded-full bg-slate-100"><div className="h-3 rounded-full bg-emerald-800" style={{ width: `${Math.max(0, Math.min(100, value))}%` }} /></div></div>)}</div>; }
+function ChartBox({ title, children }: { title: string; children: React.ReactNode }) { return <div className="premium-report-chart-card chart-card rounded-2xl border border-emerald-100 bg-white p-4"><h3 className="premium-report-subtitle">{title}</h3><div className="mt-3">{children}</div></div>; }
 function InfoCell({ label, value }: { label: string; value: React.ReactNode }) { return <div className="premium-report-info-cell rounded-xl border border-slate-100 bg-slate-50 p-2"><p className="text-[10px] font-bold text-slate-500">{label}</p><p className="mt-1 font-black">{value}</p></div>; }
 function SmallBox({ title, text }: { title: string; text: string }) { return <div className="premium-report-narrative rounded-2xl border border-slate-200 p-4"><h3 className="text-xs font-black">{title}</h3><p className="mt-2 text-xs leading-6 text-slate-700">{text}</p></div>; }
 function Narrative({ title, text }: { title: string; text: string }) { return <div className="premium-report-narrative report-section mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"><h3 className="text-xs font-black">{title}</h3><p className="mt-2 text-xs leading-6">{text}</p></div>; }
 function ListBox({ title, items }: { title: string; items: string[] }) { return <div className="premium-report-narrative report-section mt-3 rounded-2xl border border-slate-200 bg-slate-50 p-4"><h3 className="text-xs font-black">{title}</h3><ul className="mt-2 list-inside list-disc space-y-1 text-xs leading-6">{items.map((item) => <li key={item}>{item}</li>)}</ul></div>; }
 function SectionTitle({ number, title }: { number: string; title: string }) { return <h2 className="premium-report-section-title text-lg font-black"><span>{number}</span>{title}</h2>; }
-function TwoColumnTable({ rows }: { rows: Array<[string, React.ReactNode]> }) { return <div className="premium-report-table mt-3 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><tbody>{rows.map(([label, value]) => <tr key={label} className="border-t first:border-t-0"><td className="w-1/3 bg-slate-50 px-3 py-2 font-bold text-slate-600">{label}</td><td className="px-3 py-2 font-black">{value}</td></tr>)}</tbody></table></div>; }
+function TwoColumnTable({ rows }: { rows: Array<[string, React.ReactNode]> }) { return <div className="premium-report-table mastery-two-column-table mt-3 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><tbody>{rows.map(([label, value]) => <tr key={label} className="border-t first:border-t-0"><td className="w-1/3 bg-slate-50 px-3 py-2 font-bold text-slate-600">{label}</td><td className="px-3 py-2 font-black">{value}</td></tr>)}</tbody></table></div>; }
 function SignatureSection() { return <section className="signature-section mt-5 grid grid-cols-3 gap-3 text-center text-xs">{['المعلم', 'المعلم الأول / المشرف', 'إدارة المدرسة'].map((title) => <div key={title} className="premium-report-signature rounded-2xl border border-slate-200 p-4"><div className="font-black">{title}</div><div className="mt-10 border-t pt-2 text-slate-500">الاسم والتوقيع</div></div>)}</section>; }
 function displayValue(value: unknown): string { if (value === null || value === undefined) return 'لم يحدد'; const text = String(value).trim(); return !text || text === 'غير محدد' || text === '—' ? 'لم يحدد' : text; }
 
