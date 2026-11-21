@@ -3669,3 +3669,70 @@ svg text {
     background: #684615 !important;
   }
 }
+
+/* Responsive UX polish: consistent density, distinct track identities, accessible state. */
+@media screen {
+  .mw-track .mw-track-hero {
+    padding: clamp(1.1rem, 2.4vw, 1.6rem) !important;
+  }
+  .mw-track .mw-track-hero h1 {
+    line-height: 1.3;
+  }
+  .mw-track .mw-analysis-step[data-active] .mw-analysis-step__state {
+    color: #244d3c !important;
+    font-weight: 900 !important;
+    opacity: 1 !important;
+  }
+  .mw-track-individual .mw-analysis-step[data-active] .mw-analysis-step__state {
+    color: #35471d !important;
+    background: #e5ecd6 !important;
+  }
+  .mw-track-exam .mw-analysis-step[data-active] .mw-analysis-step__state {
+    color: #684717 !important;
+  }
+  .mw-track .mw-analysis-step:focus-visible,
+  .mw-track .mw-demo-card__button:focus-visible,
+  .mw-track .mw-sample-guidance summary:focus-visible,
+  .mw-track .mw-danger-details summary:focus-visible {
+    outline: 3px solid var(--step-accent, #075b49);
+    outline-offset: 3px;
+  }
+  .mw-track .mw-sample-guidance summary,
+  .mw-track .mw-danger-details summary {
+    list-style-position: inside;
+  }
+}
+@media screen and (max-width: 767px) {
+  .mw-track { --mw-mobile-gap: 0.8rem; }
+  .mw-track .mw-track-hero p { line-height: 1.65 !important; }
+  .mw-track .mw-track-hero h1 { font-size: clamp(1.45rem, 6vw, 1.85rem) !important; }
+  .mw-track .mw-analysis-steps {
+    grid-template-columns: minmax(0, 1fr) !important;
+    gap: 0.45rem !important;
+    padding: 0.55rem !important;
+  }
+  .mw-track .mw-analysis-step {
+    min-height: 3.65rem !important;
+    padding: 0.6rem 0.7rem !important;
+  }
+  .mw-track .mw-analysis-step__description {
+    line-height: 1.45;
+  }
+  .mw-track .mw-demo-card { padding: 0.75rem !important; }
+  .mw-track .mw-demo-card__button { min-height: 2.85rem; }
+  .mw-track .mw-mastery-settings-fields {
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  }
+  .mw-track .mw-mastery-settings-fields > :last-child {
+    grid-column: 1 / -1;
+  }
+  .mw-track .mw-mastery-settings-fields input { min-width: 0; width: 100%; }
+}
+@media screen and (min-width: 768px) {
+  .mw-track .mw-analysis-steps {
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr));
+  }
+  .mw-track .mw-demo-card {
+    max-width: 100%;
+  }
+}
