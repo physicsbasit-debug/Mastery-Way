@@ -345,8 +345,14 @@ export function IndividualPerformanceViews() {
         showVisitedStatus={false}
       />
 
+      {activeTab === 'student-paper' && (
+        <div className="flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={fillExample} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال</button>
+          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: طالب واحد و5 مفردات. يستبدل المثال بيانات التحليل الحالية، ثم يمكنك تشغيل التحليل.</p>
+        </div>
+      )}
       {activeTab === 'student-paper' ? (
-        <StudentPaperTab context={context} setContext={setContext} settings={settings} setSettings={updateSettings} fillExample={fillExample} clearSavedWorkspace={clearSavedWorkspace} clearAllIndividualData={clearAllIndividualData} />
+        <StudentPaperTab context={context} setContext={setContext} settings={settings} setSettings={updateSettings} clearSavedWorkspace={clearSavedWorkspace} clearAllIndividualData={clearAllIndividualData} />
       ) : null}
       {activeTab === 'exam-structure' ? (
         <ExamStructureTab questionCount={questionCount} setQuestionCount={setQuestionCount} blueprint={blueprint} setBlueprint={updateBlueprint} totalExamScore={totalExamScore} rebuildBlueprint={rebuildBlueprint} />
@@ -362,12 +368,11 @@ export function IndividualPerformanceViews() {
   );
 }
 
-function StudentPaperTab({ context, setContext, settings, setSettings, fillExample, clearSavedWorkspace, clearAllIndividualData }: {
+function StudentPaperTab({ context, setContext, settings, setSettings, clearSavedWorkspace, clearAllIndividualData }: {
   context: IndividualReportContext;
   setContext: React.Dispatch<React.SetStateAction<IndividualReportContext>>;
   settings: IndividualPerformanceSettings;
   setSettings: React.Dispatch<React.SetStateAction<IndividualPerformanceSettings>>;
-  fillExample: () => void;
   clearSavedWorkspace: () => void;
   clearAllIndividualData: () => void;
 }) {
@@ -404,7 +409,6 @@ function StudentPaperTab({ context, setContext, settings, setSettings, fillExamp
             <p className="mt-1 text-sm text-slate-500">تُحفظ بيانات التحليل وسجلات التواصل في هذا المتصفح على الجهاز. بدء تحليل جديد يحتفظ بسجلات التواصل؛ ولإزالتها من جهاز مشترك استخدم خيار حذف جميع البيانات.</p>
           </div>
           <div className="flex flex-wrap gap-2">
-            <button type="button" onClick={fillExample} className="rounded-xl border border-slate-300 bg-slate-50 px-5 py-2.5 text-sm font-bold text-slate-800 transition hover:border-slate-500">تعبئة مثال</button>
             <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-[#bac7ab] bg-[#f7f8f3] px-5 py-2.5 text-sm font-bold text-[#40502f]">بدء تحليل جديد مع الاحتفاظ بسجل التواصل</button>
             <button type="button" onClick={clearAllIndividualData} className="rounded-xl border border-red-200 bg-red-50 px-5 py-2.5 text-sm font-bold text-red-700">حذف جميع بيانات المسار وسجلات التواصل</button>
           </div>
