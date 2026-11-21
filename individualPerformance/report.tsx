@@ -111,7 +111,7 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
         <div className="mt-4 grid gap-3 md:grid-cols-3"><BulletCard title="دور الطالب" items={result.plan.studentActions} /><BulletCard title="دور المعلم / المدرسة" items={result.plan.teacherRole} /><BulletCard title="دور ولي الأمر" items={result.plan.parentRole} /></div>
         <InterventionFollowupReport identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       </ReportSection>
-      {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" pageBreak keepTogether>
+      {parentRecord?.contacts?.length ? <ReportSection number="8" title="توثيق التواصل مع ولي الأمر والمتابعة" className="individual-parent-followup-section">
         {parentRecord.contacts.map(entry => {
           const comparison = compareFollowup(entry.baseline, entry.followupPercent);
           return <div key={entry.id} className="premium-report-narrative report-section mt-3 rounded-xl border border-slate-200 p-3 text-sm leading-7">
