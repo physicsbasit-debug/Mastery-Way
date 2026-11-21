@@ -3621,3 +3621,51 @@ svg text {
   #unified-print-root .mw-print-report h2,
   #unified-print-root .mw-print-report h3 { break-after: avoid-page; page-break-after: avoid; }
 }
+
+/* Shared demo-card geometry; each analysis track retains its own visual identity. */
+@media screen {
+  .mw-track .mw-demo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 1rem;
+  }
+  .mw-track .mw-demo-card__button,
+  .mw-track .mastery-spread-no-print .mw-demo-card__button {
+    display: block;
+    width: 100% !important;
+    min-width: 0;
+    text-align: center;
+    color: #fff;
+  }
+  .mw-track-mastery .mw-demo-card {
+    border-color: #b7d9cb !important;
+    background: #f0f8f3 !important;
+  }
+  .mw-track-mastery .mw-demo-card__button {
+    background: #075b49 !important;
+  }
+  .mw-track-mastery .mw-demo-card__button:hover {
+    background: #073e34 !important;
+  }
+  .mw-track-individual .mw-demo-card {
+    border-color: #d5dfbf !important;
+    background: #f5f8ed !important;
+  }
+  .mw-track-individual .mw-demo-card__button {
+    background: #4b5b2d !important;
+  }
+  .mw-track-individual .mw-demo-card__button:hover {
+    background: #2f3a1f !important;
+  }
+  .mw-track-exam .mw-demo-card {
+    border-color: #e7cf9e !important;
+    background: #fff9ec !important;
+  }
+  .mw-track-exam .mw-demo-card__button {
+    background: #80591e !important;
+  }
+  .mw-track-exam .mw-demo-card__button:hover {
+    background: #684615 !important;
+  }
+}
