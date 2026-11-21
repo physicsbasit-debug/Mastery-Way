@@ -138,7 +138,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         const rect = el.getBoundingClientRect(); return [Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 3] as [number, number];
       });
       // Keep table and card subtitles with the first content row; avoid orphan headings.
-      clone.querySelectorAll('.mw-print-report--mastery .premium-report-subtitle').forEach(el => {
+      (clone.classList.contains('mw-print-report--mastery') ? clone.querySelectorAll('.premium-report-subtitle') : []).forEach(el => {
         const rect = el.getBoundingClientRect();
         ranges.push([Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 65]);
       });
