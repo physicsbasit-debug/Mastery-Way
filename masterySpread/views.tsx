@@ -270,7 +270,7 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
       <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
         <h2 className="text-xl font-black text-slate-900">إدخال الدرجات النهائية</h2>
         <p className="mt-1 text-sm leading-6 text-slate-500">الصق الدرجات كسطر لكل درجة أو افصل بينها بفواصل. يقبل الإدخال بالأرقام الهندية ويحوّلها تلقائيًا إلى الأرقام 0-9، كما يدعم الفواصل العربية، ولا تُستخدم أسماء الطلبة.</p>
-        <textarea value={rawScoresText} onChange={(event) => onScoresChange(event.target.value)} className="mt-4 min-h-[330px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm outline-none focus:border-slate-400 focus:bg-white" placeholder={`مثال:\n80؛ 75؛ 90\n65\n70`} />
+        <textarea value={rawScoresText} onChange={(event) => onScoresChange(event.target.value)} className="mt-4 min-h-[220px] md:min-h-[300px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm outline-none focus:border-slate-400 focus:bg-white" placeholder={`مثال:\n80؛ 75؛ 90\n65\n70`} />
         <ReadinessCard readiness={readiness} statusMessage={statusMessage} />
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" disabled={!readiness.validation.valid} onClick={onAnalyze} className={`rounded-2xl px-6 py-3 text-sm font-black text-white shadow-sm ${readiness.validation.valid ? 'bg-emerald-600 hover:bg-emerald-700' : 'cursor-not-allowed bg-slate-300'}`}>تحليل انتشار الإتقان</button>
@@ -294,7 +294,7 @@ function ReadinessCard({ readiness, statusMessage }: { readiness: MasterySpreadR
 }
 
 function SettingsCard({ settings, updateSetting }: { settings: MasterySpreadSettings; updateSetting: (key: keyof MasterySpreadSettings, value: NumericInputValue) => void }) {
-  return <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="text-lg font-black text-slate-900">إعدادات التحليل</h3><div className="mt-4 space-y-3">
+  return <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><h3 className="text-lg font-black text-slate-900">إعدادات التحليل</h3><div className="mw-mastery-settings-fields mt-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-1">
     <NumberInput label="الدرجة الكلية" value={settings.totalScore} onChange={(value) => updateSetting('totalScore', value)} />
     <NumberInput label="حد الإتقان (%)" value={settings.masteryCutoffPercent} onChange={(value) => updateSetting('masteryCutoffPercent', value)} />
     <NumberInput label="هامش القرب من الإتقان" value={settings.nearMasteryMargin ?? ''} onChange={(value) => updateSetting('nearMasteryMargin', value)} />
