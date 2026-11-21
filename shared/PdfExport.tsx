@@ -124,6 +124,12 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
           align-items: start !important; gap: 9px !important;
         }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-last {
+          grid-column: 1 / -1 !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-last ul {
+          columns: 2 !important; column-gap: 24px !important;
+        }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-card {
           padding: 11px !important; break-inside: avoid !important;
         }
@@ -162,6 +168,18 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       const ranges: Array<[number, number]> = Array.from(clone.querySelectorAll('tr, p, h1, h2, h3, h4, li, .unified-chart-card, .diagnostic-report-visual, .signature-section, [data-pdf-keep]')).map(el => {
         const rect = el.getBoundingClientRect(); return [Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 3] as [number, number];
       });
+      // A table's subtitle and its first row must share a page; the former
+      // fixed-height guard was too short for some actual rendered tables.
+      if (clone.classList.contains('mw-print-report--mastery')) {
+        clone.querySelectorAll('.mastery-judgement-table, .mastery-distribution-table').forEach(section => {
+          const heading = section.querySelector('.premium-report-subtitle');
+          const firstRow = section.querySelector('tbody tr');
+          if (!heading || !firstRow) return;
+          const top = heading.getBoundingClientRect().top - base.top;
+          const bottom = firstRow.getBoundingClientRect().bottom - base.top;
+          ranges.push([Math.max(0, top - 4), bottom + 5]);
+        });
+      }
       // Keep table and card subtitles with the first content row; avoid orphan headings.
       (clone.classList.contains('mw-print-report--mastery') ? clone.querySelectorAll('.premium-report-subtitle') : []).forEach(el => {
         const rect = el.getBoundingClientRect();
