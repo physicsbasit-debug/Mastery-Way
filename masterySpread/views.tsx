@@ -196,7 +196,13 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
           showVisitedStatus={false}
         />
       </div>
-      {activeTab === 'input' && <InputTab rawScoresText={rawScoresText} onScoresChange={handleScoresChange} settings={settings} updateSetting={updateSetting} context={context} updateContext={updateContext} readiness={readiness} statusMessage={statusMessage} onAnalyze={handleAnalyze} onReset={handleReset} onUseSample={handleUseSample} />}
+      {activeTab === 'input' && (
+        <div className="mastery-spread-no-print flex flex-wrap items-center gap-3 rounded-2xl border border-amber-200 bg-amber-50 p-3">
+          <button type="button" onClick={handleUseSample} className="rounded-xl bg-slate-900 px-5 py-2.5 text-sm font-black text-white transition hover:bg-slate-700">تعبئة مثال</button>
+          <p className="flex-1 text-xs leading-6 text-slate-700">بيانات تعليمية افتراضية: 12 درجة من 40. يستبدل المثال درجات المجموعة الحالية، ثم يمكنك تشغيل التحليل.</p>
+        </div>
+      )}
+      {activeTab === 'input' && <InputTab rawScoresText={rawScoresText} onScoresChange={handleScoresChange} settings={settings} updateSetting={updateSetting} context={context} updateContext={updateContext} readiness={readiness} statusMessage={statusMessage} onAnalyze={handleAnalyze} onReset={handleReset} />}
       {result && activeTab === 'overview' && <PrintableResultTab sectionId="mastery-overview-tab" context={buildPrintableContext(result, 'الحكم العام')}><OverviewTab result={result} /></PrintableResultTab>}
       {result && activeTab === 'charts' && <PrintableResultTab sectionId="mastery-charts-tab" context={buildPrintableContext(result, 'الرسوم والتحليلات')}><ChartsTab result={result} /></PrintableResultTab>}
       {result && activeTab === 'gap' && <PrintableResultTab sectionId="mastery-gap-tab" context={buildPrintableContext(result, 'قراءة الفجوة')}><GapTab result={result} /></PrintableResultTab>}
@@ -232,11 +238,11 @@ function TabHeader({ tab, result }: { tab: { label: string; description: string 
   return <section className="mw-compact-header rounded-3xl border border-slate-200 bg-white p-5 shadow-sm"><div className="flex flex-col gap-3 lg:flex-row lg:items-center lg:justify-between"><div><p className="text-xs font-black text-[#075B49]">تحليل انتشار الإتقان</p><h2 className="mt-1 text-2xl font-black text-slate-950">{tab.label}</h2><p className="mt-1 text-sm text-slate-500">{tab.description}</p></div>{result ? <div className="grid grid-cols-3 gap-2"><MiniStat label="الانتشار" value={`${result.summary.masterySpreadPercent}%`} /><MiniStat label="الحكم" value={result.judgement.label} /><MiniStat label="المتقنون" value={result.summary.masteryCount} /></div> : null}</div></section>;
 }
 
-function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, context, updateContext, readiness, statusMessage, onAnalyze, onReset, onUseSample }: {
+function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, context, updateContext, readiness, statusMessage, onAnalyze, onReset, }: {
   rawScoresText: string; onScoresChange: (value: string) => void; settings: MasterySpreadSettings;
   updateSetting: (key: keyof MasterySpreadSettings, value: NumericInputValue) => void;
   context: MasterySpreadContext; updateContext: (key: keyof MasterySpreadContext, value: string) => void;
-  readiness: MasterySpreadReadiness; statusMessage: string; onAnalyze: () => void; onReset: () => void; onUseSample: () => void;
+  readiness: MasterySpreadReadiness; statusMessage: string; onAnalyze: () => void; onReset: () => void;
 }) {
   return <section className="space-y-5">
     <Metadata context={context} updateContext={updateContext} />
@@ -248,7 +254,6 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
         <ReadinessCard readiness={readiness} statusMessage={statusMessage} />
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" disabled={!readiness.validation.valid} onClick={onAnalyze} className={`rounded-2xl px-6 py-3 text-sm font-black text-white shadow-sm ${readiness.validation.valid ? 'bg-emerald-600 hover:bg-emerald-700' : 'cursor-not-allowed bg-slate-300'}`}>تحليل انتشار الإتقان</button>
-          <button type="button" onClick={onUseSample} className="rounded-2xl bg-slate-900 px-6 py-3 text-sm font-black text-white">تعبئة مثال</button>
           <button type="button" onClick={onReset} className="rounded-2xl bg-red-50 px-6 py-3 text-sm font-black text-red-700 ring-1 ring-red-200">مسح بيانات المجموعة وبدء تحليل جديد</button>
         </div>
       </div>
