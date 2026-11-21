@@ -434,12 +434,12 @@ function SampleGuidanceNotice({ context }: { context: ExamItemsSampleContext }) 
         ? 'border-amber-200 bg-amber-50 text-amber-900'
         : 'border-slate-200 bg-slate-50 text-slate-800';
   return (
-    <div className={`rounded-2xl border p-4 text-sm leading-7 ${toneClass}`}>
-      <div className="font-black">إرشاد حجم العينة وطريقة اختيارها</div>
-      <p className="mt-1">{guidance.sizeMessage}</p>
+    <details className={`mw-sample-guidance rounded-2xl border p-4 text-sm leading-7 ${toneClass}`}>
+      <summary className="cursor-pointer font-black">إرشاد حجم العينة وطريقة اختيارها <span className="mr-2 text-xs font-normal opacity-80">(اضغط لعرض التفاصيل)</span></summary>
+      <p className="mt-2">{guidance.sizeMessage}</p>
       <p className="mt-2">{guidance.selectionMessage}</p>
       <p className="mt-2 text-xs font-bold opacity-80">هذا الإرشاد لا يمنع التحليل، لكنه يوضح قوة القراءة وحدود تفسير النتائج قبل الطباعة الرسمية.</p>
-    </div>
+    </details>
   );
 }
 
