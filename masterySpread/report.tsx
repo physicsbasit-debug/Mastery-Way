@@ -60,7 +60,7 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
       <SectionTitle number="2" title="المؤشرات العامة وسلم الحكم" />
       <div className="mastery-indicator-highlights mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">{([["عدد الطلبة", result.summary.totalStudents], ["المتقنون", result.summary.masteryCount], ["غير المتقنين", result.summary.nonMasteryCount], ["انتشار الإتقان", `${result.summary.masterySpreadPercent}%`]] as Array<[string, React.ReactNode]>).map(([label, value]) => <InfoCell key={label} label={label} value={value} />)}</div>
       <KeyIndicators result={result} />
-      <div className="mastery-judgement-group" data-pdf-keep="true"><JudgementTable current={result.judgement.code} /></div>
+      <div className="mastery-judgement-group"><JudgementTable current={result.judgement.code} /></div>
       <DistributionTable result={result} />
     </section>
 
@@ -91,9 +91,9 @@ function DetailedReport({ result }: { result: MasterySpreadAnalysisResult }) {
         <SectionTitle number="5" title="تحليل فجوة الانتشار والأسباب المحتملة" />
         <DiagnosticDecisionReportBlock decision={result.diagnostics.decision} />
       </div>
-      <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 items-start gap-3 md:grid-cols-2">
+      <div className="mastery-print-diagnostics mt-4 grid grid-cols-1 items-start gap-3">
         <ParetoReportBlock title="باريتو فئات الفجوة" description="يرتب فئات غير المتقنين حسب حجمها لتحديد نوع التدخل." entries={result.diagnostics.gapPareto} valueLabel="العدد" />
-        <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
+        <div className="mastery-fishbone-full"><FishboneReportBlock diagnostic={result.diagnostics.fishbone} /></div>
       </div>
     </section>
 
@@ -133,7 +133,7 @@ function KeyIndicators({ result }: { result: MasterySpreadAnalysisResult }) {
 }
 
 function JudgementTable({ current }: { current: string }) {
-  return <section className="report-section mastery-judgement-table mt-4"><h3 className="premium-report-subtitle">سلم الحكم</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الحكم</th><th className="px-3 py-2 text-right">النطاق</th></tr></thead><tbody>{MASTERY_JUDGEMENT_SCALE.map((item) => <tr key={item.code} className={item.code === current ? 'bg-emerald-50 font-black' : ''}><td className="border-b px-3 py-2">{item.label}</td><td className="border-b px-3 py-2">{item.code === 'distinguished' ? '70% فأكثر' : item.code === 'rapid_intervention' ? 'أقل من 40%' : `${item.minPercent}% إلى أقل من ${item.maxPercent}%`}</td></tr>)}</tbody></table></div></section>;
+  return <section className="report-section mastery-judgement-table mt-4"><h3 className="premium-report-subtitle">سلم الحكم</h3><div className="premium-report-table mt-2 overflow-hidden rounded-2xl border border-slate-200"><table className="w-full text-xs"><thead className="bg-emerald-900 text-white"><tr><th className="px-3 py-2 text-right">الحكم</th><th className="px-3 py-2 text-right">النطاق</th></tr></thead><tbody>{MASTERY_JUDGEMENT_SCALE.map((item) => <tr key={item.code} className={item.code === current ? 'bg-emerald-50 font-black' : ''}><td className="border-b px-3 py-2">{item.label}</td><td className="border-b px-3 py-2">{item.code === 'distinguished' ? '70% فأكثر' : item.code === 'rapid_intervention' ? 'أقل من 40%' : `${item.minPercent}% إلى أقل من ${item.maxPercent}%`}</td></tr>)}</tbody></table></div></section>;
 }
 
 function DistributionTable({ result }: { result: MasterySpreadAnalysisResult }) {
