@@ -107,6 +107,22 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .signature-section { margin-top: 12px !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature > div:last-child { margin-top: 16px !important; }
+        /* Match the individual report design family while keeping the mastery olive palette. */
+        .pdf-export-render.mw-print-report--mastery .premium-report-section-title { color: #183f33 !important; }
+        .pdf-export-render.mw-print-report--mastery .premium-report-section-title span { background: #315a42 !important; }
+        .pdf-export-render.mw-print-report--mastery .premium-report-subtitle { color: #254b38 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table thead,
+        .pdf-export-render.mw-print-report--mastery .mastery-distribution-table thead { background: #254b38 !important; color: #fff !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table tr.bg-emerald-50 { background: #edf4eb !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block { background: #f0f5ed !important; border-color: #cfddc8 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:first-child p { color: #315a42 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > p,
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:nth-child(2) > div { border-color: #d9e4d3 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics { display: block !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics > * + * { margin-top: 12px !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 9px !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone li { line-height: 1.5 !important; }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
@@ -120,6 +136,11 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       // Rows and paragraphs remain individually splittable for long tables.
       const ranges: Array<[number, number]> = Array.from(clone.querySelectorAll('tr, p, h1, h2, h3, h4, li, .unified-chart-card, .diagnostic-report-visual, .signature-section, [data-pdf-keep]')).map(el => {
         const rect = el.getBoundingClientRect(); return [Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 3] as [number, number];
+      });
+      // Keep table and card subtitles with the first content row; avoid orphan headings.
+      clone.querySelectorAll('.premium-report-subtitle').forEach(el => {
+        const rect = el.getBoundingClientRect();
+        ranges.push([Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 65]);
       });
       // Keep each section title with at least the beginning of its content.
       clone.querySelectorAll('.premium-report-section-title').forEach(el => {
