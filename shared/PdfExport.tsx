@@ -125,7 +125,33 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           align-items: start !important; gap: 9px !important;
         }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-last {
-          grid-column: 1 / -1 !important;
+          grid-column: 1 / span 2 !important;
+          width: 100% !important;
+          min-width: 0 !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-fishbone-grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          direction: rtl !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-rtl-list-item {
+          display: grid !important;
+          grid-template-columns: 10px minmax(0, 1fr) !important;
+          direction: rtl !important;
+          align-items: start !important;
+          column-gap: 7px !important;
+          text-align: right !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-rtl-list-marker {
+          display: block !important;
+          grid-column: 1 !important;
+          color: #315a42 !important;
+          text-align: center !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .mastery-rtl-list-text {
+          display: block !important;
+          grid-column: 2 !important;
+          text-align: right !important;
         }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-last ul {
           columns: 2 !important; column-gap: 24px !important;
