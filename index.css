@@ -3583,9 +3583,7 @@ svg text {
 
 /* تنسيق موحّد للتقارير المطبوعة مع لون مستقل لكل مسار. */
 @media print {
-  #unified-print-root .mw-print-report--mastery { --report-ink: #175a48; --report-tint: #edf5ef; --report-line: #cdded4; }
-  #unified-print-root .mw-print-report--individual { --report-ink: #526638; --report-tint: #f1f5e9; --report-line: #d9e2ce; }
-  #unified-print-root .mw-print-report--exam { --report-ink: #805719; --report-tint: #fbf4e6; --report-line: #e8d8b9; }
+  /* Palette values come from each report's --mw-track-* identity tokens. */
   #unified-print-root .mw-print-report {
     background: #fff !important; color: #202e28 !important;
   }
@@ -3819,20 +3817,10 @@ svg text {
   --mw-track-border: #e7cf9e;
 }
 @media screen {
+  /* Preserve each track's designed hero gradient; standardize its border only. */
   .mw-track-mastery .mw-track-hero,
   .mw-track-individual .mw-track-hero,
   .mw-track-exam .mw-track-hero {
-    background: var(--mw-track-ink) !important;
-    border-color: var(--mw-track-border) !important;
-  }
-  .mw-track-mastery .mw-compact-header > div > div > p:first-child,
-  .mw-track-individual .mw-compact-header > div > div > p:first-child,
-  .mw-track-exam .mw-compact-header > div > div > p:first-child {
-    color: var(--mw-track-ink) !important;
-  }
-  .mw-track-mastery .mw-analysis-step[data-active],
-  .mw-track-individual .mw-analysis-step[data-active],
-  .mw-track-exam .mw-analysis-step[data-active] {
     border-color: var(--mw-track-border) !important;
   }
   .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state,
@@ -3841,11 +3829,6 @@ svg text {
     color: var(--mw-track-ink) !important;
     background: var(--mw-track-soft) !important;
     border-color: var(--mw-track-border) !important;
-  }
-  .mw-track-mastery .mw-demo-card__button,
-  .mw-track-individual .mw-demo-card__button,
-  .mw-track-exam .mw-demo-card__button {
-    background: var(--mw-track-ink) !important;
   }
 }
 @media screen, print {
@@ -3879,7 +3862,6 @@ svg text {
   .premium-report-document.mw-print-report--mastery .official-report-header,
   .premium-report-document.mw-print-report--individual .official-report-header,
   .premium-report-document.mw-print-report--exam .official-report-header {
-    background: linear-gradient(115deg, var(--mw-track-ink), var(--mw-track-ink)) !important;
     border-color: var(--mw-track-border) !important;
   }
 }
