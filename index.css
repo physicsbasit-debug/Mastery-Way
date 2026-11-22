@@ -475,7 +475,7 @@
 
   .mw-analysis-steps .mw-analysis-step[data-active] {
     border-color: var(--step-accent) !important;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 78%, #172554), var(--step-accent)) !important;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 78%, #123d35), var(--step-accent)) !important;
     color: #fff !important;
     box-shadow: 0 10px 24px color-mix(in srgb, var(--step-accent) 22%, transparent) !important;
   }
@@ -1174,7 +1174,7 @@ svg text {
     border-color: rgba(255, 255, 255, 0.20);
     background:
       radial-gradient(circle at top left, rgba(255, 255, 255, 0.17), transparent 13rem),
-      linear-gradient(135deg, #172554 0%, var(--kpi-accent) 52%, #2F6BFF 112%);
+      linear-gradient(135deg, color-mix(in srgb, var(--kpi-accent) 70%, #172b23) 0%, var(--kpi-accent) 52%, color-mix(in srgb, var(--kpi-accent) 75%, #ffffff) 112%);
     box-shadow: 0 22px 58px rgba(23, 37, 84, 0.20);
   }
 
@@ -2750,7 +2750,7 @@ svg text {
   .mw-track-individual .mw-analysis-stepper__progress { color: var(--mw-olive-primary); }
   .mw-path-workspace .mw-track input:focus,
   .mw-path-workspace .mw-track textarea:focus,
-  .mw-path-workspace .mw-track select:focus { border-color: #4E9278 !important; box-shadow: 0 0 0 3px rgba(7, 91, 73, 0.10) !important; }
+  .mw-path-workspace .mw-track select:focus { border-color: var(--mw-track-ink, #075b49) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--mw-track-ink, #075b49) 12%, transparent) !important; }
 }
 
 @media screen and (max-width: 900px) {
@@ -3452,7 +3452,7 @@ svg text {
   .mw-path-workspace .mw-track-exam select:focus { border-color: #a87526 !important; box-shadow: 0 0 0 3px rgba(168,117,38,.14) !important; }
   .mw-track-exam button[class*="bg-slate-900"] { background: #805719; }
   .mw-track-exam button[class*="bg-slate-900"]:hover { background: #684515; }
-  .mw-track-exam .exam-items-no-print button { background: #805719; color: white; }
+  .mw-track-exam .exam-items-no-print button { background: var(--mw-track-ink); color: white; }
   .mw-track-exam .exam-items-no-print button:hover { background: #684515; }
   .mw-track-exam .exam-items-no-print button:last-child:not(:first-child) { background: #fff; color: #684515; }
   .mw-track-exam .mw-kpi-card--royal { --kpi-accent: #94651f; --kpi-accent-soft: rgba(168,117,38,.12); }
