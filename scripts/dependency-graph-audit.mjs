@@ -1,10 +1,11 @@
 #!/usr/bin/env node
 // Read-only repository dependency audit. No packages or source files are deleted.
-import { readdirSync, readFileSync, existsSync, statSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
+import ts from 'typescript';
 import { dirname, extname, join, resolve, relative, sep } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
-const extensions = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.css', '.json'];
+const extensions = ['.ts', '.tsx', '.js', '.jsx', '.mjs', '.css', '.json', '.png', '.svg', '.jpg', '.jpeg', '.webp'];
 const excluded = new Set(['node_modules', 'dist', '.git', '.vite', 'coverage']);
 function walk(dir) {
   return readdirSync(dir, { withFileTypes: true }).flatMap(entry => {
@@ -18,7 +19,26 @@ const set = new Set(all);
 const edges = new Map();
 const external = new Map();
 const missing = [];
-const literalImport = /\b(?:import|export)\s+(?:type\s+)?(?:[^;\n]*?\s+from\s*)?['"]([^'"\n]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
+function importSpecifiers(file, code) {
+  const kind = file.endsWith('.tsx') ? ts.ScriptKind.TSX : file.endsWith('.jsx') ? ts.ScriptKind.JSX : ts.ScriptKind.TS;
+  const ast = ts.createSourceFile(file, code, ts.ScriptTarget.Latest, true, kind);
+  const result = [];
+  function visit(node) {
+    if ((ts.isImportDeclaration(node) || ts.isExportDeclaration(node)) &&
+        node.moduleSpecifier && ts.isStringLiteral(node.moduleSpecifier)) {
+      result.push(node.moduleSpecifier.text);
+    }
+    if (ts.isCallExpression(node) && node.arguments.length === 1 &&
+        ts.isStringLiteral(node.arguments[0]) &&
+        (node.expression.kind === ts.SyntaxKind.ImportKeyword ||
+          (ts.isIdentifier(node.expression) && node.expression.text === 'require'))) {
+      result.push(node.arguments[0].text);
+    }
+    ts.forEachChild(node, visit);
+  }
+  visit(ast);
+  return result;
+}
 function resolveLocal(from, spec) {
   const base = spec.startsWith('@/') ? join(root, spec.slice(2)) : resolve(dirname(from), spec);
   const options = [base, ...extensions.map(ext => base + ext), ...extensions.map(ext => join(base, 'index' + ext))];
@@ -27,8 +47,7 @@ function resolveLocal(from, spec) {
 for (const file of source) {
   const code = readFileSync(file, 'utf8');
   const refs = new Set();
-  for (const match of code.matchAll(literalImport)) {
-    const spec = match[1] || match[2] || match[3];
+  for (const spec of importSpecifiers(file, code)) {
     if (spec.startsWith('.') || spec.startsWith('@/')) {
       const target = resolveLocal(file, spec);
       if (target) refs.add(target);
@@ -41,7 +60,7 @@ for (const file of source) {
   }
   edges.set(file, refs);
 }
-const entries = ['main.tsx', 'app.tsx', 'vite.config.ts', 'scripts/security-audit-policy.mjs']
+const entries = ['main.tsx', 'app.tsx', 'vite.config.ts', 'scripts/security-audit-policy.mjs', 'scripts/dependency-graph-audit.mjs']
   .map(p => join(root, p)).filter(p => set.has(p));
 const reachable = new Set();
 function visit(file) {
@@ -67,7 +86,7 @@ const report = {
   intentionallyRetained: ['comparison/'],
   unusedDependencyCandidates: unusedCandidates,
   undeclaredPackageImports: undeclared,
-  limitations: 'Static literal import graph only; dynamic computed imports, CSS url(), public assets, tests and framework conventions require manual review. Candidates are not safe-to-delete findings.'
+  limitations: 'TypeScript AST literal import graph only; computed imports, CSS url(), public assets, tests and framework conventions require manual review. Candidates are not safe-to-delete findings.'
 };
 process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 if (missing.length || undeclared.length) process.exitCode = 1;
