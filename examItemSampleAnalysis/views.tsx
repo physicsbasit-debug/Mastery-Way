@@ -435,7 +435,7 @@ function SampleGuidanceNotice({ context }: { context: ExamItemsSampleContext }) 
         : 'border-slate-200 bg-slate-50 text-slate-800';
   return (
     <details className={`mw-sample-guidance rounded-2xl border p-4 text-sm leading-7 ${toneClass}`}>
-      <summary className="cursor-pointer font-black">إرشاد حجم العينة وطريقة اختيارها <span className="mr-2 text-xs font-normal opacity-80">(اضغط لعرض التفاصيل)</span></summary>
+      <summary className="cursor-pointer font-black">إرشاد حجم العينة وطريقة اختيارها <span className="mw-guidance-hint">(اضغط لعرض التفاصيل)</span></summary>
       <p className="mt-2">{guidance.sizeMessage}</p>
       <p className="mt-2">{guidance.selectionMessage}</p>
       <p className="mt-2 text-xs font-bold opacity-80">هذا الإرشاد لا يمنع التحليل، لكنه يوضح قوة القراءة وحدود تفسير النتائج قبل الطباعة الرسمية.</p>

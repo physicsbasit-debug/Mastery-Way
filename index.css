@@ -3736,3 +3736,59 @@ svg text {
     max-width: 100%;
   }
 }
+
+
+/* UX finishing pass: preserve each track's palette while improving readability and touch layout. */
+@media screen {
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state {
+    background: #e8f3e8 !important;
+    color: #064b3d !important;
+    border: 1px solid #c7e3d5 !important;
+    opacity: 1 !important;
+  }
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state {
+    background: #e9efd9 !important;
+    color: #35471d !important;
+    border: 1px solid #d3dfbb !important;
+  }
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state {
+    background: #fff0d6 !important;
+    color: #684717 !important;
+    border: 1px solid #ead0a0 !important;
+  }
+  .mw-track .mw-sample-guidance summary {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    gap: 0.2rem 0.65rem;
+    line-height: 1.65;
+    list-style: none;
+  }
+  .mw-track .mw-sample-guidance summary::-webkit-details-marker { display: none; }
+  .mw-track .mw-sample-guidance summary::before {
+    content: '▸';
+    display: inline-block;
+    font-size: 0.8rem;
+    transition: transform 150ms ease;
+  }
+  .mw-track .mw-sample-guidance[open] summary::before { transform: rotate(-90deg); }
+  .mw-track .mw-sample-guidance summary .mw-guidance-hint {
+    font-size: 0.75rem;
+    font-weight: 500;
+    opacity: 0.8;
+  }
+  .mw-track input, .mw-track select, .mw-track textarea {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+}
+@media screen and (max-width: 767px) {
+  .mw-track .mw-analysis-step__title { overflow-wrap: anywhere; }
+  .mw-track .mw-analysis-step__state { flex-shrink: 0; }
+  .mw-track .mw-sample-guidance summary { align-items: baseline; }
+  .mw-track .mw-mastery-settings-fields { row-gap: 0.8rem !important; }
+}
+@media screen and (min-width: 768px) {
+  .mw-track .mw-analysis-step { min-height: 4rem; }
+}
