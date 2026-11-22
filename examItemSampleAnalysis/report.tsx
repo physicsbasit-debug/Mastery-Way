@@ -90,7 +90,7 @@ function DetailedReport({ result, followupIdentity }: { result: ExamItemsSampleA
           <ParetoReportBlock title="باريتو الفقد حسب المفردات" description="يرتب المفردات حسب مساهمتها في الفقد الكلي لتحديد نقطة البدء." entries={result.diagnostics.itemLossPareto} valueLabel="الفقد" />
           <ParetoReportBlock title="باريتو الفقد حسب المهارات" description="يوضح المهارات الأكثر مساهمة في الفقد داخل العينة." entries={result.diagnostics.skillLossPareto} valueLabel="الفقد" />
         </div>
-        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <div className="exam-diagnostic-comparison-grid mt-4 grid gap-3 lg:grid-cols-2">
           <RadarReportBlock title="رادار أداء المهارات" description="يعرض صورة عامة لتوازن أداء المهارات في العينة." data={result.diagnostics.skillRadar} />
           <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
         </div>
