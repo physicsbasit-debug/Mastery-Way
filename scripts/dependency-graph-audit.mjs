@@ -79,8 +79,12 @@ const unreachable = source.map(p => relative(root, p).split(sep).join('/'))
   .filter(p => !reachable.has(join(root, p)));
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const declared = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
-const unusedCandidates = declared.filter(p => !external.has(p) &&
-  !['typescript', 'vite', '@vitejs/plugin-react', '@tailwindcss/vite', 'tailwindcss', '@types/node', '@types/react', '@types/react-dom'].includes(p));
+const toolchain = new Set(['typescript', 'vite', '@vitejs/plugin-react', '@tailwindcss/vite', 'tailwindcss', '@types/node', '@types/react', '@types/react-dom']);
+const unusedCandidates = declared.filter(p => !external.has(p) && !toolchain.has(p));
+// A name in a code-splitting regex is not an import and does not prove runtime usage.
+const viteConfig = readFileSync(join(root, 'vite.config.ts'), 'utf8');
+const configuredOnlyCandidates = unusedCandidates.filter(p => viteConfig.includes(p));
+const unreferencedCandidates = unusedCandidates.filter(p => !viteConfig.includes(p));
 const undeclared = [...external.keys()].filter(p => !declared.includes(p));
 const report = {
   sourceFiles: source.length,
@@ -90,8 +94,10 @@ const report = {
   unreachableCandidates: unreachable.sort(),
   intentionallyRetained: ['comparison/'],
   unusedDependencyCandidates: unusedCandidates,
+  configuredOnlyDependencyCandidates: configuredOnlyCandidates,
+  unreferencedDependencyCandidates: unreferencedCandidates,
   undeclaredPackageImports: undeclared,
-  limitations: 'TypeScript AST literal import graph only; computed imports, CSS url(), public assets, tests and framework conventions require manual review. Candidates are not safe-to-delete findings.'
+  limitations: 'TypeScript AST literal import graph only; computed imports, CSS url(), public assets, tests, package scripts, transitive dependencies and framework conventions require manual review. Mention in Vite code-splitting configuration is not proof of package usage. Candidates are not safe-to-delete findings.'
 };
 process.stdout.write(JSON.stringify(report, null, 2) + '\n');
 if (missing.length || undeclared.length) process.exitCode = 1;
