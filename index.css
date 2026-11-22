@@ -3869,17 +3869,17 @@ svg text {
 /* Mobile visual consistency follow-up: route-specific surfaces only.
    Keep semantic warning/status colors and report calculations unchanged. */
 @media screen {
-  /* Home cards: remove legacy royal/cyan styling from the individual route. */
-  .mw-path-card--violet {
+  /* Home cards: the individual route uses --olive in the actual homepage markup. */
+  .mw-path-card--olive {
+    --mw-path-color: #4b5b2d;
+    --mw-path-tint: #f2f5e8;
     --mw-card-accent: linear-gradient(90deg, #394922, #71834b);
     --mw-card-glow: rgba(75, 91, 45, 0.11);
   }
-  .mw-path-card--violet .mw-card-arrow { background: #4b5b2d; box-shadow: 0 12px 24px rgba(75, 91, 45, 0.18); }
-  .mw-path-card--violet .mw-path-card-cta { background: linear-gradient(105deg, #394922, #64773d) !important; }
-  .mw-path-card--violet .mw-path-badge { color: #4b5b2d; border-color: #d5dfbf; background: #f2f5e8; }
-  .mw-path-card--violet .mw-icon-bubble { color: #4b5b2d; background: #f2f5e8; border-color: #d5dfbf; }
   /* Distinct green mastery route, including its home-card strip. */
   .mw-path-card--royal {
+    --mw-path-color: #075b49;
+    --mw-path-tint: #edf6f1;
     --mw-card-accent: linear-gradient(90deg, #075b49, #358775);
     --mw-card-glow: rgba(7, 91, 73, 0.11);
   }
