@@ -473,7 +473,7 @@ function ContextTab({ context, updateContext, reliability, itemCount, setItemCou
         </div>
       </Card>
 
-      <section className="rounded-3xl border border-slate-200 bg-white p-4 shadow-sm xl:col-span-3">
+      <section className="rounded-2xl border border-slate-200 bg-white p-3 sm:p-4 shadow-sm xl:col-span-3">
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-[1fr,240px,220px] lg:items-end">
           <div>
             <h3 className="text-base font-black text-slate-900">إجراءات بداية المسار</h3>
@@ -488,11 +488,11 @@ function ContextTab({ context, updateContext, reliability, itemCount, setItemCou
 
           </div>
         </div>
-        <details className="mw-danger-details mt-4 w-full text-sm sm:max-w-sm">
+        <details className="mw-danger-details mt-3 w-full text-sm sm:max-w-sm">
           <summary className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center font-bold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700">إدارة بيانات الجهاز</summary>
           <div className="mt-2 rounded-xl border border-red-100 bg-red-50/70 p-3">
-            <p className="mb-3 text-xs leading-6 text-red-800">سيؤدي المسح إلى حذف جدول المفردات ودرجات العينة والتحليل الحالي من هذا الجهاز.</p>
-            <button type="button" onClick={clearSavedWorkspace} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">مسح بيانات المسار وبدء تحليل جديد</button>
+            <p className="mb-3 text-xs leading-6 text-red-800">يحذف جدول المفردات ودرجات العينة والتحليل نهائيًا من هذا الجهاز.</p>
+            <button type="button" onClick={clearSavedWorkspace} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">حذف بيانات المسار</button>
           </div>
         </details>
       </section>
