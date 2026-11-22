@@ -222,6 +222,20 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           align-self: start !important;
           min-height: 0 !important;
         }
+        /* Individual diagnosis: do not stretch the shorter comparison chart
+           to the radar card's height. Keep both intrinsic chart sizes. */
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          align-items: start !important;
+          gap: 10px !important;
+        }
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid > * {
+          min-width: 0 !important;
+          height: auto !important;
+          min-height: 0 !important;
+          align-self: start !important;
+        }
         /* Final A4 layout polish: preserve content and chart aspect ratios. */
         .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {
           gap: 10px !important;
@@ -282,10 +296,17 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         const rect = el.getBoundingClientRect();
         ranges.push([Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 65]);
       });
-      // Keep each section title with at least the beginning of its content.
-      clone.querySelectorAll('.premium-report-section-title').forEach(el => {
-        const rect = el.getBoundingClientRect();
-        ranges.push([Math.max(0, rect.top - base.top - 3), rect.bottom - base.top + 55]);
+      // Keep section titles with actual first content, not an arbitrary
+      // 55px guard that can leave a heading stranded on a page.
+      clone.querySelectorAll<HTMLElement>('.premium-report-section-title').forEach(heading => {
+        const rect = heading.getBoundingClientRect();
+        const section = heading.closest('.report-flow, .report-section');
+        const content = heading.nextElementSibling ?? section?.querySelector(':scope > :not(.premium-report-section-title)');
+        const contentRect = content?.getBoundingClientRect();
+        const firstContentBottom = contentRect && contentRect.bottom > rect.bottom
+          ? Math.min(contentRect.bottom, rect.bottom + 150)
+          : rect.bottom + 55;
+        ranges.push([Math.max(0, rect.top - base.top - 3), firstContentBottom - base.top + 3]);
       });
       const pages = paginateReport(Math.ceil(base.height), 1088, ranges);
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
