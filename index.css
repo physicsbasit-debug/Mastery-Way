@@ -2732,9 +2732,6 @@ svg text {
   .mw-analysis-stepper { --step-accent: #075B49; }
   .mw-track-individual .mw-analysis-stepper { --step-accent: var(--mw-olive-primary); }
   .mw-track-exam .mw-analysis-stepper { --step-accent: #A77B2E; }
-  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] { border-color: var(--mw-olive-border) !important; background: var(--mw-olive-soft) !important; color: var(--mw-olive-deep) !important; box-shadow: inset -3px 0 var(--mw-olive-primary) !important; }
-  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__number { background: var(--mw-olive-primary); color: white; }
-  .mw-track-individual .mw-analysis-stepper__progress { color: var(--mw-olive-primary); }
 
   .mw-analysis-steps .mw-analysis-step { border-color: #E5EAE4 !important; background: #F8F9F6 !important; box-shadow: none !important; }
   .mw-analysis-steps .mw-analysis-step[data-active] { border-color: #AFCFC0 !important; background: #EAF3ED !important; color: #123D35 !important; box-shadow: inset -3px 0 #075B49 !important; }
@@ -2746,6 +2743,11 @@ svg text {
   .mw-analysis-steps .mw-analysis-step__description,
   .mw-analysis-steps .mw-analysis-step__state { color: #748078; }
   .mw-analysis-stepper__progress { border-color: #D9E7DE; background: #EFF5EF; color: #176B78; }
+
+  /* Keep individual-route olive overrides beside the shared stepper rules. */
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] { border-color: var(--mw-olive-border) !important; background: var(--mw-olive-soft) !important; color: var(--mw-olive-deep) !important; box-shadow: inset -3px 0 var(--mw-olive-primary) !important; }
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__number { background: var(--mw-olive-primary); color: white; }
+  .mw-track-individual .mw-analysis-stepper__progress { color: var(--mw-olive-primary); }
   .mw-path-workspace .mw-track input:focus,
   .mw-path-workspace .mw-track textarea:focus,
   .mw-path-workspace .mw-track select:focus { border-color: #4E9278 !important; box-shadow: 0 0 0 3px rgba(7, 91, 73, 0.10) !important; }
