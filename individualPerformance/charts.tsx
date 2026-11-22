@@ -165,7 +165,7 @@ export function TopLossItemsChart({ result, compact = false }: IndividualChartPr
   const data = result.topLossItems.slice(0, 8).map((item) => ({ name: item.label, loss: item.loss }));
 
   return (
-    <ChartCard title="أعلى المفردات تأثيرًا في الفقد" description="يعرض المفردات التي فقد فيها الطالب أكبر قدر من الدرجات." compact={compact}>
+    <div className="individual-top-loss-chart"><ChartCard title="أعلى المفردات تأثيرًا في الفقد" description="يعرض المفردات التي فقد فيها الطالب أكبر قدر من الدرجات." compact={compact}>
       {data.length === 0 ? (
         <EmptyChartMessage>لا توجد مفردات ذات فقد واضح في البيانات الحالية.</EmptyChartMessage>
       ) : (
@@ -181,7 +181,7 @@ export function TopLossItemsChart({ result, compact = false }: IndividualChartPr
           </BarChart>
         </ResponsiveContainer>
       )}
-    </ChartCard>
+    </ChartCard></div>
   );
 }
 
