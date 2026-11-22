@@ -3835,9 +3835,9 @@ svg text {
   .mw-track-exam .mw-analysis-step[data-active] {
     border-color: var(--mw-track-border) !important;
   }
-  .mw-track-mastery .mw-analysis-step[data-active] .mw-analysis-step__state,
-  .mw-track-individual .mw-analysis-step[data-active] .mw-analysis-step__state,
-  .mw-track-exam .mw-analysis-step[data-active] .mw-analysis-step__state {
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state {
     color: var(--mw-track-ink) !important;
     background: var(--mw-track-soft) !important;
     border-color: var(--mw-track-border) !important;
