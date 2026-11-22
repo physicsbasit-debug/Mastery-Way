@@ -610,7 +610,7 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
       <InterventionFollowup tone="olive" track="individual" identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       <div className="mw-dashboard-grid mw-dashboard-grid--four">
         <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="olive" />
-        <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="royal" featured />
+        <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="olive" featured />
         <Metric label="التصنيف" value={<StatusBadge tone={levelTone(result.level.code)}>{result.level.label}</StatusBadge>} hint={result.level.planType} icon="◆" tone={levelTone(result.level.code)} />
         <Metric label="أولوية التدخل" value={firstPriority ? firstPriority.skill : 'لا توجد أولوية'} hint={firstPriority ? `${firstPriority.percent}% أداء في المهارة` : 'لا توجد فجوة مهارية بارزة'} icon="★" tone="amber" />
         <Metric label="الفجوة عن الإتقان" value={`${result.summary.gapToMasteryPoints} درجة`} hint={result.summary.achievedMastery ? 'لا توجد فجوة حرجة عن الإتقان' : 'الفارق المطلوب للوصول إلى حد الإتقان'} icon="△" tone={result.summary.achievedMastery ? 'royal' : 'amber'} />
@@ -826,7 +826,7 @@ function SearchableSelect({ value, options, onChange }: { value: string; options
   return <div><input list={listId} value={value} onChange={(event) => onChange(event.target.value)} placeholder="اختر أو اكتب..." className="w-72 rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-500" /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></div>;
 }
 
-function Metric({ label, value, hint, featured = false, tone = 'royal', icon }: { label: string; value: React.ReactNode; hint?: React.ReactNode; featured?: boolean; tone?: 'royal' | 'olive' | 'violet' | 'amber' | 'slate' | 'danger'; icon?: React.ReactNode }) {
+function Metric({ label, value, hint, featured = false, tone = 'olive', icon }: { label: string; value: React.ReactNode; hint?: React.ReactNode; featured?: boolean; tone?: 'royal' | 'olive' | 'violet' | 'amber' | 'slate' | 'danger'; icon?: React.ReactNode }) {
   return <PremiumMetricCard label={label} value={value} hint={hint} featured={featured} tone={tone} icon={icon} />;
 }
 
