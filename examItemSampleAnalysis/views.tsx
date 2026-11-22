@@ -162,6 +162,7 @@ export function ExamItemsSampleAnalysisViews() {
   }, [activeTab, context, itemCount, items, sampleRows, result]);
 
   const clearSavedWorkspace = () => {
+    if (!window.confirm('سيُحذف جدول المفردات ودرجات العينة والتحليل الحالي المحفوظ على هذا الجهاز. هل تريد المتابعة؟')) return;
     clearWorkspace(WORKSPACE_KEY);
     const fresh = createFreshExamItemsSampleWorkspace();
     setActiveTab(fresh.activeTab);
@@ -484,9 +485,16 @@ function ContextTab({ context, updateContext, reliability, itemCount, setItemCou
           <NumberInput label="عدد مفردات الورقة" value={itemCount} onChange={setItemCount} />
           <div className="flex flex-col gap-2 sm:flex-row lg:flex-col">
             <button type="button" onClick={rebuildItems} className="rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-700">إنشاء جدول المفردات</button>
-            <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm font-bold text-red-700 hover:border-red-400">بدء تحليل جديد</button>
+
           </div>
         </div>
+        <details className="mw-danger-details mt-4 w-full text-sm sm:max-w-sm">
+          <summary className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center font-bold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-amber-700">إدارة بيانات الجهاز</summary>
+          <div className="mt-2 rounded-xl border border-red-100 bg-red-50/70 p-3">
+            <p className="mb-3 text-xs leading-6 text-red-800">سيؤدي المسح إلى حذف جدول المفردات ودرجات العينة والتحليل الحالي من هذا الجهاز.</p>
+            <button type="button" onClick={clearSavedWorkspace} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">مسح بيانات المسار وبدء تحليل جديد</button>
+          </div>
+        </details>
       </section>
     </div>
   );

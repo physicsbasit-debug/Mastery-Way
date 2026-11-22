@@ -172,6 +172,7 @@ export function MasterySpreadSection({ className = '', initialRawScoresText = ''
   };
 
   const handleReset = () => {
+    if (!window.confirm('سيُحذف تحليل المجموعة الحالي ودرجاتها وإعداداتها المحفوظة على هذا الجهاز. هل تريد المتابعة؟')) return;
     clearWorkspace(WORKSPACE_KEY);
     setRawScoresText(initialRawScoresText); setSettings(createFreshSettings()); setContext(createFreshContext());
     setResult(null); setStatusMessage(''); setActiveTab('input'); onAnalysisChange?.(null);
@@ -274,8 +275,15 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
         <ReadinessCard readiness={readiness} statusMessage={statusMessage} />
         <div className="mt-5 flex flex-wrap gap-3">
           <button type="button" disabled={!readiness.validation.valid} onClick={onAnalyze} className={`rounded-2xl px-6 py-3 text-sm font-black text-white shadow-sm ${readiness.validation.valid ? 'bg-emerald-600 hover:bg-emerald-700' : 'cursor-not-allowed bg-slate-300'}`}>تحليل انتشار الإتقان</button>
-          <button type="button" onClick={onReset} className="rounded-2xl bg-red-50 px-6 py-3 text-sm font-black text-red-700 ring-1 ring-red-200">مسح بيانات المجموعة وبدء تحليل جديد</button>
+
         </div>
+        <details className="mw-danger-details mt-4 w-full text-sm sm:max-w-sm">
+          <summary className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center font-bold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">إدارة بيانات الجهاز</summary>
+          <div className="mt-2 rounded-xl border border-red-100 bg-red-50/70 p-3">
+            <p className="mb-3 text-xs leading-6 text-red-800">سيؤدي المسح إلى حذف درجات المجموعة والتحليل الحالي وإعداداته من هذا الجهاز.</p>
+            <button type="button" onClick={onReset} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">مسح بيانات المجموعة وبدء تحليل جديد</button>
+          </div>
+        </details>
       </div>
       <aside className="space-y-5"><SettingsCard settings={settings} updateSetting={updateSetting} /><div className="rounded-3xl border border-blue-100 bg-blue-50 p-4 text-xs leading-6 text-blue-950">تُحفظ بيانات العمل مؤقتًا على هذا الجهاز. عند استخدام جهاز مشترك، امسح بيانات المجموعة بعد الانتهاء.</div></aside>
     </div>

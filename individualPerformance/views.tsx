@@ -425,11 +425,11 @@ function StudentPaperTab({ context, setContext, settings, setSettings, clearSave
           </div>
           <div className="flex flex-wrap gap-2">
             <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-[#bac7ab] bg-[#f7f8f3] px-5 py-2.5 text-sm font-bold text-[#40502f]">بدء تحليل جديد مع الاحتفاظ بسجل التواصل</button>
-            <details className="mw-danger-details w-full text-sm md:w-auto">
-              <summary className="cursor-pointer rounded-xl border border-slate-200 bg-white px-4 py-2.5 font-bold text-slate-600">إدارة بيانات الجهاز</summary>
-              <div className="mt-2 rounded-xl border border-red-100 bg-red-50 p-3">
+            <details className="mw-danger-details w-full text-sm md:w-72">
+              <summary className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center font-bold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">إدارة بيانات الجهاز</summary>
+              <div className="mt-2 rounded-xl border border-red-100 bg-red-50/70 p-3">
                 <p className="mb-2 text-xs leading-6 text-red-800">هذا الإجراء يحذف بيانات التحليل وسجلات التواصل من هذا الجهاز.</p>
-                <button type="button" onClick={clearAllIndividualData} className="rounded-xl border border-red-200 bg-white px-4 py-2.5 text-sm font-bold text-red-700">حذف جميع بيانات المسار وسجلات التواصل</button>
+                <button type="button" onClick={clearAllIndividualData} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">حذف جميع بيانات المسار وسجلات التواصل</button>
               </div>
             </details>
           </div>
