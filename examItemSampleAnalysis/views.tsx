@@ -649,7 +649,7 @@ function ScoresTab({
                     ? 'border-amber-300 bg-amber-50/50 focus:border-amber-500'
                     : issue
                       ? 'border-red-400 bg-red-50 focus:border-red-600'
-                      : 'border-slate-200 bg-white focus:border-blue-500';
+                      : 'border-slate-200 bg-white focus:border-amber-600';
                   return (
                     <td key={item.id} className="px-2 py-2 text-center">
                       <MobileNumberInput

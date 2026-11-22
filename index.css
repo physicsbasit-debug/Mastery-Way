@@ -475,7 +475,7 @@
 
   .mw-analysis-steps .mw-analysis-step[data-active] {
     border-color: var(--step-accent) !important;
-    background: linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 78%, #172554), var(--step-accent)) !important;
+    background: linear-gradient(135deg, color-mix(in srgb, var(--step-accent) 78%, #123d35), var(--step-accent)) !important;
     color: #fff !important;
     box-shadow: 0 10px 24px color-mix(in srgb, var(--step-accent) 22%, transparent) !important;
   }
@@ -1174,7 +1174,7 @@ svg text {
     border-color: rgba(255, 255, 255, 0.20);
     background:
       radial-gradient(circle at top left, rgba(255, 255, 255, 0.17), transparent 13rem),
-      linear-gradient(135deg, #172554 0%, var(--kpi-accent) 52%, #2F6BFF 112%);
+      linear-gradient(135deg, color-mix(in srgb, var(--kpi-accent) 70%, #172b23) 0%, var(--kpi-accent) 52%, color-mix(in srgb, var(--kpi-accent) 75%, #ffffff) 112%);
     box-shadow: 0 22px 58px rgba(23, 37, 84, 0.20);
   }
 
@@ -2750,7 +2750,7 @@ svg text {
   .mw-track-individual .mw-analysis-stepper__progress { color: var(--mw-olive-primary); }
   .mw-path-workspace .mw-track input:focus,
   .mw-path-workspace .mw-track textarea:focus,
-  .mw-path-workspace .mw-track select:focus { border-color: #4E9278 !important; box-shadow: 0 0 0 3px rgba(7, 91, 73, 0.10) !important; }
+  .mw-path-workspace .mw-track select:focus { border-color: var(--mw-track-ink, #075b49) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--mw-track-ink, #075b49) 12%, transparent) !important; }
 }
 
 @media screen and (max-width: 900px) {
@@ -3452,7 +3452,7 @@ svg text {
   .mw-path-workspace .mw-track-exam select:focus { border-color: #a87526 !important; box-shadow: 0 0 0 3px rgba(168,117,38,.14) !important; }
   .mw-track-exam button[class*="bg-slate-900"] { background: #805719; }
   .mw-track-exam button[class*="bg-slate-900"]:hover { background: #684515; }
-  .mw-track-exam .exam-items-no-print button { background: #805719; color: white; }
+  .mw-track-exam .exam-items-no-print button { background: var(--mw-track-ink); color: white; }
   .mw-track-exam .exam-items-no-print button:hover { background: #684515; }
   .mw-track-exam .exam-items-no-print button:last-child:not(:first-child) { background: #fff; color: #684515; }
   .mw-track-exam .mw-kpi-card--royal { --kpi-accent: #94651f; --kpi-accent-soft: rgba(168,117,38,.12); }
@@ -3583,9 +3583,7 @@ svg text {
 
 /* تنسيق موحّد للتقارير المطبوعة مع لون مستقل لكل مسار. */
 @media print {
-  #unified-print-root .mw-print-report--mastery { --report-ink: #175a48; --report-tint: #edf5ef; --report-line: #cdded4; }
-  #unified-print-root .mw-print-report--individual { --report-ink: #526638; --report-tint: #f1f5e9; --report-line: #d9e2ce; }
-  #unified-print-root .mw-print-report--exam { --report-ink: #805719; --report-tint: #fbf4e6; --report-line: #e8d8b9; }
+  /* Palette values come from each report's --mw-track-* identity tokens. */
   #unified-print-root .mw-print-report {
     background: #fff !important; color: #202e28 !important;
   }
@@ -3796,4 +3794,74 @@ svg text {
 }
 @media screen and (min-width: 768px) {
   .mw-track .mw-analysis-step { min-height: 4rem; }
+}
+
+/* Track identity contract: the same semantic palette on screen and in exported reports.
+   Scoped to each track to avoid changing shared components or report pagination. */
+.mw-track-mastery,
+.premium-report-document.mw-print-report--mastery {
+  --mw-track-ink: #075b49;
+  --mw-track-soft: #edf6f1;
+  --mw-track-border: #bddbd0;
+}
+.mw-track-individual,
+.premium-report-document.mw-print-report--individual {
+  --mw-track-ink: #4b5b2d;
+  --mw-track-soft: #f2f5e8;
+  --mw-track-border: #d5dfbf;
+}
+.mw-track-exam,
+.premium-report-document.mw-print-report--exam {
+  --mw-track-ink: #80591e;
+  --mw-track-soft: #fcf4e5;
+  --mw-track-border: #e7cf9e;
+}
+@media screen {
+  /* Preserve each track's designed hero gradient; standardize its border only. */
+  .mw-track-mastery .mw-track-hero,
+  .mw-track-individual .mw-track-hero,
+  .mw-track-exam .mw-track-hero {
+    border-color: var(--mw-track-border) !important;
+  }
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-exam .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__state {
+    color: var(--mw-track-ink) !important;
+    background: var(--mw-track-soft) !important;
+    border-color: var(--mw-track-border) !important;
+  }
+}
+@media screen, print {
+  .premium-report-document.mw-print-report--mastery,
+  .premium-report-document.mw-print-report--individual,
+  .premium-report-document.mw-print-report--exam {
+    --report-ink: var(--mw-track-ink);
+    --report-tint: var(--mw-track-soft);
+    --report-line: var(--mw-track-border);
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-section-title span,
+  .premium-report-document.mw-print-report--individual .premium-report-section-title span,
+  .premium-report-document.mw-print-report--exam .premium-report-section-title span,
+  .premium-report-document.mw-print-report--mastery .premium-report-table thead,
+  .premium-report-document.mw-print-report--individual .premium-report-table thead,
+  .premium-report-document.mw-print-report--exam .premium-report-table thead {
+    background: var(--mw-track-ink) !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-section-title,
+  .premium-report-document.mw-print-report--individual .premium-report-section-title,
+  .premium-report-document.mw-print-report--exam .premium-report-section-title,
+  .premium-report-document.mw-print-report--mastery .premium-report-subtitle,
+  .premium-report-document.mw-print-report--individual .premium-report-subtitle,
+  .premium-report-document.mw-print-report--exam .premium-report-subtitle {
+    color: var(--mw-track-ink) !important;
+  }
+}
+
+/* PDF export captures the screen report; browser printing keeps its white ink-saving header. */
+@media screen {
+  .premium-report-document.mw-print-report--mastery .official-report-header,
+  .premium-report-document.mw-print-report--individual .official-report-header,
+  .premium-report-document.mw-print-report--exam .official-report-header {
+    border-color: var(--mw-track-border) !important;
+  }
 }
