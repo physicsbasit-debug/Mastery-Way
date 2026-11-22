@@ -180,6 +180,35 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone li { line-height: 1.5 !important; }
+        /* Final A4 layout polish: preserve content and chart aspect ratios. */
+        .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {
+          gap: 10px !important;
+          align-items: start !important;
+        }
+        .pdf-export-render.mw-print-report--individual .individual-print-chart-grid > *,
+        .pdf-export-render.mw-print-report--exam .unified-chart-card,
+        .pdf-export-render.mw-print-report--mastery .premium-report-chart-card {
+          min-width: 0 !important;
+          box-sizing: border-box !important;
+        }
+        .pdf-export-render.mw-print-report--individual .individual-print-chart-grid .unified-chart-card {
+          height: auto !important;
+          min-height: 0 !important;
+        }
+        /* Long explanatory cards should wrap naturally rather than widen the page. */
+        .pdf-export-render.mw-print-report--exam .diagnostic-report-fishbone,
+        .pdf-export-render.mw-print-report--individual .diagnostic-report-fishbone,
+        .pdf-export-render.mw-print-report--mastery .diagnostic-report-fishbone {
+          min-width: 0 !important;
+          overflow-wrap: break-word !important;
+        }
+        .pdf-export-render.mw-print-report--exam .premium-report-table th,
+        .pdf-export-render.mw-print-report--exam .premium-report-table td,
+        .pdf-export-render.mw-print-report--mastery .premium-report-table th,
+        .pdf-export-render.mw-print-report--mastery .premium-report-table td {
+          overflow-wrap: break-word !important;
+          vertical-align: top !important;
+        }
       `;
       frameDoc.head.appendChild(pdfStyle);
       clone.querySelectorAll<HTMLDetailsElement>('details').forEach((details) => { details.open = true; });
