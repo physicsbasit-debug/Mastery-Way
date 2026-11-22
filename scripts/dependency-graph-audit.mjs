@@ -18,7 +18,7 @@ const set = new Set(all);
 const edges = new Map();
 const external = new Map();
 const missing = [];
-const literalImport = /\b(?:import|export)\s+(?:type\s+)?(?:[\s\S]*?\s+from\s*)?['"]([^'"]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
+const literalImport = /\b(?:import|export)\s+(?:type\s+)?(?:[^;\n]*?\s+from\s*)?['"]([^'"\n]+)['"]|\bimport\s*\(\s*['"]([^'"]+)['"]\s*\)|\brequire\s*\(\s*['"]([^'"]+)['"]\s*\)/g;
 function resolveLocal(from, spec) {
   const base = spec.startsWith('@/') ? join(root, spec.slice(2)) : resolve(dirname(from), spec);
   const options = [base, ...extensions.map(ext => base + ext), ...extensions.map(ext => join(base, 'index' + ext))];
