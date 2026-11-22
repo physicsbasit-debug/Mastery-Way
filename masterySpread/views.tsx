@@ -267,8 +267,8 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
 }) {
   return <section className="space-y-5">
     <Metadata context={context} updateContext={updateContext} />
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
-      <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
+    <SettingsCard settings={settings} updateSetting={updateSetting} />
+    <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm">
         <h2 className="text-xl font-black text-slate-900">إدخال الدرجات النهائية</h2>
         <p className="mt-1 text-sm leading-6 text-slate-500">الصق الدرجات كسطر لكل درجة أو افصل بينها بفواصل. يقبل الإدخال بالأرقام الهندية ويحوّلها تلقائيًا إلى الأرقام 0-9، كما يدعم الفواصل العربية، ولا تُستخدم أسماء الطلبة.</p>
         <textarea value={rawScoresText} onChange={(event) => onScoresChange(event.target.value)} className="mt-4 min-h-[220px] md:min-h-[300px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm outline-none focus:border-slate-400 focus:bg-white" placeholder={`مثال:\n80؛ 75؛ 90\n65\n70`} />
@@ -284,9 +284,8 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
             <button type="button" onClick={onReset} className="w-full rounded-xl border border-red-200 bg-white px-4 py-3 text-sm font-bold leading-6 text-red-700 hover:bg-red-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-700">مسح بيانات المجموعة وبدء تحليل جديد</button>
           </div>
         </details>
-      </div>
-      <aside className="space-y-5"><SettingsCard settings={settings} updateSetting={updateSetting} /><div className="rounded-3xl border border-blue-100 bg-blue-50 p-4 text-xs leading-6 text-blue-950">تُحفظ بيانات العمل مؤقتًا على هذا الجهاز. عند استخدام جهاز مشترك، امسح بيانات المجموعة بعد الانتهاء.</div></aside>
     </div>
+    <div className="rounded-3xl border border-blue-100 bg-blue-50 p-4 text-xs leading-6 text-blue-950">تُحفظ بيانات العمل مؤقتًا على هذا الجهاز. عند استخدام جهاز مشترك، امسح بيانات المجموعة بعد الانتهاء.</div>
   </section>;
 }
 
