@@ -334,7 +334,7 @@ export function IndividualPerformanceViews() {
         <section className="mw-track-hero mw-track-hero--individual rounded-3xl border border-slate-200 bg-gradient-to-br from-slate-950 to-slate-800 p-6 text-white shadow-sm">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <div>
-              <p className="text-sm font-bold text-[#D7C7FF]">مسار فردي مستقل</p>
+              <p className="text-sm font-bold text-[#F3E6B3]">مسار فردي مستقل</p>
               <h1 className="mt-2 text-2xl font-black md:text-3xl">تحليل الأداء الفردي</h1>
               <p className="mt-3 max-w-3xl leading-8 text-slate-200">
                 أدخل بيانات الطالب والورقة، وابنِ الأسئلة والمهارات، ثم احصل على قراءة تربوية حذرة وخطة متابعة وتقرير تفصيلي توثيقي.
@@ -424,7 +424,7 @@ function StudentPaperTab({ context, setContext, settings, setSettings, clearSave
             <p className="mt-1 text-sm text-slate-500">بدء تحليل جديد يحتفظ بسجلات التواصل. ويمكن حذف البيانات المحفوظة من إدارة بيانات الجهاز.</p>
           </div>
           <div className="flex flex-col items-start gap-2">
-            <button type="button" onClick={clearSavedWorkspace} className="rounded-xl border border-[#bac7ab] bg-[#f7f8f3] px-5 py-2.5 text-sm font-bold text-[#40502f]">بدء تحليل جديد مع الاحتفاظ بسجل التواصل</button>
+            <button type="button" onClick={clearSavedWorkspace} className="w-full rounded-xl border border-[#C7D1AE] bg-[#F4F6EA] px-3 py-2.5 text-sm font-bold leading-6 text-[#40502f] transition hover:bg-[#E9EEDB] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#5F6F3A] sm:w-auto">بدء تحليل جديد مع الاحتفاظ بسجل التواصل</button>
             <details className="mw-danger-details w-full text-sm sm:max-w-sm">
               <summary className="cursor-pointer rounded-xl border border-slate-200 bg-slate-50 px-4 py-3 text-center font-bold text-slate-700 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-700">إدارة بيانات الجهاز</summary>
               <div className="mt-2 rounded-xl border border-red-100 bg-red-50/70 p-3">
@@ -609,12 +609,12 @@ function OverviewTab({ result }: { result: IndividualPerformanceAnalysisResult }
       <NextStepCard step={individualNextStep(result)} tone="olive" />
       <InterventionFollowup tone="olive" track="individual" identity={followupIdentity('individual', result.context, [result.settings, result.questions])} metrics={result.skills.map(s => ({skill:s.skill,value:s.percent}))} />
       <div className="mw-dashboard-grid mw-dashboard-grid--four">
-        <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="royal" />
-        <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="royal" featured />
+        <Metric label="درجة الطالب" value={`${result.summary.studentScore} من ${result.summary.totalScore}`} hint={`حد الإتقان: ${result.summary.masteryCutoffScore} درجة`} icon="◉" tone="olive" />
+        <Metric label="النسبة" value={`${result.summary.percent}%`} hint="نسبة الطالب من الدرجة الكلية" icon="%" tone="olive" featured />
         <Metric label="التصنيف" value={<StatusBadge tone={levelTone(result.level.code)}>{result.level.label}</StatusBadge>} hint={result.level.planType} icon="◆" tone={levelTone(result.level.code)} />
         <Metric label="أولوية التدخل" value={firstPriority ? firstPriority.skill : 'لا توجد أولوية'} hint={firstPriority ? `${firstPriority.percent}% أداء في المهارة` : 'لا توجد فجوة مهارية بارزة'} icon="★" tone="amber" />
         <Metric label="الفجوة عن الإتقان" value={`${result.summary.gapToMasteryPoints} درجة`} hint={result.summary.achievedMastery ? 'لا توجد فجوة حرجة عن الإتقان' : 'الفارق المطلوب للوصول إلى حد الإتقان'} icon="△" tone={result.summary.achievedMastery ? 'royal' : 'amber'} />
-        <Metric label="حالة الإتقان" value={result.summary.achievedMastery ? 'حقق الإتقان' : 'لم يحقق الإتقان'} hint="مقارنة مباشرة بحد الإتقان" icon="✓" tone={result.summary.achievedMastery ? 'royal' : 'danger'} />
+        <Metric label="حالة الإتقان" value={result.summary.achievedMastery ? 'حقق الإتقان' : 'لم يحقق الإتقان'} hint="مقارنة مباشرة بحد الإتقان" icon="✓" tone={result.summary.achievedMastery ? 'olive' : 'danger'} />
         <Metric label="جودة القراءة" value={result.readingQuality.label} hint={result.readingQuality.totalQuestions ? `${result.readingQuality.totalQuestions} مفردة ممثلة` : 'قراءة تشخيصية'} icon="◎" tone="olive" />
         <Metric label="ترميز الأخطاء" value={`${result.codingCompleteness.percent}%`} hint={result.codingCompleteness.label} icon="⌁" tone="slate" />
       </div>
@@ -738,7 +738,7 @@ function Card({ title, children, className = '' }: { title: string; children: Re
 }
 
 function levelTone(code: IndividualPerformanceAnalysisResult['level']['code']): 'royal' | 'olive' | 'violet' | 'amber' | 'slate' | 'danger' {
-  if (code === 'excellent' || code === 'mastery') return 'royal';
+  if (code === 'excellent' || code === 'mastery') return 'olive';
   if (code === 'support') return 'amber';
   if (code === 'remedial') return 'danger';
   return 'slate';
@@ -826,7 +826,7 @@ function SearchableSelect({ value, options, onChange }: { value: string; options
   return <div><input list={listId} value={value} onChange={(event) => onChange(event.target.value)} placeholder="اختر أو اكتب..." className="w-72 rounded-xl border border-slate-200 px-3 py-2 text-sm outline-none focus:border-slate-500" /><datalist id={listId}>{options.map((option) => <option key={option} value={option} />)}</datalist></div>;
 }
 
-function Metric({ label, value, hint, featured = false, tone = 'royal', icon }: { label: string; value: React.ReactNode; hint?: React.ReactNode; featured?: boolean; tone?: 'royal' | 'olive' | 'violet' | 'amber' | 'slate' | 'danger'; icon?: React.ReactNode }) {
+function Metric({ label, value, hint, featured = false, tone = 'olive', icon }: { label: string; value: React.ReactNode; hint?: React.ReactNode; featured?: boolean; tone?: 'royal' | 'olive' | 'violet' | 'amber' | 'slate' | 'danger'; icon?: React.ReactNode }) {
   return <PremiumMetricCard label={label} value={value} hint={hint} featured={featured} tone={tone} icon={icon} />;
 }
 
