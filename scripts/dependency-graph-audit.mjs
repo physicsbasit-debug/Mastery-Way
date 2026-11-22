@@ -70,8 +70,13 @@ function visit(file) {
 }
 entries.forEach(visit);
 const retained = new Set(['comparison/']);
+// Preserved modules also retain their transitive imports, even outside comparison/.
+for (const file of source) {
+  const name = relative(root, file).split(sep).join('/');
+  if ([...retained].some(prefix => name.startsWith(prefix))) visit(file);
+}
 const unreachable = source.map(p => relative(root, p).split(sep).join('/'))
-  .filter(p => !reachable.has(join(root, p)) && ![...retained].some(prefix => p.startsWith(prefix)));
+  .filter(p => !reachable.has(join(root, p)));
 const pkg = JSON.parse(readFileSync(join(root, 'package.json'), 'utf8'));
 const declared = Object.keys({ ...pkg.dependencies, ...pkg.devDependencies });
 const unusedCandidates = declared.filter(p => !external.has(p) &&
