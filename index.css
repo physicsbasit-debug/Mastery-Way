@@ -3915,3 +3915,24 @@ svg text {
 @media (prefers-reduced-motion: reduce) {
   .mw-path-card, .mw-path-card-cta, .mw-analysis-step { transition: none !important; }
 }
+
+/* Mastery executive overview: restore route identity on the report screen.
+   PDF iframe has an equivalent scoped rule in shared/PdfExport.tsx. */
+@media screen {
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content {
+    background: linear-gradient(135deg, #073e34 0%, #075b49 70%, #16796c 100%) !important;
+    color: #fff !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content h2,
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__content p,
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__eyebrow {
+    color: #fff !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-summary__eyebrow {
+    background: rgba(255,255,255,.12) !important;
+    border-color: rgba(255,255,255,.35) !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-summary-metric--royal {
+    --summary-accent: #075b49;
+  }
+}
