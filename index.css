@@ -3856,12 +3856,6 @@ svg text {
     --report-tint: var(--mw-track-soft);
     --report-line: var(--mw-track-border);
   }
-  .premium-report-document.mw-print-report--mastery .official-report-header,
-  .premium-report-document.mw-print-report--individual .official-report-header,
-  .premium-report-document.mw-print-report--exam .official-report-header {
-    background: linear-gradient(115deg, var(--mw-track-ink), var(--mw-track-ink)) !important;
-    border-color: var(--mw-track-border) !important;
-  }
   .premium-report-document.mw-print-report--mastery .premium-report-section-title span,
   .premium-report-document.mw-print-report--individual .premium-report-section-title span,
   .premium-report-document.mw-print-report--exam .premium-report-section-title span,
@@ -3877,5 +3871,15 @@ svg text {
   .premium-report-document.mw-print-report--individual .premium-report-subtitle,
   .premium-report-document.mw-print-report--exam .premium-report-subtitle {
     color: var(--mw-track-ink) !important;
+  }
+}
+
+/* PDF export captures the screen report; browser printing keeps its white ink-saving header. */
+@media screen {
+  .premium-report-document.mw-print-report--mastery .official-report-header,
+  .premium-report-document.mw-print-report--individual .official-report-header,
+  .premium-report-document.mw-print-report--exam .official-report-header {
+    background: linear-gradient(115deg, var(--mw-track-ink), var(--mw-track-ink)) !important;
+    border-color: var(--mw-track-border) !important;
   }
 }
