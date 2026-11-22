@@ -42,7 +42,6 @@ function resolveBasePath() {
 const manualCodeSplitGroups = [
   { name: "react-vendor", test: /node_modules\/(?:react|react-dom|scheduler)\// },
   { name: "charts", test: /node_modules\/(?:recharts|d3-[^/]+|internmap)\// },
-  { name: "ui-vendor", test: /node_modules\/(?:framer-motion|lucide-react)\// },
   { name: "ui-core", test: /node_modules\/(?:@radix-ui|class-variance-authority|clsx|tailwind-merge)\// },
   { name: "vendor", test: /node_modules\// },
 ];
