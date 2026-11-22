@@ -3797,3 +3797,85 @@ svg text {
 @media screen and (min-width: 768px) {
   .mw-track .mw-analysis-step { min-height: 4rem; }
 }
+
+/* Track identity contract: the same semantic palette on screen and in exported reports.
+   Scoped to each track to avoid changing shared components or report pagination. */
+.mw-track-mastery,
+.premium-report-document.mw-print-report--mastery {
+  --mw-track-ink: #075b49;
+  --mw-track-soft: #edf6f1;
+  --mw-track-border: #bddbd0;
+}
+.mw-track-individual,
+.premium-report-document.mw-print-report--individual {
+  --mw-track-ink: #4b5b2d;
+  --mw-track-soft: #f2f5e8;
+  --mw-track-border: #d5dfbf;
+}
+.mw-track-exam,
+.premium-report-document.mw-print-report--exam {
+  --mw-track-ink: #80591e;
+  --mw-track-soft: #fcf4e5;
+  --mw-track-border: #e7cf9e;
+}
+@media screen {
+  .mw-track-mastery .mw-track-hero,
+  .mw-track-individual .mw-track-hero,
+  .mw-track-exam .mw-track-hero {
+    background: var(--mw-track-ink) !important;
+    border-color: var(--mw-track-border) !important;
+  }
+  .mw-track-mastery .mw-compact-header > div > div > p:first-child,
+  .mw-track-individual .mw-compact-header > div > div > p:first-child,
+  .mw-track-exam .mw-compact-header > div > div > p:first-child {
+    color: var(--mw-track-ink) !important;
+  }
+  .mw-track-mastery .mw-analysis-step[data-active],
+  .mw-track-individual .mw-analysis-step[data-active],
+  .mw-track-exam .mw-analysis-step[data-active] {
+    border-color: var(--mw-track-border) !important;
+  }
+  .mw-track-mastery .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-individual .mw-analysis-step[data-active] .mw-analysis-step__state,
+  .mw-track-exam .mw-analysis-step[data-active] .mw-analysis-step__state {
+    color: var(--mw-track-ink) !important;
+    background: var(--mw-track-soft) !important;
+    border-color: var(--mw-track-border) !important;
+  }
+  .mw-track-mastery .mw-demo-card__button,
+  .mw-track-individual .mw-demo-card__button,
+  .mw-track-exam .mw-demo-card__button {
+    background: var(--mw-track-ink) !important;
+  }
+}
+@media screen, print {
+  .premium-report-document.mw-print-report--mastery,
+  .premium-report-document.mw-print-report--individual,
+  .premium-report-document.mw-print-report--exam {
+    --report-ink: var(--mw-track-ink);
+    --report-tint: var(--mw-track-soft);
+    --report-line: var(--mw-track-border);
+  }
+  .premium-report-document.mw-print-report--mastery .official-report-header,
+  .premium-report-document.mw-print-report--individual .official-report-header,
+  .premium-report-document.mw-print-report--exam .official-report-header {
+    background: linear-gradient(115deg, var(--mw-track-ink), var(--mw-track-ink)) !important;
+    border-color: var(--mw-track-border) !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-section-title span,
+  .premium-report-document.mw-print-report--individual .premium-report-section-title span,
+  .premium-report-document.mw-print-report--exam .premium-report-section-title span,
+  .premium-report-document.mw-print-report--mastery .premium-report-table thead,
+  .premium-report-document.mw-print-report--individual .premium-report-table thead,
+  .premium-report-document.mw-print-report--exam .premium-report-table thead {
+    background: var(--mw-track-ink) !important;
+  }
+  .premium-report-document.mw-print-report--mastery .premium-report-section-title,
+  .premium-report-document.mw-print-report--individual .premium-report-section-title,
+  .premium-report-document.mw-print-report--exam .premium-report-section-title,
+  .premium-report-document.mw-print-report--mastery .premium-report-subtitle,
+  .premium-report-document.mw-print-report--individual .premium-report-subtitle,
+  .premium-report-document.mw-print-report--exam .premium-report-subtitle {
+    color: var(--mw-track-ink) !important;
+  }
+}
