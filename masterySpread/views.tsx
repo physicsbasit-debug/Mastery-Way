@@ -267,7 +267,11 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
 }) {
   return <section className="space-y-5">
     <Metadata context={context} updateContext={updateContext} />
-    <div className="grid grid-cols-1 gap-5 xl:grid-cols-3">
+    <div className="grid grid-cols-1 items-start gap-5 xl:grid-cols-3">
+      <aside className="space-y-5 xl:col-span-1">
+        <SettingsCard settings={settings} updateSetting={updateSetting} />
+        <div className="rounded-3xl border border-blue-100 bg-blue-50 p-4 text-xs leading-6 text-blue-950">تُحفظ بيانات العمل مؤقتًا على هذا الجهاز. عند استخدام جهاز مشترك، امسح بيانات المجموعة بعد الانتهاء.</div>
+      </aside>
       <div className="rounded-3xl border border-slate-200 bg-white p-5 shadow-sm xl:col-span-2">
         <h2 className="text-xl font-black text-slate-900">إدخال الدرجات النهائية</h2>
         <p className="mt-1 text-sm leading-6 text-slate-500">الصق الدرجات كسطر لكل درجة أو افصل بينها بفواصل. يقبل الإدخال بالأرقام الهندية ويحوّلها تلقائيًا إلى الأرقام 0-9، كما يدعم الفواصل العربية، ولا تُستخدم أسماء الطلبة.</p>
@@ -285,7 +289,6 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
           </div>
         </details>
       </div>
-      <aside className="space-y-5"><SettingsCard settings={settings} updateSetting={updateSetting} /><div className="rounded-3xl border border-blue-100 bg-blue-50 p-4 text-xs leading-6 text-blue-950">تُحفظ بيانات العمل مؤقتًا على هذا الجهاز. عند استخدام جهاز مشترك، امسح بيانات المجموعة بعد الانتهاء.</div></aside>
     </div>
   </section>;
 }
