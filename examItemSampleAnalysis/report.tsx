@@ -97,7 +97,7 @@ function DetailedReport({ result, followupIdentity }: { result: ExamItemsSampleA
       </ReportSection>
 
       <ReportSection number="5" title="الرسوم البيانية التوثيقية">
-        <div className="grid gap-3 lg:grid-cols-2">
+        <div className="exam-documentary-chart-grid grid gap-3 lg:grid-cols-2">
           <ReliabilityBadgeChart result={result} />
           <ItemPerformanceChart result={result} />
           <ItemLossChart result={result} />
