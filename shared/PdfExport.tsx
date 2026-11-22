@@ -81,7 +81,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .signature-section { margin-top: 10px !important; }
         .pdf-export-render.mw-print-report--individual .premium-report-signature > div:last-child { margin-top: 12px !important; }
         .pdf-export-render.mw-print-report--individual .individual-priority-table table { font-size: 13px !important; line-height: 1.5 !important; }
-        /* Mastery report: compact official header, olive identity and readable A4 tables. */
+        /* Mastery report: compact official header, emerald identity and readable A4 tables. */
         .pdf-export-render.mw-print-report--mastery .official-report-header { padding: 12px 16px !important; box-shadow: none !important; }
         .pdf-export-render.mw-print-report--mastery .official-report-header img { height: 46px !important; max-height: 46px !important; padding: 3px !important; margin-bottom: 3px !important; }
         .pdf-export-render.mw-print-report--mastery .official-report-header p { line-height: 1.35 !important; }
@@ -95,7 +95,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-print-grid-two,
         .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics { align-items: start !important; gap: 10px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-indicator-highlights { gap: 8px !important; }
-        .pdf-export-render.mw-print-report--mastery .mastery-indicator-highlights .premium-report-info-cell { background: #f3f6ee !important; border-color: #d5dfce !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-indicator-highlights .premium-report-info-cell { background: #edf6f1 !important; border-color: #bddbd0 !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-judgement-table table,
         .pdf-export-render.mw-print-report--mastery .mastery-distribution-table table,
         .pdf-export-render.mw-print-report--mastery .mastery-two-column-table table { font-size: 12.5px !important; line-height: 1.5 !important; }
@@ -103,13 +103,13 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-distribution-table td,
         .pdf-export-render.mw-print-report--mastery .mastery-two-column-table td { padding: 5px 8px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics .diagnostic-report-fishbone { min-height: 0 !important; }
-        .pdf-export-render.mw-print-report--mastery .premium-report-chart-card { border-color: #d5dfce !important; }
+        .pdf-export-render.mw-print-report--mastery .premium-report-chart-card { border-color: #bddbd0 !important; }
         .pdf-export-render.mw-print-report--mastery .signature-section { margin-top: 12px !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .premium-report-signature > div:last-child { margin-top: 16px !important; }
         /* Mastery uses the individual report's dark official cover language, not its track color. */
         .pdf-export-render.mw-print-report--mastery .official-report-header {
-          background: linear-gradient(110deg, #203f34 0%, #456844 72%, #768849 100%) !important;
+          background: linear-gradient(110deg, #073e34 0%, #075b49 65%, #16796c 100%) !important;
           border-color: #b59a58 !important; border-radius: 24px !important;
           padding: 20px 18px !important; margin-bottom: 14px !important;
         }
@@ -145,7 +145,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-rtl-list-marker {
           display: block !important;
           grid-column: 1 !important;
-          color: #315a42 !important;
+          color: #075b49 !important;
           text-align: center !important;
         }
         .pdf-export-render.mw-print-report--mastery .mastery-rtl-list-text {
@@ -164,17 +164,17 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-judgement-table,
         .pdf-export-render.mw-print-report--mastery .mastery-distribution-table { break-inside: avoid !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-indicators-section > .mastery-indicator-highlights { margin-bottom: 10px !important; }
-        /* Match the individual report design family while keeping the mastery olive palette. */
-        .pdf-export-render.mw-print-report--mastery .premium-report-section-title { color: #183f33 !important; }
-        .pdf-export-render.mw-print-report--mastery .premium-report-section-title span { background: #315a42 !important; }
-        .pdf-export-render.mw-print-report--mastery .premium-report-subtitle { color: #254b38 !important; }
+        /* Preserve the shared report geometry while using the mastery emerald palette. */
+        .pdf-export-render.mw-print-report--mastery .premium-report-section-title { color: #075b49 !important; }
+        .pdf-export-render.mw-print-report--mastery .premium-report-section-title span { background: #075b49 !important; }
+        .pdf-export-render.mw-print-report--mastery .premium-report-subtitle { color: #075b49 !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-judgement-table thead,
-        .pdf-export-render.mw-print-report--mastery .mastery-distribution-table thead { background: #254b38 !important; color: #fff !important; }
-        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table tr.bg-emerald-50 { background: #edf4eb !important; }
-        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block { background: #f0f5ed !important; border-color: #cfddc8 !important; }
-        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:first-child p { color: #315a42 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-distribution-table thead { background: #075b49 !important; color: #fff !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-judgement-table tr.bg-emerald-50 { background: #edf6f1 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block { background: #edf6f1 !important; border-color: #bddbd0 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:first-child p { color: #075b49 !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > p,
-        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:nth-child(2) > div { border-color: #d9e4d3 !important; }
+        .pdf-export-render.mw-print-report--mastery .mastery-diagnostic-insights-section .diagnostic-report-block > div:nth-child(2) > div { border-color: #bddbd0 !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics { display: block !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-print-diagnostics > * + * { margin-top: 12px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
