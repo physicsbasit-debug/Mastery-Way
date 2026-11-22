@@ -240,7 +240,6 @@
   }
 
   .mw-track-hero > div { position: relative; z-index: 1; }
-  .mw-track-hero--individual { background: linear-gradient(135deg, #211854 0%, #4C1D95 48%, #6D5DF6 100%) !important; }
   .mw-track-hero--exam { background: linear-gradient(135deg, #172554 0%, #4F2D05 54%, #D6A13D 115%) !important; }
 
   .mw-compact-header {
@@ -2717,7 +2716,7 @@ svg text {
 
   .mw-workspace-header::before { content: ""; position: absolute; inset: 0 0 auto; height: 0.22rem; background: #075B49; }
   .mw-workspace-header--royal::before { background: #075B49; }
-  .mw-workspace-header--olive::before { background: #176B78; }
+  .mw-workspace-header--olive::before { background: var(--mw-olive-primary); }
   .mw-workspace-header--amber::before { background: #A77B2E; }
   .mw-workspace-header--royal,
   .mw-workspace-header--olive,
@@ -2731,8 +2730,12 @@ svg text {
 
   .mw-analysis-steps { border: 1px solid #E2E7DF !important; border-radius: 1.1rem !important; background: #FFFEFA !important; box-shadow: 0 7px 20px rgba(34, 53, 47, 0.045) !important; backdrop-filter: none; }
   .mw-analysis-stepper { --step-accent: #075B49; }
-  .mw-track-individual .mw-analysis-stepper { --step-accent: #176B78; }
+  .mw-track-individual .mw-analysis-stepper { --step-accent: var(--mw-olive-primary); }
   .mw-track-exam .mw-analysis-stepper { --step-accent: #A77B2E; }
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] { border-color: var(--mw-olive-border) !important; background: var(--mw-olive-soft) !important; color: var(--mw-olive-deep) !important; box-shadow: inset -3px 0 var(--mw-olive-primary) !important; }
+  .mw-track-individual .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__number { background: var(--mw-olive-primary); color: white; }
+  .mw-track-individual .mw-analysis-stepper__progress { color: var(--mw-olive-primary); }
+
   .mw-analysis-steps .mw-analysis-step { border-color: #E5EAE4 !important; background: #F8F9F6 !important; box-shadow: none !important; }
   .mw-analysis-steps .mw-analysis-step[data-active] { border-color: #AFCFC0 !important; background: #EAF3ED !important; color: #123D35 !important; box-shadow: inset -3px 0 #075B49 !important; }
   .mw-analysis-steps .mw-analysis-step[data-completed] { border-color: #D9E7DE !important; background: #F4F8F4 !important; }
