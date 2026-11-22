@@ -180,6 +180,27 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone li { line-height: 1.5 !important; }
+        /* Exam documentary charts: avoid a stranded half-width fifth card. */
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid {
+          display: grid !important;
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          align-items: start !important;
+          gap: 10px !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) {
+          grid-column: 1 / -1 !important;
+          width: 100% !important;
+          max-width: none !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) .recharts-responsive-container {
+          max-width: 520px !important;
+          margin-inline: auto !important;
+        }
+        /* Keep the radar and its explanation as independent, naturally sized cards. */
+        .pdf-export-render.mw-print-report--exam .diagnostic-report-visual {
+          align-self: start !important;
+          min-height: 0 !important;
+        }
         /* Final A4 layout polish: preserve content and chart aspect ratios. */
         .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {
           gap: 10px !important;
