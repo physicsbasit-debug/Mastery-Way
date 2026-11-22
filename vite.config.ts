@@ -23,7 +23,6 @@ function buildCodespacesHmrConfig() {
   };
 }
 
-
 function resolveBasePath() {
   const explicitBase = process.env.VITE_BASE_PATH?.trim();
 
@@ -51,8 +50,8 @@ const manualCodeSplitGroups = [
 export default defineConfig(() => {
   const port = Number(process.env.PORT || 5173);
   const hmr = buildCodespacesHmrConfig();
-    
- return {
+
+  return {
     base: resolveBasePath(),
     plugins: [react(), tailwindcss()],
     resolve: {
