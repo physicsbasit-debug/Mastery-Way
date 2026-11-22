@@ -236,6 +236,28 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           min-height: 0 !important;
           align-self: start !important;
         }
+        /* Final visual balance: shorter radar cards stay compact while the
+           diagnostic causes use the available width more efficiently. */
+        .pdf-export-render.mw-print-report--exam .exam-diagnostic-comparison-grid {
+          display: grid !important;
+          grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr) !important;
+          align-items: start !important;
+          gap: 10px !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-diagnostic-comparison-grid .diagnostic-report-fishbone > div:nth-child(2) {
+          grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+          gap: 6px !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-diagnostic-comparison-grid .diagnostic-report-fishbone > div:nth-child(2) > div {
+          padding: 7px !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) .recharts-responsive-container,
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) .recharts-wrapper {
+          max-width: 640px !important;
+        }
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid {
+          grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) !important;
+        }
         /* Final A4 layout polish: preserve content and chart aspect ratios. */
         .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {
           gap: 10px !important;
