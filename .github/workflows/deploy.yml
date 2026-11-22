@@ -41,6 +41,8 @@ jobs:
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
+      # A fresh workflow run is required after an artifact-lookup failure.
+      # Re-running this whole job can upload a second artifact with the same name.
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
