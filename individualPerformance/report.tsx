@@ -87,7 +87,7 @@ function DetailedReport({ result, parentRecord }: { result: IndividualPerformanc
           <ParetoReportBlock title="باريتو الفقد حسب المهارات" description="يرتب المهارات حسب مساهمتها في فقد الطالب." entries={result.diagnostics.skillLossPareto} valueLabel="الفقد" />
           <ParetoReportBlock title="باريتو أنماط الأخطاء" description="يرتب أنماط الأخطاء المرمزة حسب التكرار." entries={result.diagnostics.errorPareto} valueLabel="التكرار" />
         </div>
-        <div className="mt-4 grid gap-3 lg:grid-cols-2">
+        <div className="individual-radar-comparison-grid mt-4 grid gap-3 lg:grid-cols-2">
           <RadarReportBlock title="رادار مهارات الطالب" description="يعرض صورة عامة للفجوات بين مهارات الطالب في هذه الورقة." data={result.diagnostics.skillRadar} />
           <TopLossItemsChart result={result} compact />
         </div>
