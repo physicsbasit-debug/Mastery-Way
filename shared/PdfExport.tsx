@@ -180,6 +180,27 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) { grid-template-columns: repeat(3, minmax(0, 1fr)) !important; gap: 8px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone > div:nth-child(2) > div { padding: 9px !important; }
         .pdf-export-render.mw-print-report--mastery .mastery-fishbone-full .diagnostic-report-fishbone li { line-height: 1.5 !important; }
+        /* Mastery quick overview: same emerald hero as the report header. */
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary {
+          border-color: #bddbd0 !important;
+          background: #edf6f1 !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary__content {
+          background: linear-gradient(135deg, #073e34 0%, #075b49 70%, #16796c 100%) !important;
+          color: #fff !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary__content h2,
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary__content p,
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary__eyebrow {
+          color: #fff !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary__eyebrow {
+          border-color: rgba(255,255,255,.35) !important;
+          background: rgba(255,255,255,.12) !important;
+        }
+        .pdf-export-render.mw-print-report--mastery .premium-report-summary-metric--royal {
+          --summary-accent: #075b49;
+        }
         /* Exam documentary charts: avoid a stranded half-width fifth card. */
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid {
           display: grid !important;
