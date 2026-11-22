@@ -258,6 +258,27 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid {
           grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) !important;
         }
+        /* Size the actual chart, not just its card: four compact loss bars
+           otherwise leave a large gap beside the radar warning. */
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid .individual-top-loss-chart .recharts-responsive-container {
+          height: 300px !important;
+          min-height: 300px !important;
+        }
+        /* The final full-row skill chart needs a real flex basis.
+           Enlarging the outer card alone leaves the Recharts canvas tiny. */
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex {
+          width: min(100%, 680px) !important;
+          margin-inline: auto !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex > .min-w-0 {
+          flex: 1 1 0% !important;
+          min-width: 0 !important;
+          width: auto !important;
+        }
+        .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) .recharts-responsive-container {
+          width: 100% !important;
+          max-width: none !important;
+        }
         /* Final A4 layout polish: preserve content and chart aspect ratios. */
         .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {
           gap: 10px !important;
