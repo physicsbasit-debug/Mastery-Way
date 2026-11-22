@@ -258,16 +258,23 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid {
           grid-template-columns: minmax(0, 1.12fr) minmax(0, 0.88fr) !important;
         }
-        /* Size the actual chart, not just its card: four compact loss bars
-           otherwise leave a large gap beside the radar warning. */
+        /* Recharts is already rendered before the PDF DOM is cloned.
+           Do not enlarge its wrapper without re-rendering the SVG: that
+           only creates empty space beneath the original 175px chart. */
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid .individual-top-loss-chart,
+        .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid .individual-top-loss-chart .unified-chart-card {
+          height: fit-content !important;
+          min-height: 0 !important;
+          align-self: start !important;
+        }
         .pdf-export-render.mw-print-report--individual .individual-radar-comparison-grid .individual-top-loss-chart .recharts-responsive-container {
-          height: 300px !important;
-          min-height: 300px !important;
+          height: 175px !important;
+          min-height: 0 !important;
         }
         /* The final full-row skill chart needs a real flex basis.
            Enlarging the outer card alone leaves the Recharts canvas tiny. */
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex {
-          width: min(100%, 680px) !important;
+          width: min(100%, 520px) !important;
           margin-inline: auto !important;
         }
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex > .min-w-0 {
