@@ -3865,3 +3865,53 @@ svg text {
     border-color: var(--mw-track-border) !important;
   }
 }
+
+/* Mobile visual consistency follow-up: route-specific surfaces only.
+   Keep semantic warning/status colors and report calculations unchanged. */
+@media screen {
+  /* Home cards: remove legacy royal/cyan styling from the individual route. */
+  .mw-path-card--violet {
+    --mw-card-accent: linear-gradient(90deg, #394922, #71834b);
+    --mw-card-glow: rgba(75, 91, 45, 0.11);
+  }
+  .mw-path-card--violet .mw-card-arrow { background: #4b5b2d; box-shadow: 0 12px 24px rgba(75, 91, 45, 0.18); }
+  .mw-path-card--violet .mw-path-card-cta { background: linear-gradient(105deg, #394922, #64773d) !important; }
+  .mw-path-card--violet .mw-path-badge { color: #4b5b2d; border-color: #d5dfbf; background: #f2f5e8; }
+  .mw-path-card--violet .mw-icon-bubble { color: #4b5b2d; background: #f2f5e8; border-color: #d5dfbf; }
+  /* Distinct green mastery route, including its home-card strip. */
+  .mw-path-card--royal {
+    --mw-card-accent: linear-gradient(90deg, #075b49, #358775);
+    --mw-card-glow: rgba(7, 91, 73, 0.11);
+  }
+  .mw-path-card--royal .mw-card-arrow { background: #075b49; box-shadow: 0 12px 24px rgba(7, 91, 73, 0.18); }
+  .mw-path-card--royal .mw-path-card-cta { background: linear-gradient(105deg, #075b49, #16796c) !important; }
+  .mw-path-card--royal .mw-path-badge { color: #075b49; border-color: #bddbd0; background: #edf6f1; }
+  .mw-path-card--royal .mw-icon-bubble { color: #075b49; background: #edf6f1; border-color: #bddbd0; }
+  /* Use the same calm, decorated active-step treatment in every route. */
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] {
+    background: var(--mw-track-soft) !important;
+    color: var(--mw-track-ink) !important;
+    border-color: var(--mw-track-border) !important;
+    box-shadow: inset -3px 0 var(--mw-track-ink) !important;
+  }
+  .mw-track-mastery .mw-analysis-steps .mw-analysis-step[data-active] .mw-analysis-step__number {
+    background: var(--mw-track-ink) !important;
+    color: #fff !important;
+  }
+  /* PDF export captures screen styling: give mastery a visible green header. */
+  .premium-report-document.mw-print-report--mastery .official-report-header {
+    background: linear-gradient(135deg, #073e34, #075b49 65%, #16796c) !important;
+    color: #fff !important;
+    border-color: #075b49 !important;
+    border-bottom-color: #d5b86b !important;
+  }
+  .premium-report-document.mw-print-report--mastery .official-report-header h1,
+  .premium-report-document.mw-print-report--mastery .official-report-header p,
+  .premium-report-document.mw-print-report--mastery .official-report-header div {
+    color: #fff !important;
+  }
+}
+/* Respect motion sensitivity; avoid unnecessary visual transitions on touch devices. */
+@media (prefers-reduced-motion: reduce) {
+  .mw-path-card, .mw-path-card-cta, .mw-analysis-step { transition: none !important; }
+}
