@@ -24,4 +24,4 @@ jobs:
       - name: Install Chromium
         run: npx playwright install --with-deps chromium
       - name: Run browser geometry regression
-        run: node --test tests/pdf-svg-browser.test.mjs
+        run: node --test tests/pdf-svg-browser.browser.mjs
