@@ -1,0 +1,27 @@
+name: PDF SVG browser regression
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  chromium-svg-contract:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+      - name: Install application dependencies
+        run: npm ci
+      - name: Install browser test dependency without changing lockfile
+        run: npm install --no-save --package-lock=false playwright@1.56.1
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run browser geometry regression
+        run: node --test tests/pdf-svg-browser.test.mjs
