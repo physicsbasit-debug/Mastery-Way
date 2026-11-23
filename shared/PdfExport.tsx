@@ -271,8 +271,8 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           height: 175px !important;
           min-height: 0 !important;
         }
-        /* The final full-row skill chart needs a real flex basis.
-           Enlarging the outer card alone leaves the Recharts canvas tiny. */
+        /* The cloned SVG retains its original viewport: keep the canvas
+           at its rendered dimensions rather than pretending CSS can redraw it. */
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex {
           width: min(100%, 520px) !important;
           margin-inline: auto !important;
