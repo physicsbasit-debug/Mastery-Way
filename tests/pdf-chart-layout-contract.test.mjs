@@ -36,3 +36,12 @@ test('mastery PDF is not targeted by the individual and exam chart sizing overri
   assert.ok(block.length > 0);
   assert.doesNotMatch(block, /mw-print-report--mastery/);
 });
+
+test('PDF width reflow is limited to individual and exam and restores live layout', () => {
+  assert.match(pdf, /source\.matches\('\.mw-print-report--individual, \.mw-print-report--exam'\)/);
+  assert.match(pdf, /source\.style\.width = '794px'/);
+  assert.match(pdf, /requestAnimationFrame\(\(\) => requestAnimationFrame/);
+  assert.match(pdf, /const clone = source\.cloneNode\(true\)/);
+  assert.match(pdf, /restoreSourceLayout\?\.\(\);/);
+  assert.match(pdf, /finally \{ restoreSourceLayout\?\.\(\); frame\?\.remove\(\);/);
+});
