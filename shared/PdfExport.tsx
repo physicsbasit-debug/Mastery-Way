@@ -11,6 +11,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
     if (busy) return;
     setBusy(true); setError(''); setUrl('');
     let frame: HTMLIFrameElement | undefined;
+    let restoreSourceLayout: (() => void) | undefined;
     try {
       const source = document.getElementById(areaId);
       if (!source) throw new Error('التقرير غير متاح.');
@@ -33,7 +34,29 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       await Promise.all(styleLoads);
       await frameDoc.fonts?.ready;
       Object.assign(frameDoc.body.style, { margin: '0', width: '794px', background: '#fff', direction: 'rtl' });
+      // Recharts renders a fixed-size SVG before cloneNode. For the two affected
+      // reports, give ResizeObserver two frames at the exact PDF width so the
+      // cloned SVG and its container agree. Restore the live report immediately.
+      if (source.matches('.mw-print-report--individual, .mw-print-report--exam')) {
+        const previousWidth = source.style.width;
+        const previousMaxWidth = source.style.maxWidth;
+        const previousBoxSizing = source.style.boxSizing;
+        const previousTransition = source.style.transition;
+        restoreSourceLayout = () => {
+          source.style.width = previousWidth;
+          source.style.maxWidth = previousMaxWidth;
+          source.style.boxSizing = previousBoxSizing;
+          source.style.transition = previousTransition;
+        };
+        source.style.transition = 'none';
+        source.style.width = '794px';
+        source.style.maxWidth = 'none';
+        source.style.boxSizing = 'border-box';
+        await new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      }
       const clone = source.cloneNode(true) as HTMLElement;
+      restoreSourceLayout?.();
+      restoreSourceLayout = undefined;
       clone.classList.add('pdf-export-render');
       const pdfStyle = frameDoc.createElement('style');
       pdfStyle.textContent = `
@@ -371,7 +394,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
     } catch (cause) {
       console.error('PDF export failed', cause);
       setError('تعذر إنشاء ملف PDF. حاول مرة أخرى، وإذا استمرت المشكلة جرّب متصفحًا آخر.');
-    } finally { frame?.remove(); setBusy(false); }
+    } finally { restoreSourceLayout?.(); frame?.remove(); setBusy(false); }
   }
   return <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" dir="rtl">
     <div className="flex flex-wrap items-center justify-between gap-3">
