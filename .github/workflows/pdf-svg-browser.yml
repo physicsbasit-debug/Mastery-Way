@@ -25,3 +25,18 @@ jobs:
         run: npm install --no-save --package-lock=false playwright@1.56.1
       - name: Run browser geometry regression
         run: node --test tests/pdf-svg-browser.browser.mjs
+      - name: Start Vite and test the real PDF export workflow
+        run: |
+          npm run dev -- --host 127.0.0.1 > /tmp/mw-vite.log 2>&1 &
+          for i in {1..40}; do
+            if curl -fsS http://127.0.0.1:5173/tests/pdf-chart-fixture.html > /dev/null; then break; fi
+            sleep 1
+          done
+          node --test tests/pdf-export-browser.browser.mjs
+      - name: Attach test PDF files and screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pdf-chart-proof
+          path: tests/pdf-proof/
+          if-no-files-found: ignore
