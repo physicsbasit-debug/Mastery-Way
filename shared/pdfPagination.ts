@@ -22,3 +22,33 @@ export function paginateReport(height: number, pageHeight: number, protectedRang
   }
   return pages;
 }
+
+/**
+ * Exam-only last-page guard: avoid creating an almost empty signature page
+ * when the report can safely fit within A4's physical margins.
+ *
+ * The PDF draws 794px of content into 198mm at x=6mm. At 1140px height
+ * it consumes 284.3mm, leaving over 6mm at the foot of the 297mm sheet.
+ * Never alter the mastery or individual pagination through this helper.
+ */
+export function paginateExamWithoutSignatureOrphan(
+  height: number,
+  protectedRanges: Array<[number, number]>,
+  signatureTop: number | null,
+): Array<[number, number]> {
+  const normal = paginateReport(height, 1088, protectedRanges);
+  if (!Number.isFinite(signatureTop) || signatureTop === null || normal.length < 2) return normal;
+  const [lastStart, lastEnd] = normal[normal.length - 1];
+  const hasSignatureOnlyTail = lastEnd - lastStart <= 260
+    && signatureTop >= lastStart - 80
+    && signatureTop < lastEnd;
+  if (!hasSignatureOnlyTail) return normal;
+
+  // Increase page capacity by the smallest safe amount, and only when it
+  // actually removes the nearly empty final page.
+  for (const pageHeight of [1100, 1112, 1124, 1136, 1140]) {
+    const candidate = paginateReport(height, pageHeight, protectedRanges);
+    if (candidate.length < normal.length) return candidate;
+  }
+  return normal;
+}
