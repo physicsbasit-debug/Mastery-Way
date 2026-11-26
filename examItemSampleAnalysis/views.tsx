@@ -506,7 +506,7 @@ function ItemsTab({ items, setItems, paperTotalScore, itemCount, setItemCount, r
   };
   return (
     <Card title="بناء المفردات" desc={`الدرجة الكلية المحسوبة للورقة: ${paperTotalScore}`}>
-      <p className="mb-3 text-sm leading-7 text-slate-600">تبدأ خلية درجة المفردة فارغة، ويكتبها المعلم يدويًا. يجب أن تكون الدرجة 0.5 فأكثر، وتتدرج بمقدار 0.5، ولا تقبل الصفر أو القيم السالبة.</p>
+      <p className="mb-3 text-sm leading-7 text-slate-600">تبدأ الدرجة الكلية للمفردة عند 0، وتعني أنها غير محتسبة ولا تحتاج درجات في العينة. للمفردات المحتسبة، استخدم 0.5 فأكثر بتدرج 0.5، ولا تقبل السالب.</p>
       <div className="mb-4 flex flex-wrap items-end gap-3">
         <NumberInput label="عدد المفردات" value={itemCount} onChange={setItemCount} />
         <button type="button" onClick={rebuildItems} className="rounded-xl bg-slate-900 px-4 py-2.5 text-sm font-bold text-white">إعادة بناء الجدول</button>
@@ -618,18 +618,19 @@ function ScoresTab({
       </div>
       <div className="grid gap-3 md:hidden">
         {rows.map((row, rowIndex) => {
-          const filled = items.filter((item) => row.scores[item.id] !== '' && row.scores[item.id] != null).length;
+          const counted = items.filter(item => Number(item.maxScore) > 0);
+          const filled = counted.filter((item) => row.scores[item.id] !== '' && row.scores[item.id] != null).length;
           const invalid = items.filter((item) => {
             const issue = issueByCell.get(`${row.id}:${item.id}`);
             return issue && issue.type !== 'empty';
           }).length;
           return <details key={row.id} className="exam-score-paper">
-            <summary><span>{row.label}</span><span className="exam-score-paper__status">{filled} / {items.length} مدخلة{invalid ? ` · ${invalid} تحتاج تصحيحًا` : ''}</span></summary>
+            <summary><span>{row.label}</span><span className="exam-score-paper__status">{filled} / {counted.length} مدخلة{invalid ? ` · ${invalid} تحتاج تصحيحًا` : ''}</span></summary>
             <div className="exam-score-paper__content grid grid-cols-2 gap-3">{items.map((item) => {
               const issue = issueByCell.get(`${row.id}:${item.id}`);
               const fieldClass = issue?.type === 'empty' ? 'border-amber-300 bg-amber-50' : issue ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white';
-              return <label key={item.id} className="text-sm font-bold text-slate-700">{item.label} <span className="text-slate-500">(من {item.maxScore || '—'})</span>
-                <MobileNumberInput compact value={row.scores[item.id] ?? ''} min={0} max={typeof item.maxScore === 'number' ? item.maxScore : undefined} step="any" align="center" onChange={(value) => updateScore(rowIndex, item.id, value === '' ? '' : String(value))} inputClassName={`mt-1 w-full rounded-lg border px-2 py-2 text-center ${fieldClass}`} ariaInvalid={Boolean(issue && issue.type !== 'empty')} title={issue?.message ?? `${row.label}، ${item.label}`} />
+              return <label key={item.id} className="text-sm font-bold text-slate-700">{item.label} <span className="text-slate-500">{item.maxScore === 0 ? '(غير محتسبة)' : `(من ${item.maxScore || '—'})`}</span>
+                <MobileNumberInput compact value={item.maxScore === 0 ? '' : (row.scores[item.id] ?? '')} disabled={item.maxScore === 0} min={0} max={typeof item.maxScore === 'number' ? item.maxScore : undefined} step="any" align="center" onChange={(value) => updateScore(rowIndex, item.id, value === '' ? '' : String(value))} inputClassName={`mt-1 w-full rounded-lg border px-2 py-2 text-center ${fieldClass}`} ariaInvalid={Boolean(issue && issue.type !== 'empty')} title={issue?.message ?? `${row.label}، ${item.label}`} />
                 {issue && issue.type !== 'empty' ? <span className="block text-xs text-red-700">{issue.message}</span> : null}
               </label>;
             })}</div>
@@ -638,7 +639,7 @@ function ScoresTab({
       </div>
       <div className="hidden md:block max-h-[520px] overflow-auto rounded-2xl border border-slate-200">
         <table className="min-w-full text-sm">
-          <thead className="sticky top-0 bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الورقة</th>{items.map((item) => <th key={item.id} className="px-3 py-2 text-center">{item.label}<div className="text-[10px] text-slate-300">من {item.maxScore || '—'}</div></th>)}</tr></thead>
+          <thead className="sticky top-0 bg-slate-900 text-white"><tr><th className="px-3 py-2 text-right">الورقة</th>{items.map((item) => <th key={item.id} className="px-3 py-2 text-center">{item.label}<div className="text-[10px] text-slate-300">{item.maxScore === 0 ? 'غير محتسبة' : `من ${item.maxScore || '—'}`}</div></th>)}</tr></thead>
           <tbody>
             {rows.map((row, rowIndex) => (
               <tr key={row.id} className="border-t border-slate-100">
@@ -654,7 +655,8 @@ function ScoresTab({
                     <td key={item.id} className="px-2 py-2 text-center">
                       <MobileNumberInput
                         compact
-                        value={row.scores[item.id] ?? ''}
+                        value={item.maxScore === 0 ? '' : (row.scores[item.id] ?? '')}
+                        disabled={item.maxScore === 0}
                         min={0}
                         max={typeof item.maxScore === 'number' ? item.maxScore : undefined}
                         step="any"
@@ -835,7 +837,7 @@ function HalfStepScoreInput({ value, onChange }: { value: number | ''; onChange:
     <MobileNumberInput
       compact
       value={value}
-      min={0.5}
+      min={0}
       step={0.5}
       placeholder="اكتب الدرجة"
       onChange={(nextValue) => onChange(nextValue)}

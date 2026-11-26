@@ -457,11 +457,11 @@ function ExamStructureTab({ questionCount, setQuestionCount, blueprint, setBluep
         <ReadOnly label="الدرجة الكلية المحسوبة" value={totalExamScore} />
         <div className="flex items-end"><button type="button" onClick={rebuildBlueprint} className="w-full rounded-xl bg-slate-900 px-4 py-3 text-sm font-bold text-white hover:bg-slate-700">إنشاء جدول الأسئلة</button></div>
       </div>
-      <p className="mb-3 text-sm leading-7 text-slate-600">تبدأ خلية درجة كل مفردة فارغة، ويكتبها المعلم يدويًا. يجب أن تكون الدرجة 0.5 فأكثر، وتتدرج بمقدار 0.5، ولا تقبل الصفر أو القيم السالبة.</p>
+      <p className="mb-3 text-sm leading-7 text-slate-600">تبدأ درجة المفردة عند 0، وتعني أنها غير محتسبة ولا تحتاج درجة طالب. للمفردات المحتسبة استخدم 0.5 فأكثر بتدرج 0.5، ولا تقبل السالب.</p>
       <div className="overflow-x-auto rounded-2xl border border-slate-200">
         <table className="individual-mobile-table individual-mobile-blueprint w-full min-w-[620px] text-sm">
           <thead className="bg-slate-900 text-white"><tr><th className="px-3 py-3 text-right">السؤال</th><th className="px-3 py-3 text-right">الدرجة الكلية</th><th className="px-3 py-3 text-right">المهارة</th></tr></thead>
-          <tbody>{blueprint.map((question) => <tr key={question.id} className="border-b border-slate-100 last:border-b-0"><td className="px-3 py-2 font-black">{question.label}</td><td className="px-3 py-2"><SmallNumber value={question.maxScore} min={0.5} step={0.5} onChange={(value) => updateQuestion(question.id, { maxScore: value })} /></td><td className="px-3 py-2"><SmallSelect value={question.skill} options={SKILL_OPTIONS} onChange={(value) => updateQuestion(question.id, { skill: value })} /></td></tr>)}</tbody>
+          <tbody>{blueprint.map((question) => <tr key={question.id} className="border-b border-slate-100 last:border-b-0"><td className="px-3 py-2 font-black">{question.label}</td><td className="px-3 py-2"><SmallNumber value={question.maxScore} min={0} step={0.5} onChange={(value) => updateQuestion(question.id, { maxScore: value })} /></td><td className="px-3 py-2"><SmallSelect value={question.skill} options={SKILL_OPTIONS} onChange={(value) => updateQuestion(question.id, { skill: value })} /></td></tr>)}</tbody>
         </table>
       </div>
     </Card>
@@ -506,7 +506,7 @@ function StudentScoresTab({ blueprint, studentInputs, setStudentInputs, analyze,
   return (
     <Card title="إدخال درجات الطالب وترميز الأخطاء">
       <p className="mb-4 text-sm leading-7 text-slate-600">
-        الصفر درجة صحيحة، أما الخلية الفارغة أو الدرجة غير الصالحة فتمنع بدء التحليل. الدرجة الكاملة تُعرض «إجابة متقنة»، والدرجة الناقصة بلا ترميز تُعرض «لم يرمز نوع الخطأ».
+        الصفر درجة صحيحة للطالب في المفردة المحتسبة؛ أما المفردة ذات الدرجة الكلية 0 فهي غير محتسبة ولا تحتاج إدخال درجة. الدرجة الكاملة تُعرض «إجابة متقنة»، والناقصة بلا ترميز تُعرض «لم يرمز نوع الخطأ».
       </p>
 
       <div className={`mb-4 rounded-2xl border p-4 ${statusClass}`}>
@@ -514,7 +514,7 @@ function StudentScoresTab({ blueprint, studentInputs, setStudentInputs, analyze,
           <div>
             <div className="font-black">{readiness.isValid ? 'جدول الدرجات مكتمل وجاهز للتحليل' : 'التحليل متوقف حتى اكتمال جميع الدرجات وصحة البيانات'}</div>
             <div className="mt-1 text-sm font-bold">
-              تم إدخال {readiness.completedScoreCount} من {readiness.totalQuestionCount} درجة صحيحة.
+              تم إدخال {readiness.completedScoreCount} من {readiness.totalQuestionCount} درجة صحيحة للمفردات المحتسبة. {readiness.excludedQuestionCount > 0 ? `المفردات المستبعدة: ${readiness.excludedQuestionCount}.` : ''}
               {!readiness.isValid ? ` الفارغة: ${readiness.emptyScoreCount}، درجات غير صالحة: ${readiness.invalidScoreCount}، أخطاء بناء الورقة: ${readiness.invalidBlueprintCount}، وإجمالي ملاحظات التحقق: ${readiness.issueCount}.` : ''}
             </div>
           </div>
@@ -563,12 +563,12 @@ function StudentScoresTab({ blueprint, studentInputs, setStudentInputs, analyze,
                 <tr key={question.id} className="border-b border-slate-100 last:border-b-0">
                   <td className="px-3 py-2 font-black">{question.label}</td>
                   <td className="px-3 py-2">{question.skill}</td>
-                  <td className="px-3 py-2">{question.maxScore || '—'}</td>
+                  <td className="px-3 py-2">{question.maxScore === 0 ? 'غير محتسبة' : (question.maxScore || '—')}</td>
                   <td className="px-3 py-2">
-                    <StudentScoreInput value={input.score} max={Number(question.maxScore)} issueMessage={scoreIssue?.message} inputClassName={scoreInputClass} onChange={(value) => updateInput(question.id, { score: value })} />
+                    {question.maxScore === 0 ? <span className="text-xs font-bold text-slate-500">غير محتسبة</span> : <StudentScoreInput value={input.score} max={Number(question.maxScore)} issueMessage={scoreIssue?.message} inputClassName={scoreInputClass} onChange={(value) => updateInput(question.id, { score: value })} />}
                   </td>
                   <td className="px-3 py-2">
-                    <div>
+                    {question.maxScore === 0 ? <span className="text-xs text-slate-400">مستبعدة</span> : <div>
                       <SmallSelect
                         value={input.errorType || DEFAULT_ERROR_TYPE}
                         options={errorOptions}
@@ -577,17 +577,17 @@ function StudentScoresTab({ blueprint, studentInputs, setStudentInputs, analyze,
                         title={errorTypeIssue?.message}
                       />
                       {errorTypeIssue ? <p className="mt-1 max-w-56 text-[11px] font-bold leading-5 text-red-700">{errorTypeIssue.message}</p> : null}
-                    </div>
+                    </div>}
                   </td>
                   <td className="px-3 py-2">
-                    {input.errorType === 'أخرى' ? (
+                    {question.maxScore === 0 ? <span className="text-xs text-slate-400">مستبعدة</span> : input.errorType === 'أخرى' ? (
                       <div>
                         <input value={input.otherErrorDetail || ''} onChange={(event) => updateInput(question.id, { otherErrorDetail: event.target.value })} placeholder="اكتب وصفًا مختصرًا" className={`w-60 rounded-xl border px-3 py-2 text-sm outline-none ${otherDetailIssue ? 'border-red-400 bg-red-50 focus:border-red-600' : 'border-slate-200 focus:border-slate-500'}`} />
                         {otherDetailIssue ? <p className="mt-1 max-w-60 text-[11px] font-bold leading-5 text-red-700">{otherDetailIssue.message}</p> : null}
                       </div>
                     ) : <span className="text-xs text-slate-400">لا يلزم</span>}
                   </td>
-                  <td className="px-3 py-2"><SearchableSelect value={input.teacherNote || ''} options={TEACHER_NOTE_OPTIONS} onChange={(value) => updateInput(question.id, { teacherNote: value })} /></td>
+                  <td className="px-3 py-2">{question.maxScore === 0 ? <span className="text-xs text-slate-400">مستبعدة</span> : <SearchableSelect value={input.teacherNote || ''} options={TEACHER_NOTE_OPTIONS} onChange={(value) => updateInput(question.id, { teacherNote: value })} />}</td>
                 </tr>
               );
             })}
