@@ -1,5 +1,5 @@
 import React from 'react';
-import { paginateReport } from './pdfPagination';
+import { paginateExamWithoutSignatureOrphan, paginateReport } from './pdfPagination';
 
 export function PdfExport({ areaId, filename }: { areaId: string; filename: string }) {
   const [busy, setBusy] = React.useState(false);
@@ -374,7 +374,15 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           : rect.bottom + 55;
         ranges.push([Math.max(0, rect.top - base.top - 3), firstContentBottom - base.top + 3]);
       });
-      const pages = paginateReport(Math.ceil(base.height), 1088, ranges);
+      const examSignature = clone.classList.contains('mw-print-report--exam')
+        ? clone.querySelector<HTMLElement>('.signature-section')
+        : null;
+      const signatureTop = examSignature
+        ? examSignature.getBoundingClientRect().top - base.top
+        : null;
+      const pages = examSignature
+        ? paginateExamWithoutSignatureOrphan(Math.ceil(base.height), ranges, signatureTop)
+        : paginateReport(Math.ceil(base.height), 1088, ranges);
       const pdf = new jsPDF({ unit: 'mm', format: 'a4', compress: true });
       for (let i = 0; i < pages.length; i++) {
         const [top, bottom] = pages[i];
