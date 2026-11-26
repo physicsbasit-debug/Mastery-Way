@@ -33,6 +33,7 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       await Promise.all(styleLoads);
       await frameDoc.fonts?.ready;
       Object.assign(frameDoc.body.style, { margin: '0', width: '794px', background: '#fff', direction: 'rtl' });
+      // PDF-only charts contain the same report data and do not require live resizing.
       const clone = source.cloneNode(true) as HTMLElement;
       clone.classList.add('pdf-export-render');
       const pdfStyle = frameDoc.createElement('style');
@@ -271,8 +272,8 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
           height: 175px !important;
           min-height: 0 !important;
         }
-        /* The final full-row skill chart needs a real flex basis.
-           Enlarging the outer card alone leaves the Recharts canvas tiny. */
+        /* The cloned SVG retains its original viewport: keep the canvas
+           at its rendered dimensions rather than pretending CSS can redraw it. */
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) > .flex {
           width: min(100%, 520px) !important;
           margin-inline: auto !important;
@@ -285,6 +286,21 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         .pdf-export-render.mw-print-report--exam .exam-documentary-chart-grid > :last-child:nth-child(odd) .recharts-responsive-container {
           width: 100% !important;
           max-width: none !important;
+        }
+        /* Route-scoped, data-identical PDF charts avoid frozen Recharts SVG geometry.
+           Live widgets remain unchanged in the application interface. */
+        .pdf-export-render.mw-print-report--exam .mw-pdf-chart-live,
+        .pdf-export-render.mw-print-report--individual .mw-pdf-chart-live { display: none !important; }
+        .pdf-export-render.mw-print-report--exam .mw-pdf-static-chart,
+        .pdf-export-render.mw-print-report--individual .mw-pdf-static-chart {
+          display: block !important;
+          width: 100% !important;
+          box-sizing: border-box !important;
+          min-width: 0 !important;
+        }
+        .pdf-export-render.mw-print-report--exam .mw-pdf-bar-row,
+        .pdf-export-render.mw-print-report--individual .mw-pdf-bar-row {
+          break-inside: avoid !important;
         }
         /* Final A4 layout polish: preserve content and chart aspect ratios. */
         .pdf-export-render.mw-print-report--individual .individual-print-chart-grid {

@@ -9,6 +9,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
+import { PdfStaticBars } from './PdfStaticCharts';
 
 export function formatChartValue(value: unknown) {
   if (Array.isArray(value)) return value.map((item) => String(item ?? '')).join(' - ');
@@ -159,7 +160,7 @@ export function OutsideLabelBarChart({
   const labelWidth = getLabelColumnWidth(data, labelKey);
 
   return (
-    <div className="flex items-stretch gap-3" dir="ltr">
+    <><div className="mw-pdf-chart-live flex items-stretch gap-3" dir="ltr">
       <div
         className="shrink-0 text-right text-[11px] font-bold text-slate-600"
         dir="rtl"
@@ -189,5 +190,7 @@ export function OutsideLabelBarChart({
         </ResponsiveContainer>
       </div>
     </div>
+    <PdfStaticBars data={data} valueKey={valueKey} labelKey={labelKey} suffix={valueSuffix} color={fill} maximum={domain?.[1]} />
+    </>
   );
 }

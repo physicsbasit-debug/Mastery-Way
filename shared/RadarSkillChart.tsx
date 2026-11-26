@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from 'recharts';
 import { ChartCard, EmptyChartMessage, formatChartValue } from './UnifiedVisuals';
+import { PdfStaticRadar } from './PdfStaticCharts';
 import type { RadarSkillEntry } from './diagnosticTypes';
 
 export function RadarSkillChart({
@@ -27,7 +28,7 @@ export function RadarSkillChart({
       {!eligible ? (
         <EmptyChartMessage>لا يظهر مخطط الرادار إلا عند وجود 3 مهارات فأكثر؛ حتى لا نرسم طبقًا مكسورًا ونسميه تحليلًا.</EmptyChartMessage>
       ) : (
-        <ResponsiveContainer width="100%" height={compact ? 235 : 310}>
+        <><div className="mw-pdf-chart-live"><ResponsiveContainer width="100%" height={compact ? 235 : 310}>
           <RadarChart data={data} outerRadius={compact ? 75 : 105} margin={{ top: 12, right: 20, bottom: 12, left: 20 }}>
             <PolarGrid />
             <PolarAngleAxis dataKey="skill" tick={{ fontSize: 11 }} />
@@ -35,7 +36,7 @@ export function RadarSkillChart({
             <Tooltip formatter={(value) => [`${formatChartValue(value)}%`, 'الأداء']} />
             <Radar name="الأداء" dataKey="percent" stroke="#2563eb" fill="#2563eb" fillOpacity={0.22} />
           </RadarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer></div><PdfStaticRadar data={data} /></>
       )}
       {data.some((entry) => (entry.itemCount ?? 2) <= 1) ? (
         <p className="mt-2 rounded-2xl bg-amber-50 p-3 text-xs font-bold leading-6 text-amber-800">
