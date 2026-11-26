@@ -222,3 +222,32 @@ test('three real report components export PDFs for audited analysis results with
     await browser.close();
   }
 });
+
+
+test('real app opens each route, runs its teaching example, and returns home in one click', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1280, height: 900 } });
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    await page.goto('http://127.0.0.1:5173/', { waitUntil: 'networkidle' });
+    const expected = [
+      { index: 0, summaryId: 'mastery-overview-tab' },
+      { index: 1, summaryId: 'individual-overview-tab' },
+      { index: 2, summaryId: 'exam-items-summary-tab' },
+    ];
+    for (const route of expected) {
+      await page.locator('.mw-path-card').nth(route.index).click();
+      await page.getByRole('button', { name: 'تعبئة مثال وعرض النتائج' }).click();
+      await page.locator('#' + route.summaryId).waitFor({ state: 'visible', timeout: 30000 });
+      const summary = await page.locator('#' + route.summaryId).innerText();
+      assert.ok(summary.length > 100, 'summary must not be empty');
+      assert.ok(!summary.includes('NaN%'), 'summary must contain valid percentages');
+      await page.locator('.mw-back-home-button').click();
+      assert.equal(await page.locator('.mw-path-card').count(), 3);
+    }
+    assert.deepEqual(errors, []);
+  } finally {
+    await browser.close();
+  }
+});
