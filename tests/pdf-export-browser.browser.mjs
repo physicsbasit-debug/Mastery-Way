@@ -96,11 +96,11 @@ test('exam PDF packs an orphaned signature row into the preceding A4 pages witho
     });
     const pdf = Buffer.from(base64, 'base64');
     const pages = (pdf.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length;
-    assert.equal(pages, 6, 'A seventh signature-only A4 page must not be emitted');
-    assert.equal(pdf.subarray(0, 4).toString(), '%PDF');
     mkdirSync('tests/pdf-proof', { recursive: true });
     writeFileSync('tests/pdf-proof/exam-signature-stress.pdf', pdf);
     console.log('Exam signature stress: ' + JSON.stringify({ ...geometry, pages, bytes: pdf.length }));
+    assert.equal(pdf.subarray(0, 4).toString(), '%PDF');
+    assert.equal(pages, 6, 'A seventh signature-only A4 page must not be emitted');
   } finally {
     await browser.close();
   }
