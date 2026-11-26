@@ -58,3 +58,27 @@ test('exam signature guard never changes other layouts or creates overlapping pa
     assert.deepEqual(impossible, paginateReport(7 * 1140 + 250, 1088, ranges));
   } finally { await server.close(); }
 });
+
+test('recovers the observed orphan signature page without resizing A4 content or dropping slices', async () => {
+  const server = await createServer({ configFile: './vite.config.ts', server: { middlewareMode: true, hmr: false, ws: false }, appType: 'custom' });
+  try {
+    const { paginateReport, paginateExamWithoutSignatureOrphan } = await server.ssrLoadModule('/shared/pdfPagination.ts');
+    // Reproduction using the seven original PDF image-slice lengths
+    // (1050/997/1013/727/1069/1064/126px), with synthetic protected blocks.
+    const total = 6046;
+    const protectedRanges = [
+      [1050, 1180], [2047, 2210], [3060, 3190],
+      [3787, 4200], [4856, 4910], [5920, 6030],
+    ];
+    const before = paginateReport(total, 1088, protectedRanges);
+    assert.deepEqual(before.map(([start, end]) => end - start), [1050, 997, 1013, 727, 1069, 1064, 126]);
+    const after = paginateExamWithoutSignatureOrphan(total, protectedRanges, 5920);
+    assert.equal(after.length, 6, 'signatures should not require a separate seventh page');
+    assert.equal(after[0][0], 0);
+    assert.equal(after.at(-1)[1], total);
+    after.forEach(([start, end], index) => {
+      assert.ok(end - start <= 1140 && end > start);
+      if (index) assert.equal(start, after[index - 1][1]);
+    });
+  } finally { await server.close(); }
+});
