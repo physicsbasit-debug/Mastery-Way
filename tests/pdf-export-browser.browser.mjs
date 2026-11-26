@@ -167,3 +167,58 @@ test('actual seven-fragment geometry merges signatures into the sixth PDF page i
     console.log('Exam real-slice regression: ' + JSON.stringify({ ...geometry, pages, pdfBytes: pdf.length }));
   } finally { await browser.close(); }
 });
+
+
+test('three real report components export PDFs for audited analysis results with zero-mark exclusions', async () => {
+  const browser = await chromium.launch({ headless: true });
+  try {
+    const page = await browser.newPage({ viewport: { width: 1200, height: 900 } });
+    const jsErrors = [];
+    page.on('pageerror', error => jsErrors.push(error.message));
+    await page.goto('http://127.0.0.1:5173/tests/functional-report-fixture.html', { waitUntil: 'networkidle' });
+    mkdirSync('tests/pdf-proof', { recursive: true });
+
+    const baseline = await page.locator('#fixture-arithmetic').evaluate(el => ({
+      mastered: el.dataset.mastered,
+      individualTotal: el.dataset.individualTotal,
+      examTotal: el.dataset.examTotal,
+      individualExcluded: el.dataset.individualExcluded,
+      examExcluded: el.dataset.examExcluded,
+    }));
+    assert.deepEqual(baseline, { mastered: '2', individualTotal: '2', examTotal: '2', individualExcluded: '1', examExcluded: '1' });
+
+    for (const [route, reportId] of [
+      ['spread', 'mastery-spread-detailed-report'],
+      ['individual', 'individual-performance-detailed-report'],
+      ['exam', 'exam-items-detailed-report'],
+    ]) {
+      await page.locator('#route-' + route).click();
+      await page.locator('#' + reportId).waitFor({ state: 'visible' });
+      const text = await page.locator('#' + reportId).innerText();
+      assert.ok(text.includes('مدرسة اختبار محلي'));
+      assert.ok(!text.includes('NaN%'), 'percentage formatting must be numeric');
+      assert.ok(!text.includes('Infinity'), 'no invalid arithmetic is allowed');
+      await page.getByRole('button', { name: 'تصدير PDF' }).click();
+      const link = page.locator('a[download]').first();
+      await link.waitFor({ state: 'visible', timeout: 120000 });
+      const base64 = await link.evaluate(async element => {
+        const bytes = new Uint8Array(await (await fetch(element.href)).arrayBuffer());
+        let binary = '';
+        for (let offset = 0; offset < bytes.length; offset += 16000) {
+          binary += String.fromCharCode(...bytes.slice(offset, offset + 16000));
+        }
+        return btoa(binary);
+      });
+      const pdf = Buffer.from(base64, 'base64');
+      assert.equal(pdf.subarray(0, 4).toString(), '%PDF');
+      assert.ok(pdf.length > 5000);
+      const pageCount = (pdf.toString('latin1').match(/\/Type\s*\/Page\b/g) || []).length;
+      assert.ok(pageCount >= 1 && pageCount <= 15);
+      writeFileSync('tests/pdf-proof/functional-' + route + '.pdf', pdf);
+      console.log('audited route', route, 'PDF pages', pageCount, 'bytes', pdf.length);
+    }
+    assert.deepEqual(jsErrors, [], 'no JavaScript errors while switching and exporting real reports');
+  } finally {
+    await browser.close();
+  }
+});
