@@ -388,7 +388,14 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
         const [top, bottom] = pages[i];
         const canvas = await html2canvas(clone, { backgroundColor: '#ffffff', scale: 1.4, x: 0, y: top, width: 794, height: bottom - top, windowWidth: 1100, logging: false, useCORS: true });
         if (i) pdf.addPage();
-        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', 6, 6, 198, (bottom - top) * 198 / 794, undefined, 'FAST');
+        // A signature-only final fragment may be joined to the preceding page.
+        // Scale that one image proportionally (never more than 5%) to stay
+        // within A4's printable 6mm margins. Other pages are identical.
+        const sliceHeight = bottom - top;
+        const finalScale = Math.min(1, 1140 / sliceHeight);
+        const imageWidthMm = 198 * finalScale;
+        const imageLeftMm = 6 + (198 - imageWidthMm) / 2;
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.92), 'JPEG', imageLeftMm, 6, imageWidthMm, sliceHeight * imageWidthMm / 794, undefined, 'FAST');
         canvas.width = 0; canvas.height = 0;
       }
       setUrl(URL.createObjectURL(pdf.output('blob')));

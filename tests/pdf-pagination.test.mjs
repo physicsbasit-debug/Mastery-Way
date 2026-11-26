@@ -82,3 +82,29 @@ test('recovers the observed orphan signature page without resizing A4 content or
     });
   } finally { await server.close(); }
 });
+
+test('merges the real 1064px recommendation page and 126px signatures into one safely scaled A4 page', async () => {
+  const server = await createServer({ configFile: './vite.config.ts', server: { middlewareMode: true, hmr: false, ws: false }, appType: 'custom' });
+  try {
+    const { joinSignatureOnlyLastPage } = await server.ssrLoadModule('/shared/pdfPagination.ts');
+    const observedLengths = [1050, 997, 1013, 727, 1069, 1064, 126];
+    let top = 0;
+    const original = observedLengths.map(length => { const pair = [top, top + length]; top += length; return pair; });
+    const fixed = joinSignatureOnlyLastPage(original, 5920);
+    assert.equal(fixed.length, 6);
+    assert.deepEqual(fixed.slice(0, -1), original.slice(0, -2));
+    assert.deepEqual(fixed.at(-1), [4856, 6046]);
+    const lastHeight = fixed.at(-1)[1] - fixed.at(-1)[0];
+    const scale = Math.min(1, 1140 / lastHeight);
+    assert.ok(scale >= 0.95);
+    assert.ok(6 + lastHeight * 198 * scale / 794 < 291);
+    fixed.forEach(([start, end], index) => { 
+      assert.ok(end > start);
+      if (index) assert.equal(start, fixed[index - 1][1]);
+    });
+    assert.deepEqual(joinSignatureOnlyLastPage(original, null), original);
+    assert.deepEqual(joinSignatureOnlyLastPage(original, 1234), original);
+    assert.deepEqual(joinSignatureOnlyLastPage([...original.slice(0, -2), [4856, 5800], [5800, 6046]], 5800), [...original.slice(0, -2), [4856, 5800], [5800, 6046]]);
+    assert.deepEqual(joinSignatureOnlyLastPage([...original.slice(0, -2), [4856, 6060], [6060, 6200]], 6060), [...original.slice(0, -2), [4856, 6060], [6060, 6200]]);
+  } finally { await server.close(); }
+});

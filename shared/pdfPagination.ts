@@ -50,5 +50,28 @@ export function paginateExamWithoutSignatureOrphan(
     const candidate = paginateReport(height, pageHeight, protectedRanges);
     if (candidate.length < normal.length) return candidate;
   }
-  return normal;
+  return joinSignatureOnlyLastPage(normal, signatureTop);
+}
+
+/**
+ * The true exam report can have a 1064px penultimate slice and a 126px
+ * signature-only tail. Increasing page height does not solve this when an
+ * earlier protected block forces a break. Join only those final two slices;
+ * PdfExport uniformly scales this one merged image (at most 5%) to fit A4.
+ * All source pixels remain present and all other pages stay unchanged.
+ */
+export function joinSignatureOnlyLastPage(
+  pages: Array<[number, number]>,
+  signatureTop: number | null,
+): Array<[number, number]> {
+  if (signatureTop === null || !Number.isFinite(signatureTop) || pages.length < 2) return pages;
+  const [lastStart, lastEnd] = pages[pages.length - 1];
+  const [previousStart, previousEnd] = pages[pages.length - 2];
+  const tailHeight = lastEnd - lastStart;
+  const joinedHeight = lastEnd - previousStart;
+  if (previousEnd !== lastStart || tailHeight <= 0 || tailHeight > 180) return pages;
+  if (signatureTop < lastStart - 20 || signatureTop >= lastEnd) return pages;
+  // Never make the final text smaller than 95% of its original size.
+  if (joinedHeight > 1200 || joinedHeight <= 0) return pages;
+  return [...pages.slice(0, -2), [previousStart, lastEnd]];
 }
