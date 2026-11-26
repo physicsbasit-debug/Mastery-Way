@@ -14,6 +14,7 @@ import {
   YAxis,
 } from 'recharts';
 import { ChartCard, EmptyChartMessage, HorizontalChartShell } from '../shared/UnifiedVisuals';
+import { PdfStaticBars } from '../shared/PdfStaticCharts';
 import type { IndividualPerformanceAnalysisResult } from './types';
 
 type IndividualChartProps = { result: IndividualPerformanceAnalysisResult; compact?: boolean };
@@ -35,7 +36,7 @@ export function StudentMasteryPositionChart({ result, compact = false }: Individ
 
   return (
     <ChartCard title="موقع الطالب من حد الإتقان" description="يقارن هذا الرسم نسبة الطالب بحد الإتقان المعتمد في الورقة." compact={compact}>
-      <HorizontalChartShell labels={data.map((item) => item.name)} height={chartHeight} labelWidthClass={compact ? "w-24 md:w-28" : "w-28 md:w-36"} topPadding={compact ? 12 : 20} bottomPadding={compact ? 26 : 38}>
+      <div className="mw-pdf-chart-live"><HorizontalChartShell labels={data.map((item) => item.name)} height={chartHeight} labelWidthClass={compact ? "w-24 md:w-28" : "w-28 md:w-36"} topPadding={compact ? 12 : 20} bottomPadding={compact ? 26 : 38}>
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={data} layout="vertical" margin={{ top: 15, right: 48, left: 4, bottom: 10 }}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -50,7 +51,8 @@ export function StudentMasteryPositionChart({ result, compact = false }: Individ
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </HorizontalChartShell>
+      </HorizontalChartShell></div>
+      <PdfStaticBars data={data} valueKey="value" suffix="%" maximum={100} color="#5F6F3A" />
     </ChartCard>
   );
 }
@@ -68,14 +70,16 @@ export function ItemStatusChart({ result, compact = false }: IndividualChartProp
       {data.length === 0 ? (
         <EmptyChartMessage>لا توجد مفردات للعرض.</EmptyChartMessage>
       ) : (
-        <ResponsiveContainer width="100%" height={compact ? 175 : 250}>
+        <><div className="mw-pdf-chart-live"><ResponsiveContainer width="100%" height={compact ? 175 : 250}>
           <PieChart>
             <Pie data={data} dataKey="value" nameKey="name" innerRadius={compact ? 40 : 55} outerRadius={compact ? 64 : 88} paddingAngle={2} label>
               {data.map((entry) => <Cell key={entry.name} fill={entry.fill} />)}
             </Pie>
             <Tooltip formatter={(value) => [formatTooltipValue(value), 'العدد']} />
           </PieChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer></div>
+          <PdfStaticBars data={data} valueKey="value" maximum={Math.max(1, data.reduce((sum, item) => sum + item.value, 0))} color="#7A8C4A" />
+        </>
       )}
       <div className="mt-2 grid grid-cols-2 gap-2 text-xs text-slate-600">
         {data.map((item) => (
@@ -169,7 +173,7 @@ export function TopLossItemsChart({ result, compact = false }: IndividualChartPr
       {data.length === 0 ? (
         <EmptyChartMessage>لا توجد مفردات ذات فقد واضح في البيانات الحالية.</EmptyChartMessage>
       ) : (
-        <ResponsiveContainer width="100%" height={compact ? 175 : 250}>
+        <><div className="mw-pdf-chart-live"><ResponsiveContainer width="100%" height={compact ? 175 : 250}>
           <BarChart data={data} margin={{ top: 20, right: 20, left: 10, bottom: 10 }}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis dataKey="name" />
@@ -179,7 +183,9 @@ export function TopLossItemsChart({ result, compact = false }: IndividualChartPr
               <LabelList dataKey="loss" position="top" formatter={(value: unknown) => formatTooltipValue(value)} />
             </Bar>
           </BarChart>
-        </ResponsiveContainer>
+        </ResponsiveContainer></div>
+          <PdfStaticBars data={data} valueKey="loss" color="#dc2626" />
+        </>
       )}
     </ChartCard></div>
   );
