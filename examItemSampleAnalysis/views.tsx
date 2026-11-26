@@ -630,7 +630,7 @@ function ScoresTab({
               const issue = issueByCell.get(`${row.id}:${item.id}`);
               const fieldClass = issue?.type === 'empty' ? 'border-amber-300 bg-amber-50' : issue ? 'border-red-400 bg-red-50' : 'border-slate-200 bg-white';
               return <label key={item.id} className="text-sm font-bold text-slate-700">{item.label} <span className="text-slate-500">{item.maxScore === 0 ? '(غير محتسبة)' : `(من ${item.maxScore || '—'})`}</span>
-                <MobileNumberInput compact value={row.scores[item.id] ?? ''} disabled={item.maxScore === 0} min={0} max={typeof item.maxScore === 'number' ? item.maxScore : undefined} step="any" align="center" onChange={(value) => updateScore(rowIndex, item.id, value === '' ? '' : String(value))} inputClassName={`mt-1 w-full rounded-lg border px-2 py-2 text-center ${fieldClass}`} ariaInvalid={Boolean(issue && issue.type !== 'empty')} title={issue?.message ?? `${row.label}، ${item.label}`} />
+                <MobileNumberInput compact value={item.maxScore === 0 ? '' : (row.scores[item.id] ?? '')} disabled={item.maxScore === 0} min={0} max={typeof item.maxScore === 'number' ? item.maxScore : undefined} step="any" align="center" onChange={(value) => updateScore(rowIndex, item.id, value === '' ? '' : String(value))} inputClassName={`mt-1 w-full rounded-lg border px-2 py-2 text-center ${fieldClass}`} ariaInvalid={Boolean(issue && issue.type !== 'empty')} title={issue?.message ?? `${row.label}، ${item.label}`} />
                 {issue && issue.type !== 'empty' ? <span className="block text-xs text-red-700">{issue.message}</span> : null}
               </label>;
             })}</div>
@@ -655,7 +655,7 @@ function ScoresTab({
                     <td key={item.id} className="px-2 py-2 text-center">
                       <MobileNumberInput
                         compact
-                        value={row.scores[item.id] ?? ''}
+                        value={item.maxScore === 0 ? '' : (row.scores[item.id] ?? '')}
                         disabled={item.maxScore === 0}
                         min={0}
                         max={typeof item.maxScore === 'number' ? item.maxScore : undefined}
