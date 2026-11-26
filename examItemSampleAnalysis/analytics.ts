@@ -165,7 +165,18 @@ export function validateAnalysisReadiness(
 
   if (!items.length) issues.push({ scope: 'items', message: 'لم يتم بناء مفردات الورقة.' });
   const validItems: ExamItemDefinition[] = [];
+  const seenItemIds = new Set<string>();
+  let excludedItems = 0;
   items.forEach((item) => {
+    const itemId = String(item.id || '').trim();
+    if (!itemId || seenItemIds.has(itemId)) {
+      issues.push({ scope: 'items', message: `${item.label}: معرّف المفردة مفقود أو مكرر.` });
+    }
+    if (itemId) seenItemIds.add(itemId);
+    if (item.maxScore === 0) {
+      excludedItems += 1;
+      return;
+    }
     const isEmptyMaxScore = item.maxScore === '' || item.maxScore === undefined || item.maxScore === null;
     const maxScore = Number(item.maxScore);
     if (isEmptyMaxScore) {
@@ -177,7 +188,19 @@ export function validateAnalysisReadiness(
     } else {
       validItems.push(item);
     }
-    if (!item.skill) issues.push({ scope: 'items', message: `${item.label}: المهارة غير محددة.` });
+    if (!String(item.skill || '').trim()) issues.push({ scope: 'items', message: `${item.label}: المهارة غير محددة.` });
+  });
+  if (items.length > 0 && validItems.length === 0 && excludedItems === items.length) {
+    issues.push({ scope: 'items', message: 'جميع المفردات غير محتسبة؛ حدّد درجة 0.5 فأكثر لمفردة واحدة على الأقل.' });
+  }
+
+  const seenRowIds = new Set<string>();
+  rows.forEach((row) => {
+    const rowId = String(row.id || '').trim();
+    if (!rowId || seenRowIds.has(rowId)) {
+      issues.push({ scope: 'scores', message: `${row.label || 'ورقة'}: معرّف الورقة مفقود أو مكرر.` });
+    }
+    if (rowId) seenRowIds.add(rowId);
   });
 
   const expectedRowCount = Number.isInteger(context.sampleSize) && context.sampleSize > 0
@@ -288,7 +311,7 @@ export function validateAnalysisReadiness(
     completedCells,
     emptyCells,
     invalidCells,
-    excludedItems: 0,
+    excludedItems,
   };
 }
 
@@ -466,7 +489,7 @@ function buildSummary(context: ExamItemsSampleContext, itemResults: ItemAnalysis
   const totalAchieved = itemResults.reduce((sum, item) => sum + item.totalAchieved, 0);
   const totalLoss = Math.max(0, totalAvailable - totalAchieved);
   return {
-    totalItems: itemResults.length,
+    totalItems: itemResults.length + excludedItems,
     excludedItems,
     sampleSize: context.sampleSize,
     paperTotalScore: roundTo(paperTotalScore),
@@ -681,10 +704,11 @@ export function runExamItemsSampleAnalysis(
   }
 
   const reliability = evaluateSampleReliability(context.totalPapers, context.sampleSize, context.sampleSelectionMethod);
-  const { results: itemResults, validCells, invalidCells } = buildItemResults(items, rows);
+  const countedItems = items.filter(item => Number(item.maxScore) > 0);
+  const { results: itemResults, validCells, invalidCells } = buildItemResults(countedItems, rows);
   const skills = buildSkillResults(itemResults);
-  const summary = buildSummary(context, itemResults, 0);
-  const skillBalance = groupBalance(items);
+  const summary = buildSummary(context, itemResults, readiness.excludedItems);
+  const skillBalance = groupBalance(countedItems);
   const dataCompleteness = buildDataCompleteness(validCells, invalidCells);
   const balanceReading = buildBalanceReading(skillBalance);
   const decision = buildDecision(itemResults, skills, reliability, dataCompleteness);
@@ -714,7 +738,7 @@ export function createDefaultItems(count: number): ExamItemDefinition[] {
   return Array.from({ length: Math.max(1, count) }, (_, index) => ({
     id: `q${index + 1}`,
     label: `س${index + 1}`,
-    maxScore: '',
+    maxScore: 0,
     skill: ['المعرفة', 'الفهم', 'التطبيق', 'الاستدلال', 'القدرات العليا'][index % 5],
   }));
 }

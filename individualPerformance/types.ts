@@ -15,6 +15,8 @@ export type ReadingQualityCode = 'limited' | 'cautious' | 'good';
 export type ValidationIssueCode =
   | 'missing_blueprint'
   | 'duplicate_question_id'
+  | 'duplicate_student_input_id'
+  | 'no_counted_questions'
   | 'invalid_max_score'
   | 'missing_skill'
   | 'missing_score'

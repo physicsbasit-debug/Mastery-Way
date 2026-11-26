@@ -72,7 +72,7 @@ export function createExamBlueprint(questionCount: number): ExamQuestionBlueprin
   return Array.from({ length: safeCount }, (_, index) => ({
     id: `q${index + 1}`,
     label: `س${index + 1}`,
-    maxScore: '',
+    maxScore: 0,
     skill: 'الفهم',
   }));
 }
@@ -277,6 +277,18 @@ function inspectIndividualAnalysisInputs(
   const issues: ValidationIssue[] = [];
   const warnings: string[] = [];
   const inputById = new Map(inputs.map((input) => [input.questionId, input]));
+  const seenInputIds = new Set<string>();
+  inputs.forEach((input) => {
+    const inputId = String(input.questionId || '').trim();
+    if (inputId && seenInputIds.has(inputId)) {
+      issues.push({
+        code: 'duplicate_student_input_id',
+        questionId: inputId,
+        message: 'تكرر إدخال درجة الطالب للمفردة نفسها؛ يجب وجود سجل واحد لكل مفردة.',
+      });
+    }
+    if (inputId) seenInputIds.add(inputId);
+  });
   const seenIds = new Set<string>();
   let completedScoreCount = 0;
   let emptyScoreCount = 0;
@@ -308,6 +320,12 @@ function inspectIndividualAnalysisInputs(
     seenIds.add(questionId);
 
     const maxScore = Number(question.maxScore);
+    // A zero-mark question is explicitly excluded: no score, skill or error code
+    // is required, and it must never enter the individual outcome denominators.
+    if (question.maxScore === 0) {
+      excludedQuestionCount += 1;
+      return;
+    }
     const input = inputById.get(questionId);
     const rawValue = input?.score;
     const isEmpty = rawValue === '' || rawValue == null || (typeof rawValue === 'string' && rawValue.trim() === '');
@@ -476,7 +494,10 @@ function inspectIndividualAnalysisInputs(
   });
 
   const settingsValid = settingIssues.length === 0;
-  const activeQuestionCount = blueprint.length;
+  const activeQuestionCount = blueprint.length - excludedQuestionCount;
+  if (activeQuestionCount === 0 && blueprint.length > 0) {
+    issues.push({ code: 'no_counted_questions', message: 'جميع المفردات غير محتسبة. حدّد درجة 0.5 فأكثر لمفردة واحدة على الأقل.' });
+  }
   const readiness: AnalysisReadinessResult = {
     isValid: issues.length === 0 && questions.length > 0 && questions.length === activeQuestionCount,
     totalQuestionCount: activeQuestionCount,
