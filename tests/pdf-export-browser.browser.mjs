@@ -69,7 +69,9 @@ test('exam PDF packs an orphaned signature row into the preceding A4 pages witho
         signatures.appendChild(card);
       }
       report.append(filler, signatures);
-      const targetHeight = 6 * 1088 + 160;
+      // Calibrated so the original A4 paginator pushes only the signature row
+      // onto page seven, matching the uploaded report rather than adding filler.
+      const targetHeight = 6 * 1088 - 90;
       const currentHeight = report.getBoundingClientRect().height;
       filler.style.height = Math.max(1, targetHeight - currentHeight + 1) + 'px';
       const reportRect = report.getBoundingClientRect();
@@ -81,7 +83,7 @@ test('exam PDF packs an orphaned signature row into the preceding A4 pages witho
       };
     });
     assert.ok(geometry.hasThreeSignatures);
-    assert.ok(geometry.height > 6 * 1088 && geometry.height < 6 * 1140, JSON.stringify(geometry));
+    assert.ok(geometry.height > 6 * 1088 - 140 && geometry.height < 6 * 1088, JSON.stringify(geometry));
 
     await page.getByRole('button', { name: 'تصدير PDF' }).click();
     const download = page.locator('a[download]');
