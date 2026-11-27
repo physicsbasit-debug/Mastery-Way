@@ -40,9 +40,11 @@ function resolveBasePath() {
 }
 
 const manualCodeSplitGroups = [
+  { name: "vite-runtime", test: /(?:^|\0|\/)vite\/(?:preload-helper|modulepreload-polyfill)/ },
   { name: "react-vendor", test: /node_modules\/(?:react|react-dom|scheduler)\// },
   { name: "charts", test: /node_modules\/(?:recharts|d3-[^/]+|internmap)\// },
   { name: "ui-core", test: /node_modules\/(?:@radix-ui|class-variance-authority|clsx|tailwind-merge)\// },
+  { name: "pdf-export", test: /node_modules\/(?:jspdf|html2canvas-pro)\// },
   { name: "vendor", test: /node_modules\// },
 ];
 
