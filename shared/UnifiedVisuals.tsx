@@ -138,7 +138,7 @@ export function OutsideLabelBarChart({
   labelKey = 'name',
   valueSuffix = '',
   tooltipValueLabel = 'القيمة',
-  fill = '#2563eb',
+  fill = '#075b49',
   height,
   domain,
   compact = true,

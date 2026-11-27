@@ -13,6 +13,7 @@ import {
   buildTeachingRecommendations,
 } from './reportText';
 import type { ExamItemsSampleAnalysisResult } from './types';
+import { sameItemRanking } from './utils';
 import { PremiumReportSummary, ReportStatusChip, toneFromText } from '../shared/ReportVisualElements';
 import { InterventionFollowupReport } from '../shared/InterventionFollowupReport';
 
@@ -67,10 +68,14 @@ function DetailedReport({ result, followupIdentity }: { result: ExamItemsSampleA
           <Metric label="اكتمال البيانات" value={`${result.dataCompleteness.completionPercent}%`} />
           <Metric label="حد الإتقان" value={`${result.summary.masteryCutoffPercent}%`} />
         </div>
-        <div className="mt-4 grid gap-3 lg:grid-cols-2">
-          <DataTable title="أقل المفردات أداءً" headers={['المفردة', 'المهارة', 'الأداء', 'الأولوية']} rows={result.decision.lowestPerformanceItems.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.priority])} />
-          <DataTable title="أعلى المفردات فقدًا" headers={['المفردة', 'المهارة', 'الفقد', 'الأولوية']} rows={result.decision.highestLossItems.map((item) => [item.label, item.skill, item.totalLoss, item.priority])} />
-        </div>
+        {sameItemRanking(result.decision.lowestPerformanceItems, result.decision.highestLossItems) ? (
+          <div className="mt-4"><DataTable title="أقل المفردات أداءً وأعلاها فقدًا" headers={['المفردة', 'المهارة', 'الأداء', 'الفقد', 'الأولوية']} rows={result.decision.lowestPerformanceItems.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.totalLoss, item.priority])} /></div>
+        ) : (
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            <DataTable title="أقل المفردات أداءً" headers={['المفردة', 'المهارة', 'الأداء', 'الأولوية']} rows={result.decision.lowestPerformanceItems.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.priority])} />
+            <DataTable title="أعلى المفردات فقدًا" headers={['المفردة', 'المهارة', 'الفقد', 'الأولوية']} rows={result.decision.highestLossItems.map((item) => [item.label, item.skill, item.totalLoss, item.priority])} />
+          </div>
+        )}
         <div className="mt-4"><DataTable headers={['المفردة', 'المهارة', 'الدرجة', 'الأداء', 'الفقد', 'صفر', 'كاملة', 'جزئية', 'الأولوية']} rows={result.items.map((item) => [item.label, item.skill, item.maxScore, `${item.performancePercent}%`, item.totalLoss, `${item.zeroPercent}%`, `${item.fullPercent}%`, `${item.partialPercent}%`, item.priority])} /></div>
         <Narrative title="مفردات تحتاج مراجعة" text={buildPriorityItemRecommendation(result)} />
       </ReportSection>
@@ -91,7 +96,7 @@ function DetailedReport({ result, followupIdentity }: { result: ExamItemsSampleA
           <ParetoReportBlock title="باريتو الفقد حسب المهارات" description="يوضح المهارات الأكثر مساهمة في الفقد داخل العينة." entries={result.diagnostics.skillLossPareto} valueLabel="الفقد" />
         </div>
         <div className="exam-diagnostic-comparison-grid mt-4 grid gap-3 lg:grid-cols-2">
-          <RadarReportBlock title="رادار أداء المهارات" description="يعرض صورة عامة لتوازن أداء المهارات في العينة." data={result.diagnostics.skillRadar} />
+          <RadarReportBlock color="#a87526" title="رادار أداء المهارات" description="يعرض صورة عامة لتوازن أداء المهارات في العينة." data={result.diagnostics.skillRadar} />
           <FishboneReportBlock diagnostic={result.diagnostics.fishbone} />
         </div>
       </ReportSection>

@@ -14,6 +14,7 @@ import {
 } from './constants';
 import { createDefaultItems, createDefaultSampleRows, evaluateSampleReliability, recommendedSampleSize, runExamItemsSampleAnalysis, validateAnalysisReadiness } from './analytics';
 import { ExamItemsSampleReports } from './report';
+import { sameItemRanking } from './utils';
 import { clearWorkspace, getAutosaveTimestamp, loadWorkspace, saveWorkspace } from '../shared/workspaceAutosave';
 import { PrintableResultTab } from '../shared/PrintableResultTab';
 import { DiagnosticDecisionCard } from '../shared/DiagnosticCards';
@@ -738,7 +739,7 @@ function DiagnosticInsightsTab({ result }: { result: ExamItemsSampleAnalysisResu
         <ParetoChart title="باريتو الفقد حسب المهارات" description="يوضح المهارات الأكثر مساهمة في الفقد داخل العينة." entries={result.diagnostics.skillLossPareto} valueLabel="الفقد" />
       </div>
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <RadarSkillChart data={result.diagnostics.skillRadar} title="رادار أداء المهارات" description="يعرض صورة عامة لتوازن أداء المهارات في العينة." />
+        <RadarSkillChart color="#a87526" data={result.diagnostics.skillRadar} title="رادار أداء المهارات" description="يعرض صورة عامة لتوازن أداء المهارات في العينة." />
         <FishboneDiagnosticCard diagnostic={result.diagnostics.fishbone} />
       </div>
     </div>
@@ -750,18 +751,26 @@ function ItemAnalysisTab({ result }: { result: ExamItemsSampleAnalysisResult }) 
   return (
     <div className="space-y-4">
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2"><ItemPerformanceChart result={result} /><ItemLossChart result={result} /><ZeroRateChart result={result} /></div>
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+      {sameItemRanking(result.decision.lowestPerformanceItems, result.decision.highestLossItems) ? (
         <DataTable
-          title="أقل المفردات أداءً"
+          title="أقل المفردات أداءً وأعلاها فقدًا"
           headers={['المفردة', 'المهارة', 'الأداء', 'الفقد', 'الأولوية']}
           rows={result.decision.lowestPerformanceItems.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.totalLoss, item.priority])}
         />
-        <DataTable
-          title="أعلى المفردات فقدًا"
-          headers={['المفردة', 'المهارة', 'الفقد', 'الأداء', 'الأولوية']}
-          rows={result.decision.highestLossItems.map((item) => [item.label, item.skill, item.totalLoss, `${item.performancePercent}%`, item.priority])}
-        />
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <DataTable
+            title="أقل المفردات أداءً"
+            headers={['المفردة', 'المهارة', 'الأداء', 'الفقد', 'الأولوية']}
+            rows={result.decision.lowestPerformanceItems.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.totalLoss, item.priority])}
+          />
+          <DataTable
+            title="أعلى المفردات فقدًا"
+            headers={['المفردة', 'المهارة', 'الفقد', 'الأداء', 'الأولوية']}
+            rows={result.decision.highestLossItems.map((item) => [item.label, item.skill, item.totalLoss, `${item.performancePercent}%`, item.priority])}
+          />
+        </div>
+      )}
       <DataTable headers={['المفردة', 'المهارة', 'الأداء', 'الفقد', 'صفر', 'كاملة', 'الأولوية']} rows={result.items.map((item) => [item.label, item.skill, `${item.performancePercent}%`, item.totalLoss, `${item.zeroPercent}%`, `${item.fullPercent}%`, item.priority])} />
     </div>
   );

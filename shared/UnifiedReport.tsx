@@ -165,7 +165,7 @@ export function UnifiedPrintStyles({
     padding: 0 !important;
     background: white !important;
     color: #0f172a !important;
-    font-family: Arial, Tahoma, "Noto Sans Arabic", sans-serif !important;
+    font-family: Tajawal, Arial, Tahoma, "Noto Sans Arabic", sans-serif !important;
     font-size: ${fontSizePx}px !important;
     line-height: ${lineHeight} !important;
     overflow: visible !important;

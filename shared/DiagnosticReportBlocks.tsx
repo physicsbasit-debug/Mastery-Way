@@ -6,10 +6,10 @@ import { RadarSkillChart } from './RadarSkillChart';
 
 export function DiagnosticDecisionReportBlock({ decision }: { decision: DiagnosticDecision }) {
   return (
-    <section className="diagnostic-report-block rounded-2xl border border-blue-100 bg-blue-50/70 p-4">
+    <section className="diagnostic-report-block rounded-2xl border border-[var(--mw-track-border,#e2e7df)] bg-[var(--mw-track-soft,#f8f9f6)] p-4">
       <div className="flex items-start justify-between gap-3">
         <div>
-          <p className="text-[10px] font-black text-blue-700">لوحة القرار التشخيصي</p>
+          <p className="text-[10px] font-black text-[var(--mw-track-ink,#075b49)]">لوحة القرار التشخيصي</p>
           <h3 className="mt-1 text-base font-black text-slate-950">{decision.priorityTitle}</h3>
         </div>
         <span className="rounded-full bg-white px-3 py-1 text-[10px] font-black text-slate-700">{confidenceLabel(decision.confidence)}</span>
@@ -20,7 +20,7 @@ export function DiagnosticDecisionReportBlock({ decision }: { decision: Diagnost
         <Info label="الإجراء المقترح" value={decision.recommendedAction} />
         <Info label="دليل إعادة القياس" value={decision.retestEvidence} />
       </div>
-      <p className="mt-3 rounded-xl border border-blue-100 bg-white p-3 text-xs font-bold leading-6 text-slate-700">{decision.caution}</p>
+      <p className="mt-3 rounded-xl border border-[var(--mw-track-border,#e2e7df)] bg-white p-3 text-xs font-bold leading-6 text-slate-700">{decision.caution}</p>
     </section>
   );
 }
@@ -29,8 +29,8 @@ export function ParetoReportBlock({ title, description, entries, valueLabel = '�
   return <div className="diagnostic-report-visual diagnostic-report-pareto"><ParetoChart title={title} description={description} entries={entries} valueLabel={valueLabel} compact /></div>;
 }
 
-export function RadarReportBlock({ title, description, data }: { title: string; description?: string; data: RadarSkillEntry[] }) {
-  return <div className="diagnostic-report-visual"><RadarSkillChart title={title} description={description} data={data} compact /></div>;
+export function RadarReportBlock({ title, description, data, color }: { title: string; description?: string; data: RadarSkillEntry[]; color?: string }) {
+  return <div className="diagnostic-report-visual"><RadarSkillChart title={title} description={description} data={data} color={color} compact /></div>;
 }
 
 export function FishboneReportBlock({ diagnostic }: { diagnostic: FishboneDiagnostic }) {
@@ -60,7 +60,7 @@ export function FishboneReportBlock({ diagnostic }: { diagnostic: FishboneDiagno
 
 function Info({ label, value }: { label: string; value: React.ReactNode }) {
   return (
-    <div className="rounded-xl border border-blue-100 bg-white p-3">
+    <div className="rounded-xl border border-[var(--mw-track-border,#e2e7df)] bg-white p-3">
       <p className="text-[10px] font-bold text-slate-500">{label}</p>
       <div className="mt-1 text-xs font-black leading-6 text-slate-900">{value}</div>
     </div>

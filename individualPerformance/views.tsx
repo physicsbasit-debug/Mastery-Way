@@ -714,7 +714,7 @@ function DiagnosticInsightsPanel({ result }: { result: IndividualPerformanceAnal
           <ParetoChart title="باريتو أنماط الأخطاء" description="يرتب أنماط الأخطاء المرمزة حسب التكرار." entries={result.diagnostics.errorPareto} valueLabel="التكرار" />
         </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <RadarSkillChart data={result.diagnostics.skillRadar} title="رادار مهارات الطالب" description="يعرض صورة عامة للفجوات بين مهارات الطالب في هذه الورقة." />
+          <RadarSkillChart color="#5F6F3A" data={result.diagnostics.skillRadar} title="رادار مهارات الطالب" description="يعرض صورة عامة للفجوات بين مهارات الطالب في هذه الورقة." />
           <FishboneDiagnosticCard diagnostic={result.diagnostics.fishbone} />
         </div>
       </div>

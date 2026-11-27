@@ -34,7 +34,7 @@ export function SkillPerformanceChart({ result }: { result: ExamItemsSampleAnaly
   const data = result.skills.map((skill) => ({ name: skill.skill, value: skill.performancePercent }));
   return (
     <ChartCard title="أداء المهارات" description="يعرض أداء العينة حسب المهارات المرتبطة بمفردات الورقة." compact>
-      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="أداء المهارة" fill="#0f766e" domain={[0, 100]} />
+      <OutsideLabelBarChart data={data} valueKey="value" valueSuffix="%" tooltipValueLabel="أداء المهارة" fill="#6b4a17" domain={[0, 100]} />
     </ChartCard>
   );
 }
