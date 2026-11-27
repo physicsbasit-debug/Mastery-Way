@@ -141,7 +141,7 @@ function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath:
           <span className="mw-workbar__sep" aria-hidden="true">/</span>
           <span className="mw-workbar__route">{activePathMeta?.title ?? 'مسار التحليل'}</span>
         </div>
-        <button type="button" onClick={onBackHome} className="mw-workbar__back"><span aria-hidden="true">→</span> كل المسارات</button>
+        <button type="button" onClick={onBackHome} className="mw-workbar__back mw-back-home-button"><span aria-hidden="true">→</span> كل المسارات</button>
       </header>
       <Suspense fallback={<div className="rounded-2xl border border-white/70 bg-white/80 p-6 text-center font-bold text-slate-600">جارٍ تحميل المسار…</div>}>
         {activePath === 'masterySpread' && <MasterySpreadViews />}
