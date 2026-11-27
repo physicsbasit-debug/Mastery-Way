@@ -16,11 +16,14 @@ export function RadarSkillChart({
   description = 'تعرض الصورة العامة لأداء المهارات مع قراءة حذرة عند ضعف التمثيل.',
   data,
   compact = false,
+  color = '#075b49',
 }: {
   title?: string;
   description?: string;
   data: RadarSkillEntry[];
   compact?: boolean;
+  /** Route colour, used for both the live chart and its static PDF twin. */
+  color?: string;
 }) {
   const eligible = data.length >= 3;
   return (
@@ -34,9 +37,9 @@ export function RadarSkillChart({
             <PolarAngleAxis dataKey="skill" tick={{ fontSize: 11 }} />
             <PolarRadiusAxis domain={[0, 100]} tickFormatter={(value) => `${value}%`} tick={{ fontSize: 10 }} />
             <Tooltip formatter={(value) => [`${formatChartValue(value)}%`, 'الأداء']} />
-            <Radar name="الأداء" dataKey="percent" stroke="#2563eb" fill="#2563eb" fillOpacity={0.22} />
+            <Radar name="الأداء" dataKey="percent" stroke={color} fill={color} fillOpacity={0.22} />
           </RadarChart>
-        </ResponsiveContainer></div><PdfStaticRadar data={data} /></>
+        </ResponsiveContainer></div><PdfStaticRadar data={data} color={color} /></>
       )}
       {data.some((entry) => (entry.itemCount ?? 2) <= 1) ? (
         <p className="mt-2 rounded-2xl bg-amber-50 p-3 text-xs font-bold leading-6 text-amber-800">

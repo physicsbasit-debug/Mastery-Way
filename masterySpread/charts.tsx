@@ -13,19 +13,22 @@ import {
 import { ChartCard, EmptyChartMessage, HorizontalChartShell } from '../shared/UnifiedVisuals';
 import type { MasteryJudgementCode, MasterySpreadAnalysisResult } from './types';
 
+// Route palette: greens carry the mastery identity; amber → red stay as status semantics.
+const ROUTE = { ink: '#075b49', mid: '#2e8b74', light: '#5aa58c', gold: '#b78b3d', deep: '#073e34' } as const;
+
 const JUDGEMENT_COLORS: Record<MasteryJudgementCode, string> = {
-  distinguished: '#15803d',
-  good: '#2563eb',
-  adequate: '#ca8a04',
-  not_adequate: '#f97316',
-  rapid_intervention: '#dc2626',
+  distinguished: ROUTE.ink,
+  good: ROUTE.mid,
+  adequate: '#c99a2e',
+  not_adequate: '#e07b39',
+  rapid_intervention: '#c2412d',
 };
 
 const BAND_COLORS: Record<string, string> = {
-  mastery: '#15803d',
-  near_mastery: '#2563eb',
-  moderate_gap: '#ca8a04',
-  deep_gap: '#dc2626',
+  mastery: ROUTE.ink,
+  near_mastery: ROUTE.light,
+  moderate_gap: '#c99a2e',
+  deep_gap: '#c2412d',
 };
 
 function formatPercent(value: unknown): string {
@@ -40,11 +43,11 @@ function countTooltip(value: unknown): [string, string] {
 export function MasteryScaleBar({ result }: { result: MasterySpreadAnalysisResult }) {
   const spread = Math.max(0, Math.min(100, result.summary.masterySpreadPercent));
   const segments = [
-    { label: 'تدخل سريع', width: 40, color: '#dc2626' },
-    { label: 'غير ملائم', width: 10, color: '#f97316' },
-    { label: 'ملائم', width: 10, color: '#ca8a04' },
-    { label: 'جيد', width: 10, color: '#2563eb' },
-    { label: 'متميز', width: 30, color: '#15803d' },
+    { label: 'تدخل سريع', width: 40, color: JUDGEMENT_COLORS.rapid_intervention },
+    { label: 'غير ملائم', width: 10, color: JUDGEMENT_COLORS.not_adequate },
+    { label: 'ملائم', width: 10, color: JUDGEMENT_COLORS.adequate },
+    { label: 'جيد', width: 10, color: JUDGEMENT_COLORS.good },
+    { label: 'متميز', width: 30, color: JUDGEMENT_COLORS.distinguished },
   ];
 
   return (
@@ -79,8 +82,8 @@ export function MasteryScaleBar({ result }: { result: MasterySpreadAnalysisResul
 
 export function MasteryVsNonMasteryChart({ result }: { result: MasterySpreadAnalysisResult }) {
   const data = [
-    { name: 'حققوا الإتقان', count: result.summary.masteryCount, color: '#15803d' },
-    { name: 'لم يحققوا الإتقان', count: result.summary.nonMasteryCount, color: '#dc2626' },
+    { name: 'حققوا الإتقان', count: result.summary.masteryCount, color: ROUTE.ink },
+    { name: 'لم يحققوا الإتقان', count: result.summary.nonMasteryCount, color: JUDGEMENT_COLORS.rapid_intervention },
   ];
   return (
     <ChartCard title="المتقنون مقابل غير المتقنين" description="يقارن عدد من بلغوا حد الإتقان بمن لم يبلغوه.">
@@ -133,8 +136,8 @@ export function ScoresHistogramChart({ result }: { result: MasterySpreadAnalysis
           <XAxis dataKey="name" tick={{ fontSize: 11 }} />
           <YAxis allowDecimals={false} />
           <Tooltip formatter={countTooltip} />
-          {cutoffBucket ? <ReferenceLine x={cutoffBucket.key} stroke="#0f172a" strokeDasharray="4 4" label={{ value: 'نطاق حد الإتقان', position: 'top', fontSize: 11 }} /> : null}
-          <Bar dataKey="count" name="العدد" fill="#2563eb" radius={[10, 10, 0, 0]}>
+          {cutoffBucket ? <ReferenceLine x={cutoffBucket.key} stroke={ROUTE.gold} strokeDasharray="4 4" label={{ value: 'نطاق حد الإتقان', position: 'top', fontSize: 11 }} /> : null}
+          <Bar dataKey="count" name="العدد" fill={ROUTE.mid} radius={[10, 10, 0, 0]}>
             <LabelList dataKey="count" position="top" />
           </Bar>
         </BarChart>
@@ -145,9 +148,9 @@ export function ScoresHistogramChart({ result }: { result: MasterySpreadAnalysis
 
 export function MeanMedianCutoffChart({ result }: { result: MasterySpreadAnalysisResult }) {
   const data = [
-    { name: 'المتوسط', value: result.statistics.meanPercent, color: '#2563eb' },
-    { name: 'الوسيط', value: result.statistics.medianPercent, color: '#7c3aed' },
-    { name: 'حد الإتقان', value: result.summary.masteryCutoffPercent, color: '#15803d' },
+    { name: 'المتوسط', value: result.statistics.meanPercent, color: ROUTE.mid },
+    { name: 'الوسيط', value: result.statistics.medianPercent, color: ROUTE.gold },
+    { name: 'حد الإتقان', value: result.summary.masteryCutoffPercent, color: ROUTE.deep },
   ];
   return (
     <ChartCard title="المتوسط والوسيط وحد الإتقان" description="تساعد المقارنة في قراءة مركز أداء المجموعة.">
@@ -176,8 +179,8 @@ export function GapToNextLevelChart({ result }: { result: MasterySpreadAnalysisR
     );
   }
   const data = [
-    { name: 'الحالي', value: result.summary.masterySpreadPercent, color: '#2563eb' },
-    { name: 'المطلوب', value: result.gapToNextLevel.requiredSpreadPercent, color: '#15803d' },
+    { name: 'الحالي', value: result.summary.masterySpreadPercent, color: ROUTE.mid },
+    { name: 'المطلوب', value: result.gapToNextLevel.requiredSpreadPercent, color: ROUTE.deep },
   ];
   return (
     <ChartCard title="الفجوة إلى المستوى التالي" description="يوضح المسافة بين النسبة الحالية وحد المستوى التالي.">

@@ -9,7 +9,8 @@ const ExamItemsSampleAnalysisViews = lazy(() => import('./examItemSampleAnalysis
 
 type ActivePath = 'home' | 'masterySpread' | 'individualPerformance' | 'examItemSampleAnalysis';
 
-type PathTheme = 'royal' | 'olive' | 'violet' | 'amber';
+/** Route identity; matches the .mw-track-* colour contract in index.css. */
+type PathTheme = 'mastery' | 'individual' | 'exam';
 
 type PathCard = {
   id: Exclude<ActivePath, 'home'>;
@@ -28,7 +29,7 @@ const PATHS: PathCard[] = [
     title: 'تحليل انتشار الإتقان',
     descriptionLines: ['قياس انتشار الإتقان في مجموعة درجات نهائية،', 'مع حكم عام وفجوة وخطة جماعية قابلة للتنفيذ.'],
     badge: 'مسار جماعي',
-    theme: 'royal',
+    theme: 'mastery',
     icon: 'spread',
   },
   {
@@ -36,7 +37,7 @@ const PATHS: PathCard[] = [
     title: 'تحليل الأداء الفردي',
     descriptionLines: ['قراءة تشخيصية لأداء طالب واحد في المفردات والمهارات،', 'مع تفسير تربوي وخطة متابعة دقيقة.'],
     badge: 'مسار فردي',
-    theme: 'olive',
+    theme: 'individual',
     icon: 'student',
   },
   {
@@ -44,7 +45,7 @@ const PATHS: PathCard[] = [
     title: 'تحليل مفردات الورقة الامتحانية',
     descriptionLines: ['تحليل عينة من أوراق الطلبة لرصد أداء المفردات والمهارات،', 'وتوثيق توازن الورقة وموثوقية القراءة.'],
     badge: 'مسار عينة',
-    theme: 'amber',
+    theme: 'exam',
     icon: 'items',
   },
 ];
@@ -85,17 +86,18 @@ function HomePage({ onSelectPath }: { onSelectPath: (path: ActivePath) => void }
             <p className="mw-brand-caption">قراءة تربوية تقود إلى قرار</p>
           </div>
         </div>
+        <div className="mw-home-intro">
+          <h1>اختر مسار التحليل</h1>
+          <p>ابدأ بالمسار المناسب لنوع البيانات التي لديك.</p>
+          <ul className="mw-home-facts">
+            <li>ثلاثة مسارات تحليل</li>
+            <li>تقارير PDF على مقاس A4</li>
+            <li>البيانات تبقى على جهازك</li>
+          </ul>
+        </div>
       </header>
 
-      <section className="mw-paths-section">
-        <div className="mw-section-heading">
-          <div>
-            <span className="mw-section-eyebrow">المسارات المتاحة</span>
-            <h1>اختر مسار التحليل</h1>
-            <p>ابدأ بالمسار المناسب لنوع البيانات التي لديك.</p>
-          </div>
-        </div>
-
+      <section className="mw-paths-section" aria-label="المسارات المتاحة">
         <div className="mw-path-grid">
           {PATHS.map((path, index) => <PathCardButton key={path.id} path={path} index={index + 1} onSelect={() => onSelectPath(path.id)} />)}
         </div>
@@ -132,18 +134,14 @@ function PathCardButton({ path, index, onSelect }: { path: PathCard; index: numb
 function PathWorkspace({ activePath, activePathMeta, onBackHome }: { activePath: ActivePath; activePathMeta?: PathCard; onBackHome: () => void }) {
   return (
     <div className="mw-path-workspace mx-auto flex w-full max-w-7xl flex-col gap-5 px-4 py-4 md:px-6">
-      <header className={`workspace-current-header mw-workspace-header mw-workspace-header--${activePathMeta?.theme ?? 'royal'}`}>
-        <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-          <div className="flex items-start gap-4">
-            <div className="mw-workspace-icon"><IconBubble variant={activePathMeta?.theme ?? 'royal'} icon={activePathMeta?.icon ?? 'spread'} compact /></div>
-            <div>
-              <p className="mw-workspace-kicker">مساحة التحليل</p>
-              <h1>{activePathMeta?.title ?? 'مسار التحليل'}</h1>
-              <p className="mw-workspace-description">أدخل البيانات، تابع المؤشرات، ثم صدّر تقريرك عند اكتمال التحليل.</p>
-            </div>
-          </div>
-          <button type="button" onClick={onBackHome} className="mw-back-home-button"><span aria-hidden="true">→</span> المسارات</button>
+      <header className={`workspace-current-header mw-workbar mw-workbar--${activePathMeta?.theme ?? 'mastery'}`}>
+        <div className="mw-workbar__brand">
+          <span className="mw-workbar__mark" aria-hidden="true"><CompassCheckLogo /></span>
+          <span className="mw-workbar__name">بوصلة الإتقان</span>
+          <span className="mw-workbar__sep" aria-hidden="true">/</span>
+          <span className="mw-workbar__route">{activePathMeta?.title ?? 'مسار التحليل'}</span>
         </div>
+        <button type="button" onClick={onBackHome} className="mw-workbar__back mw-back-home-button"><span aria-hidden="true">→</span> كل المسارات</button>
       </header>
       <Suspense fallback={<div className="rounded-2xl border border-white/70 bg-white/80 p-6 text-center font-bold text-slate-600">جارٍ تحميل المسار…</div>}>
         {activePath === 'masterySpread' && <MasterySpreadViews />}

@@ -56,7 +56,7 @@ function polygonPoints(count: number, fraction: number) {
 }
 
 /** Fixed viewBox and explicit data legend prevent a tiny or mislabelled PDF radar. */
-export function PdfStaticRadar({ data }: { data: RadarSkillEntry[] }) {
+export function PdfStaticRadar({ data, color = '#075b49' }: { data: RadarSkillEntry[]; color?: string }) {
   if (data.length < 3) return null;
   const count = data.length;
   const points = data.map((entry, index) => {
@@ -71,7 +71,7 @@ export function PdfStaticRadar({ data }: { data: RadarSkillEntry[] }) {
       <svg viewBox="0 0 300 210" width="280" height="196" role="img" aria-label="رادار أداء المهارات" style={{ display: 'block', margin: '0 auto', maxWidth: '100%' }}>
         {[0.25, 0.5, 0.75, 1].map((fraction) => <polygon key={fraction} points={polygonPoints(count, fraction)} fill="none" stroke="#cbd5e1" strokeWidth="1" />)}
         {Array.from({ length: count }, (_, index) => <line key={index} x1="150" y1="102" x2={(150 + Math.cos(-Math.PI / 2 + index * 2 * Math.PI / count) * 88).toFixed(2)} y2={(102 + Math.sin(-Math.PI / 2 + index * 2 * Math.PI / count) * 88).toFixed(2)} stroke="#cbd5e1" strokeWidth="1" />)}
-        <polygon points={points} fill="#2563eb" fillOpacity="0.2" stroke="#2563eb" strokeWidth="2" />
+        <polygon points={points} fill={color} fillOpacity="0.2" stroke={color} strokeWidth="2" />
       </svg>
       <div dir="rtl" style={{ display: 'grid', gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', gap: '5px 10px', marginTop: 2 }}>
         {data.map((entry, index) => (

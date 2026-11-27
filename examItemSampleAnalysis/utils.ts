@@ -33,3 +33,8 @@ export function getTodayISO(date = new Date()): string {
   const day = String(date.getDate()).padStart(2, '0');
   return `${year}-${month}-${day}`;
 }
+
+/** True when two ranked item lists name the same items in the same order. */
+export function sameItemRanking(first: ReadonlyArray<{ label: string }>, second: ReadonlyArray<{ label: string }>): boolean {
+  return first.length === second.length && first.every((item, index) => item.label === second[index].label);
+}

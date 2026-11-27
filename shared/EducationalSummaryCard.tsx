@@ -28,9 +28,9 @@ export default function EducationalSummaryCard({
   }
 
   return (
-    <div className="rounded-[24px] border border-sky-100/80 bg-gradient-to-b from-sky-50/90 to-white p-5 text-right shadow-sm print:rounded-none print:border-slate-300 print:bg-white print:shadow-none lg:p-6">
+    <div className="rounded-[24px] border border-[var(--mw-track-border,#e2e7df)] bg-gradient-to-b from-[var(--mw-track-soft,#f8f9f6)] to-white p-5 text-right shadow-sm print:rounded-none print:border-slate-300 print:bg-white print:shadow-none lg:p-6">
       <div className="flex items-center justify-between gap-3">
-        <div className="text-sm font-extrabold tracking-tight text-sky-950 lg:text-base">
+        <div className="text-sm font-extrabold tracking-tight text-[var(--mw-track-ink,#123d35)] lg:text-base">
           {title}
         </div>
       </div>

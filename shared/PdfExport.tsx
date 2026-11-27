@@ -338,6 +338,8 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
       [clone, ...Array.from(clone.querySelectorAll<HTMLElement>('*'))].forEach(element => element.style.setProperty('letter-spacing', 'normal', 'important'));
       clone.style.width = '794px'; clone.style.maxWidth = 'none'; clone.style.boxSizing = 'border-box';
       frameDoc.body.appendChild(clone);
+      // Make sure every Tajawal weight used by the report is loaded in the frame before capture.
+      await Promise.all(['400', '500', '700', '800', '900'].map(weight => frameDoc.fonts?.load(`${weight} 16px Tajawal`, 'أب12').catch(() => undefined)));
       await Promise.all(Array.from(clone.querySelectorAll('img')).map(image => image.decode().catch(() => undefined)));
       const base = clone.getBoundingClientRect();
       // Charts and signatures must travel as a whole when they fit on a page.
@@ -407,9 +409,9 @@ export function PdfExport({ areaId, filename }: { areaId: string; filename: stri
   return <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm" dir="rtl">
     <div className="flex flex-wrap items-center justify-between gap-3">
       <div><h2 className="text-xl font-black text-slate-900">التقرير الختامي</h2><p className="text-sm text-slate-500">تقرير تفصيلي قابل للتصدير بصيغة PDF على مقاس A4.</p></div>
-      <button type="button" disabled={busy} onClick={createPdf} className="rounded-xl bg-emerald-800 px-4 py-2 text-sm font-bold text-white disabled:opacity-60">{busy ? 'جارٍ إعداد ملف PDF…' : 'تصدير PDF'}</button>
+      <button type="button" disabled={busy} onClick={createPdf} className="mw-route-action rounded-xl bg-emerald-800 px-4 py-2 text-sm font-bold text-white disabled:opacity-60">{busy ? 'جارٍ إعداد ملف PDF…' : 'تصدير PDF'}</button>
     </div>
-    {url && <p className="mt-3 text-sm" role="status"><a className="inline-block rounded-xl bg-emerald-700 px-4 py-2 font-bold text-white" href={url} download={filename}>تنزيل ملف PDF</a> <span>الملف جاهز للتنزيل.</span></p>}
+    {url && <p className="mt-3 text-sm" role="status"><a className="mw-route-action inline-block rounded-xl bg-emerald-700 px-4 py-2 font-bold text-white" href={url} download={filename}>تنزيل ملف PDF</a> <span>الملف جاهز للتنزيل.</span></p>}
     {error && <p className="mt-3 text-sm text-red-800" role="alert">{error}</p>}
   </div>;
 }

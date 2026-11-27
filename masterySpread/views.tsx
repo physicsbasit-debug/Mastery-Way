@@ -278,7 +278,7 @@ function InputTab({ rawScoresText, onScoresChange, settings, updateSetting, cont
         <textarea value={rawScoresText} onChange={(event) => onScoresChange(event.target.value)} className="mt-4 min-h-[220px] md:min-h-[300px] w-full rounded-2xl border border-slate-200 bg-slate-50 p-4 font-mono text-sm outline-none focus:border-slate-400 focus:bg-white" placeholder={`مثال:\n80؛ 75؛ 90\n65\n70`} />
         <ReadinessCard readiness={readiness} statusMessage={statusMessage} />
         <div className="mt-5 flex flex-wrap gap-3">
-          <button type="button" disabled={!readiness.validation.valid} onClick={onAnalyze} className={`rounded-2xl px-6 py-3 text-sm font-black text-white shadow-sm ${readiness.validation.valid ? 'bg-emerald-600 hover:bg-emerald-700' : 'cursor-not-allowed bg-slate-300'}`}>تحليل انتشار الإتقان</button>
+          <button type="button" disabled={!readiness.validation.valid} onClick={onAnalyze} className={`rounded-2xl px-6 py-3 text-sm font-black text-white shadow-sm ${readiness.validation.valid ? 'mw-route-action bg-emerald-600 hover:bg-emerald-700' : 'mw-route-action-disabled cursor-not-allowed bg-slate-300'}`}>تحليل انتشار الإتقان</button>
 
         </div>
 
